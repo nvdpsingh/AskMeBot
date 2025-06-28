@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
-from .groq_router import query_llm
+from groq_router import query_llm
 
 app = FastAPI()
 
