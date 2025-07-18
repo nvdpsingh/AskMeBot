@@ -25,6 +25,6 @@ def query_llm(prompt:str,model:str):
 
     except Exception as e:
         print("LLM Error: ",e)
-        return{
-            "error": str(e)
-        }
+        error_str = str(e)
+        
+       

@@ -8,5 +8,12 @@ dependencies = [
     "fastapi>=0.115.13",
     "langchain>=0.3.26",
     "langgraph>=0.4.8",
+    "pydantic>=2.11.7",
+    "supabase>=2.16.0",
     "uvicorn>=0.34.3",
+]
+
+[tool.uv.workspace]
+members = [
+    "fastapitut/fastapitut",
 ]

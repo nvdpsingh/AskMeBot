@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AskMeBot - AI Assistant</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Custom scrollbar */
+        .chat-container::-webkit-scrollbar {
+            width: 6px;
+        }
+        .chat-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        .chat-container::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
+        }
+        .chat-container::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+        
+        /* Smooth animations */
+        .message {
+            animation: fadeIn 0.3s ease-out;
+        }
+        
+        .rotate-45 {
+            transform: rotate(45deg);
+        }
+        #action-menu a {
+            transition: all 0.2s ease;
+            transform: translateY(5px);
+            opacity: 0;
+        }
+        #action-menu.shown a {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        #action-menu a:nth-child(1) { transition-delay: 0.1s; }
+        #action-menu a:nth-child(2) { transition-delay: 0.2s; }
+        #action-menu a:nth-child(3) { transition-delay: 0.3s; }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Typing indicator animation */
+        .typing-dot {
+            animation: typingAnimation 1.5s infinite ease-in-out;
+        }
+        
+        .typing-dot:nth-child(1) { animation-delay: 0s; }
+        .typing-dot:nth-child(2) { animation-delay: 0.3s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.6s; }
+        
+        @keyframes typingAnimation {
+            0%, 100% { transform: translateY(0); opacity: 0.5; }
+            50% { transform: translateY(-5px); opacity: 1; }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 h-screen flex items-center justify-center p-4 min-w-[800px]">
+    <div class="max-w-2xl w-full h-[700px] bg-white rounded-2xl shadow-xl flex flex-col overflow-hidden">
+        <!-- Header -->
+        <div class="bg-white border-b border-gray-100 p-4 flex items-center justify-between">
+            <button id="menu-button" class="text-gray-600 hover:text-gray-800 transition">
+                <i class="fas fa-bars text-xl"></i>
+            </button>
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 flex items-center justify-center">
+                    <i class="fas fa-robot text-white"></i>
+                </div>
+                <div>
+                    <h2 class="font-medium text-gray-800">AskMeBot</h2>
+                    <p class="text-xs text-gray-500">AI Assistant</p>
+                </div>
+            </div>
+            <div class="relative">
+                <button id="model-selector" class="flex items-center space-x-2 px-3 py-2 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:from-purple-600 hover:to-pink-600 transition-all duration-200 shadow-lg">
+                    <i class="fas fa-brain text-sm"></i>
+                    <span class="text-sm font-medium">Models</span>
+                </button>
+                <div id="model-dropdown" class="hidden absolute right-0 top-12 w-48 bg-white rounded-xl shadow-lg py-2 z-50 border border-gray-100">
+                    <div class="px-3 py-2 border-b border-gray-100">
+                        <p class="text-xs font-medium text-gray-700">Select Model</p>
+                    </div>
+                    <div class="model-option px-3 py-2 hover:bg-gray-50 cursor-pointer" data-model="llama3-8b-8192">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm font-medium text-gray-800">Llama 3.1 8B</p>
+                                <p class="text-xs text-gray-500">Fast & Efficient</p>
+                            </div>
+                            <div class="w-2 h-2 rounded-full bg-green-500"></div>
+                        </div>
+                    </div>
+                    <div class="model-option px-3 py-2 hover:bg-gray-50 cursor-pointer" data-model="compound-beta">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm font-medium text-gray-800">Compound Beta</p>
+                                <p class="text-xs text-gray-500">Compound's Model</p>
+                            </div>
+                            <div class="w-2 h-2 rounded-full bg-green-500"></div>
+                        </div>
+                    </div>
+                    <div class="model-option px-3 py-2 hover:bg-gray-50 cursor-pointer" data-model="llama3-70b-8192">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm font-medium text-gray-800">Llama 3.1 70B</p>
+                                <p class="text-xs text-gray-500">High Quality</p>
+                            </div>
+                            <div class="w-2 h-2 rounded-full bg-gray-300"></div>
+                        </div>
+                    </div>
+                    <div class="model-option px-3 py-2 hover:bg-gray-50 cursor-pointer" data-model="mixtral-8x7b-32768">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm font-medium text-gray-800">Mixtral 8x7B</p>
+                                <p class="text-xs text-gray-500">Balanced</p>
+                            </div>
+                            <div class="w-2 h-2 rounded-full bg-gray-300"></div>
+                        </div>
+                    </div>
+                    <div class="model-option px-3 py-2 hover:bg-gray-50 cursor-pointer" data-model="gemma2-9b-it">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm font-medium text-gray-800">Gemma 2 9B</p>
+                                <p class="text-xs text-gray-500">Google's Latest</p>
+                            </div>
+                            <div class="w-2 h-2 rounded-full bg-gray-300"></div>
+                        </div>
+                    </div>
+                    <div class="model-option px-3 py-2 hover:bg-gray-50 cursor-pointer" data-model="deepseek-r1-distill-llama-70b">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm font-medium text-gray-800">Deepseek R1 Distill</p>
+                                <p class="text-xs text-gray-500">Deepseek's Model</p>
+                            </div>
+                            <div class="w-2 h-2 rounded-full bg-gray-300"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Menu Sidebar -->
+        <div id="menu-sidebar" class="hidden absolute left-0 top-0 h-full w-64 bg-white shadow-lg z-50 transition-transform duration-300 transform -translate-x-full">
+            <div class="p-4 border-b">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
+                        <i class="fas fa-user text-gray-600"></i>
+                    </div>
+                    <div>
+                        <h2 class="font-medium">AskMeBot User</h2>
+                        <p class="text-xs text-gray-500">user@askmebot.com</p>
+                    </div>
+                </div>
+            </div>
+            <div class="p-2">
+                <a href="#" class="block px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-lg"><i class="fas fa-comments mr-3"></i> Chat History</a>
+                <a href="#" class="block px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-lg"><i class="fas fa-cog mr-3"></i> Settings</a>
+                <a href="#" class="block px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-lg"><i class="fas fa-info-circle mr-3"></i> About AskMeBot</a>
+            </div>
+        </div>
+        
+        <!-- Chat messages container -->
+        <div class="chat-container flex-1 p-4 overflow-y-auto space-y-4">
+            <!-- Welcome message -->
+            <div class="message flex">
+                <div class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center mr-3 flex-shrink-0">
+                    <i class="fas fa-robot text-gray-500 text-sm"></i>
+                </div>
+                <div class="bg-gray-100 rounded-2xl rounded-tl-none px-4 py-3 max-w-[85%]">
+                    <p class="text-gray-800">Hello! I'm AskMeBot, your AI assistant. How can I help you today?</p>
+                    <p class="text-xs text-gray-500 mt-1">Just now</p>
+                </div>
+            </div>
+            
+        
+            
+            <!-- Typing indicator (hidden by default) -->
+            <div id="typing-indicator" class="hidden flex items-center">
+                <div class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center mr-3 flex-shrink-0">
+                    <i class="fas fa-robot text-gray-500 text-sm"></i>
+                </div>
+                <div class="bg-gray-100 rounded-2xl rounded-tl-none px-4 py-3">
+                    <div class="flex space-x-1">
+                        <div class="typing-dot w-2 h-2 bg-gray-400 rounded-full"></div>
+                        <div class="typing-dot w-2 h-2 bg-gray-400 rounded-full"></div>
+                        <div class="typing-dot w-2 h-2 bg-gray-400 rounded-full"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Input area -->
+        <div class="border-t border-gray-100 p-4">
+            <form id="chat-form" class="flex items-center space-x-4">
+                <div class="relative">
+                    <button id="action-menu-button" type="button" class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 hover:bg-gray-200 transition transform hover:rotate-45 duration-300">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                    <div id="action-menu" class="hidden absolute bottom-full left-0 mb-2 w-48 bg-white rounded-xl shadow-lg py-1 z-10">
+                        <a href="#" class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100">
+                            <i class="fas fa-file-pdf text-red-500 mr-2"></i>
+                            Document Analysis
+                        </a>
+                        <a href="#" class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100">
+                            <i class="fas fa-search text-blue-500 mr-2"></i>
+                            Web Search
+                        </a>
+                        <a href="#" class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100">
+                            <i class="fas fa-code text-green-500 mr-2"></i>
+                            Code Assistant
+                        </a>
+                    </div>
+                </div>
+                <div class="flex-1 relative">
+                    <input 
+                        id="message-input"
+                        type="text" 
+                        placeholder="Ask AskMeBot anything..." 
+                        class="w-full bg-gray-100 rounded-full py-3 px-4 pr-12 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                        autocomplete="off"
+                    >
+                    <button type="button" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                        <i class="far fa-face-smile"></i>
+                    </button>
+                </div>
+                <button type="submit" class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white hover:bg-blue-600 transition">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Menu sidebar toggle
+            const menuButton = document.getElementById('menu-button');
+            const menuSidebar = document.getElementById('menu-sidebar');
+            
+            menuButton.addEventListener('click', function() {
+                menuSidebar.classList.toggle('hidden');
+                menuSidebar.classList.toggle('transform');
+                menuSidebar.classList.toggle('-translate-x-full');
+            });
+            
+            // Close sidebar when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!menuSidebar.contains(e.target) && e.target !== menuButton) {
+                    menuSidebar.classList.add('hidden');
+                    menuSidebar.classList.add('transform');
+                    menuSidebar.classList.add('-translate-x-full');
+                }
+            });
+            
+            // Action menu toggle
+            const actionMenuButton = document.getElementById('action-menu-button');
+            const actionMenu = document.getElementById('action-menu');
+            
+            actionMenuButton.addEventListener('click', function(e) {
+                e.stopPropagation();
+                actionMenu.classList.toggle('hidden');
+                this.classList.toggle('rotate-45');
+            });
+            
+            // Close menu when clicking outside
+            document.addEventListener('click', function() {
+                actionMenu.classList.add('hidden');
+                actionMenuButton.classList.remove('rotate-45');
+            });
+            
+            const chatForm = document.getElementById('chat-form');
+            const messageInput = document.getElementById('message-input');
+            const chatContainer = document.querySelector('.chat-container');
+            const typingIndicator = document.getElementById('typing-indicator');
+            const modelSelector = document.getElementById('model-selector');
+            const modelDropdown = document.getElementById('model-dropdown');
+            
+            // Model selection functionality
+            let selectedModel = 'llama3-8b-8192'; // Default model
+            
+            modelSelector.addEventListener('click', function(e) {
+                e.stopPropagation();
+                modelDropdown.classList.toggle('hidden');
+            });
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function() {
+                modelDropdown.classList.add('hidden');
+            });
+            
+            // Handle model selection
+            document.querySelectorAll('.model-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    const model = this.getAttribute('data-model');
+                    selectedModel = model;
+                    
+                    // Update visual indicators
+                    document.querySelectorAll('.model-option .w-2').forEach(dot => {
+                        dot.classList.remove('bg-green-500');
+                        dot.classList.add('bg-gray-300');
+                    });
+                    this.querySelector('.w-2').classList.remove('bg-gray-300');
+                    this.querySelector('.w-2').classList.add('bg-green-500');
+                    
+                    // Update button color based on model
+                    const modelNames = {
+                        'llama3-8b-8192': 'from-purple-500 to-pink-500',
+                        'llama3-70b-8192': 'from-blue-500 to-indigo-500',
+                        'mixtral-8x7b-32768': 'from-green-500 to-teal-500',
+                        'gemma2-9b-it': 'from-orange-500 to-red-500',
+                        'deepseek-r1-distill-llama-70b': 'from-yellow-500 to-orange-500',
+                        'compound-beta': 'from-indigo-500 to-purple-500'
+                    };
+                    
+                    modelSelector.className = `flex items-center space-x-2 px-3 py-2 rounded-full bg-gradient-to-r ${modelNames[model]} text-white hover:from-purple-600 hover:to-pink-600 transition-all duration-200 shadow-lg`;
+                    
+                    // Hide dropdown
+                    modelDropdown.classList.add('hidden');
+                    
+                    // Show notification
+                    showModelNotification(model);
+                });
+            });
+            
+            function showModelNotification(model) {
+                const modelDisplayNames = {
+                    'llama3-8b-8192': 'Llama 3.1 8B',
+                    'llama3-70b-8192': 'Llama 3.1 70B',
+                    'mixtral-8x7b-32768': 'Mixtral 8x7B',
+                    'gemma2-9b-it': 'Gemma 2 9B',
+                    'deepseek-r1-distill-llama-70b': 'Deepseek R1 Distill',
+                    'llama3-1-8b-instant': 'Llama 3.1 8B Instant',
+                    'compound-beta': 'Compound Beta'
+                };
+                
+                const notification = document.createElement('div');
+                notification.className = 'fixed top-4 right-4 bg-white rounded-lg shadow-lg px-4 py-3 border-l-4 border-green-500 z-50 transform translate-x-full transition-transform duration-300';
+                notification.innerHTML = `
+                    <div class="flex items-center">
+                        <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                        <span class="text-sm text-gray-800">Switched to ${modelDisplayNames[model]}</span>
+                    </div>
+                `;
+                
+                document.body.appendChild(notification);
+                
+                // Animate in
+                setTimeout(() => {
+                    notification.classList.remove('translate-x-full');
+                }, 100);
+                
+                // Remove after 3 seconds
+                setTimeout(() => {
+                    notification.classList.add('translate-x-full');
+                    setTimeout(() => {
+                        document.body.removeChild(notification);
+                    }, 300);
+                }, 3000);
+            }
+            
+            chatForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                const message = messageInput.value.trim();
+                
+                if (message) {
+                    // Add user message
+                    addMessage(message, 'user');
+                    messageInput.value = '';
+                    
+                    // Show typing indicator
+                    console.log('Showing typing indicator...');
+                    typingIndicator.classList.remove('hidden');
+                    chatContainer.scrollTop = chatContainer.scrollHeight;
+                    
+                    try {
+                        // Add a small delay to make typing indicator visible
+                        await new Promise(resolve => setTimeout(resolve, 500));
+                        
+                        // Send message to AskMeBot API
+                        const response = await fetch('/chat', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                prompt: message,
+                                model: selectedModel
+                            })
+                        });
+                        
+                        if (response.ok) {
+                            const data = await response.json();
+                            console.log('Hiding typing indicator...');
+                            typingIndicator.classList.add('hidden');
+                            
+                            // Check if there's an error in the response
+                            if (data.error) {
+                                let errorMessage = data.error;
+                                
+                                // Add helpful suggestions based on error type
+                                if (data.error_type === 'model_not_found') {
+                                    errorMessage += ' 💡 Try switching to a different model using the Models button.';
+                                } else if (data.error_type === 'rate_limit') {
+                                    errorMessage += ' ⏰ Wait a few seconds and try again.';
+                                } else if (data.error_type === 'message_too_long') {
+                                    errorMessage += ' ✂️ Try breaking your message into smaller parts.';
+                                }
+                                
+                                addMessage(errorMessage, 'bot');
+                            } else {
+                                addMessage(data.response || data.message || 'I received your message but couldn\'t process it properly.', 'bot');
+                            }
+                        } else {
+                            throw new Error('API request failed');
+                        }
+                    } catch (error) {
+                        console.error('Error:', error);
+                        typingIndicator.classList.add('hidden');
+                        addMessage('Sorry, I encountered an error while processing your request. Please try again.', 'bot');
+                    }
+                }
+            });
+            
+            function addMessage(text, sender) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message flex ${sender === 'user' ? 'justify-end' : ''}`;
+                
+                const timestamp = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                
+                if (sender === 'user') {
+                    messageDiv.innerHTML = `
+                        <div class="bg-blue-500 text-white rounded-2xl rounded-tr-none px-4 py-3 max-w-[80%]">
+                            <p>${text}</p>
+                            <p class="text-xs text-blue-100 mt-1">${timestamp}</p>
+                        </div>
+                    `;
+                } else {
+                    messageDiv.innerHTML = `
+                        <div class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center mr-3 flex-shrink-0">
+                            <i class="fas fa-robot text-gray-500 text-sm"></i>
+                        </div>
+                        <div class="bg-gray-100 rounded-2xl rounded-tl-none px-4 py-3 max-w-[80%]">
+                            <p class="text-gray-800">${text}</p>
+                            <p class="text-xs text-gray-500 mt-1">${timestamp}</p>
+                        </div>
+                    `;
+                }
+                
+                chatContainer.appendChild(messageDiv);
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            }
+            
+            // Auto-focus input on load
+            messageInput.focus();
+        });
+    </script>
+</body>
+</html> 
