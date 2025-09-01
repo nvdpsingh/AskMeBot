@@ -40,7 +40,6 @@ class ChatInput(BaseModel):
 def chat(chat_input: ChatInput):
     return query_llm(chat_input.prompt, chat_input.model)
 
-parsed = parse_llm_output(raw_llm_output)
 @app.post("/save")
 def save():
-    return
+    return {"message": "Save endpoint"}

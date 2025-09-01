@@ -1,8 +1,18 @@
 from langchain_groq import ChatGroq
+import os
 
-
-llm = ChatGroq(model="gemma2-9b-it")
+# Only initialize if API key is available
+llm = None
+if os.getenv("GROQ_API_KEY"):
+    try:
+        llm = ChatGroq(model="openai/gpt-oss-20b")
+    except Exception as e:
+        print(f"Failed to initialize Groq client: {e}")
+        llm = None
 def parse_llm_output(llm_output:str):
+    if llm is None:
+        return {"error": "Groq API key not configured", "parsed_output": llm_output}
+    
     system_prompt = """
     You are a helpful assistant that can parse the output of a LLM.
     You will be given a string of text that is the output of a LLM.
