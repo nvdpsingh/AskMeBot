@@ -1,6 +1,11 @@
 from langchain_groq import ChatGroq
 from langchain.prompts import ChatPromptTemplate,MessagesPlaceholder
+from dotenv import load_dotenv
+from app.chat_parser import parse_llm_output
 import os
+
+# Load environment variables from .env file
+load_dotenv()
 
 chat_history=[]
 def query_llm(prompt:str,model:str):
@@ -9,7 +14,7 @@ def query_llm(prompt:str,model:str):
         if not os.getenv("GROQ_API_KEY"):
             return {
                 "model": model,
-                "response": "🤖 Hi! I'm AskMeBot, your AI assistant. I'm currently running in demo mode because no Groq API key is configured.\n\nTo enable full functionality:\n1. Get a free API key from https://console.groq.com/\n2. Set the environment variable: export GROQ_API_KEY=your-key-here\n3. Restart the application\n\nFor now, I can help you with basic responses! What would you like to know?",
+                "response": "🤖 Hi! I'm AskMeBot, your AI assistant. GROQ_API_KEY not found in environment variables. Please Configure that to interact with the bot.",
                 "error": False,
                 "demo_mode": True
             }
@@ -27,9 +32,14 @@ def query_llm(prompt:str,model:str):
         chat_history.append(("user", prompt))
         chat_history.append(("assistant", str(response)))
         
+        # Parse the response to convert markdown to HTML
+        parsed_response = parse_llm_output(str(response.content))
+        
         return {
             "model": model,
-            "response":str(response.content)
+            "response": parsed_response["parsed_output"],
+            "original_response": parsed_response["original_output"],
+            "formatted": parsed_response["formatted"]
         }
 
     except Exception as e:

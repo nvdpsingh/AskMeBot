@@ -166,6 +166,17 @@
         .message {
             animation: messageSlide 0.4s ease-out;
             position: relative;
+            margin-bottom: 1.5rem;
+        }
+        
+        .message:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            bottom: -0.75rem;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.1), transparent);
         }
         
         @keyframes messageSlide {
@@ -184,6 +195,7 @@
             color: var(--batman-dark);
             border: 1px solid rgba(255, 215, 0, 0.3);
             box-shadow: 0 4px 15px rgba(255, 215, 0, 0.2);
+            margin-bottom: 0.5rem;
         }
         
         .bot-message {
@@ -191,6 +203,7 @@
             border: 1px solid rgba(255, 215, 0, 0.2);
             color: #e5e5e5;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            margin-bottom: 0.5rem;
         }
         
         .input-container {
@@ -258,10 +271,22 @@
         .status-indicator {
             width: 8px;
             height: 8px;
-            background: var(--batman-accent);
             border-radius: 50%;
             box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
             animation: statusPulse 2s infinite;
+        }
+        
+        .status-indicator.online {
+            background: var(--batman-accent);
+        }
+        
+        .status-indicator.offline {
+            background: #dc2626;
+            animation: none;
+        }
+        
+        .status-indicator.checking {
+            background: #f59e0b;
         }
         
         @keyframes statusPulse {
@@ -297,6 +322,31 @@
         
         .batman-glow {
             text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+        
+        /* Markdown formatting styles */
+        .bot-message strong {
+            color: var(--batman-accent);
+            font-weight: bold;
+        }
+        
+        .bot-message em {
+            color: #e5e5e5;
+            font-style: italic;
+        }
+        
+        .bot-message code {
+            background: rgba(0, 0, 0, 0.3);
+            color: var(--batman-accent);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        
+        .bot-message h1, .bot-message h2, .bot-message h3 {
+            margin: 8px 0 4px 0;
+            font-family: 'Orbitron', sans-serif;
         }
         
         .floating-particles {
@@ -359,48 +409,31 @@
             
             <div class="flex items-center space-x-4">
                 <div class="flex items-center space-x-2">
-                    <div class="status-indicator"></div>
-                    <span class="text-gray-300 text-sm font-medium">ONLINE</span>
+                    <div id="status-indicator" class="status-indicator"></div>
+                    <span id="status-text" class="text-gray-300 text-sm font-medium">CHECKING...</span>
                 </div>
                 
                 <div class="relative">
                     <button id="model-selector" class="batman-button px-4 py-2 rounded-lg flex items-center space-x-2 font-medium">
                         <i class="fas fa-brain text-sm"></i>
-                        <span>MODELS</span>
+                        <span>OpenAI GPT OSS 20B</span>
                         <i class="fas fa-chevron-down text-xs"></i>
                     </button>
                     
-                    <div id="model-dropdown" class="model-dropdown hidden absolute right-0 top-12 w-64 rounded-xl py-3 z-50">
+                    <div id="model-dropdown" class="model-dropdown hidden absolute right-0 top-12 w-64 rounded-xl py-3 z-[9999]">
                         <div class="px-4 py-2 border-b border-gray-700">
                             <p class="text-sm font-bold text-gray-300">SELECT MODEL</p>
                         </div>
-                        <div class="model-option px-4 py-3 cursor-pointer transition-all duration-200" data-model="llama3-8b-8192">
+                        <div class="model-option px-4 py-3 cursor-pointer transition-all duration-200" data-model="openai/gpt-oss-20b">
                             <div class="flex items-center justify-between">
                                 <div>
-                                    <p class="text-sm font-bold text-gray-200">Llama 3.1 8B</p>
-                                    <p class="text-xs text-gray-400">Fast & Efficient</p>
+                                    <p class="text-sm font-bold text-gray-200">OpenAI GPT OSS 20B</p>
+                                    <p class="text-xs text-gray-400">Advanced AI Model</p>
                                 </div>
                                 <div class="status-indicator"></div>
                             </div>
                         </div>
-                        <div class="model-option px-4 py-3 cursor-pointer transition-all duration-200" data-model="mixtral-8x7b-32768">
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <p class="text-sm font-bold text-gray-200">Mixtral 8x7B</p>
-                                    <p class="text-xs text-gray-400">High Performance</p>
-                                </div>
-                                <div class="status-indicator"></div>
-                            </div>
-                        </div>
-                        <div class="model-option px-4 py-3 cursor-pointer transition-all duration-200" data-model="gemma2-9b-it">
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <p class="text-sm font-bold text-gray-200">Gemma 2 9B</p>
-                                    <p class="text-xs text-gray-400">Balanced</p>
-                                </div>
-                                <div class="status-indicator"></div>
-                            </div>
-                        </div>
+
                     </div>
                 </div>
             </div>
@@ -408,7 +441,7 @@
         
         <!-- Chat Container -->
         <div id="chat-container" class="chat-container flex-1 p-6 overflow-y-auto scrollbar-thin">
-            <div class="space-y-4">
+            <div class="space-y-6">
                 <!-- Welcome Message -->
                 <div class="message flex">
                     <div class="w-10 h-10 rounded-full bg-gradient-to-r from-yellow-500 to-yellow-400 flex items-center justify-center mr-3 flex-shrink-0">
@@ -426,7 +459,7 @@
             </div>
             
             <!-- Typing Indicator -->
-            <div id="typing-indicator" class="typing-indicator hidden flex items-center space-x-2 px-6 py-4 rounded-2xl max-w-[80%] mt-4">
+            <div id="typing-indicator" class="typing-indicator hidden flex items-center space-x-2 px-6 py-4 rounded-2xl max-w-[80%] mt-6 mb-4">
                 <div class="w-10 h-10 rounded-full bg-gradient-to-r from-yellow-500 to-yellow-400 flex items-center justify-center mr-3 flex-shrink-0">
                     <i class="fas fa-bat text-black"></i>
                 </div>
@@ -467,7 +500,38 @@
             const modelDropdown = document.getElementById('model-dropdown');
             const modelOptions = document.querySelectorAll('.model-option');
             
-            let selectedModel = 'llama3-8b-8192';
+            let selectedModel = 'openai/gpt-oss-20b';
+            
+            // Check API status
+            async function checkAPIStatus() {
+                try {
+                    const response = await fetch('/health');
+                    const data = await response.json();
+                    
+                    const statusIndicator = document.getElementById('status-indicator');
+                    const statusText = document.getElementById('status-text');
+                    
+                    if (data.api_key_available) {
+                        statusIndicator.className = 'status-indicator online';
+                        statusText.textContent = 'ONLINE';
+                        statusText.className = 'text-green-400 text-sm font-medium';
+                    } else {
+                        statusIndicator.className = 'status-indicator offline';
+                        statusText.textContent = 'OFFLINE';
+                        statusText.className = 'text-red-400 text-sm font-medium';
+                    }
+                } catch (error) {
+                    const statusIndicator = document.getElementById('status-indicator');
+                    const statusText = document.getElementById('status-text');
+                    
+                    statusIndicator.className = 'status-indicator offline';
+                    statusText.textContent = 'ERROR';
+                    statusText.className = 'text-red-400 text-sm font-medium';
+                }
+            }
+            
+            // Check status on page load
+            checkAPIStatus();
             
             // Create floating particles
             function createParticles() {
@@ -530,7 +594,7 @@
                             <i class="fas fa-bat text-black"></i>
                         </div>
                         <div class="bot-message rounded-2xl rounded-tl-none px-6 py-4 max-w-[80%]">
-                            <p class="text-gray-200 leading-relaxed">${text}</p>
+                            <div class="text-gray-200 leading-relaxed">${text}</div>
                             <p class="text-xs text-gray-400 mt-2">${timestamp}</p>
                         </div>
                     `;

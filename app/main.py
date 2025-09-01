@@ -4,8 +4,12 @@ from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from app.groq_router import query_llm
-
 from app.chat_parser import parse_llm_output
+from dotenv import load_dotenv
+import os
+
+# Load environment variables from .env file
+load_dotenv()
 
 
 app = FastAPI()
@@ -25,7 +29,13 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 # Health check endpoint
 @app.get("/health")
 def health_check():
-    return {"status": "healthy", "message": "AskMeBot is running!"}
+    import os
+    has_api_key = bool(os.getenv("GROQ_API_KEY"))
+    return {
+        "status": "healthy", 
+        "message": "AskMeBot is running!",
+        "api_key_available": has_api_key
+    }
 
 # Serve the main HTML file
 @app.get("/")
