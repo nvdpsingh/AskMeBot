@@ -332,6 +332,78 @@
             text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
         }
         
+        /* Theme Variables */
+        :root {
+            --primary-color: var(--batman-accent);
+            --secondary-color: var(--batman-gray);
+            --background-color: var(--batman-dark);
+            --text-color: #e5e5e5;
+            --border-color: var(--batman-accent);
+        }
+        
+        /* Cyberpunk Theme */
+        .theme-cyberpunk {
+            --primary-color: #00ffff;
+            --secondary-color: #1a0d2e;
+            --background-color: #0a0a0a;
+            --text-color: #00ffff;
+            --border-color: #ff0080;
+        }
+        
+        /* Ocean Theme */
+        .theme-ocean {
+            --primary-color: #00b4d8;
+            --secondary-color: #023e8a;
+            --background-color: #001d3d;
+            --text-color: #caf0f8;
+            --border-color: #0077b6;
+        }
+        
+        /* Forest Theme */
+        .theme-forest {
+            --primary-color: #52c41a;
+            --secondary-color: #135200;
+            --background-color: #0a1f0a;
+            --text-color: #b7eb8f;
+            --border-color: #73d13d;
+        }
+        
+        /* Sunset Theme */
+        .theme-sunset {
+            --primary-color: #ff6b35;
+            --secondary-color: #8b2c00;
+            --background-color: #2d1b00;
+            --text-color: #ffb366;
+            --border-color: #ff8c42;
+        }
+        
+        /* Purple Theme */
+        .theme-purple {
+            --primary-color: #9c27b0;
+            --secondary-color: #4a148c;
+            --background-color: #1a0033;
+            --text-color: #e1bee7;
+            --border-color: #ba68c8;
+        }
+        
+        /* Minimal Theme */
+        .theme-minimal {
+            --primary-color: #2563eb;
+            --secondary-color: #f8fafc;
+            --background-color: #ffffff;
+            --text-color: #1e293b;
+            --border-color: #e2e8f0;
+        }
+        
+        /* Matrix Theme */
+        .theme-matrix {
+            --primary-color: #00ff00;
+            --secondary-color: #001100;
+            --background-color: #000000;
+            --text-color: #00ff00;
+            --border-color: #00cc00;
+        }
+        
         /* Markdown formatting styles */
         .bot-message strong {
             color: var(--batman-accent);
@@ -766,8 +838,14 @@
                 <div class="setting-item">
                     <span class="setting-label">Theme</span>
                     <select class="setting-control" id="theme-select">
-                        <option value="batman">Batman Dark</option>
-                        <option value="light">Light Mode</option>
+                        <option value="batman" selected>Batman Dark</option>
+                        <option value="cyberpunk">Cyberpunk Neon</option>
+                        <option value="ocean">Ocean Blue</option>
+                        <option value="forest">Forest Green</option>
+                        <option value="sunset">Sunset Orange</option>
+                        <option value="purple">Purple Haze</option>
+                        <option value="minimal">Minimal White</option>
+                        <option value="matrix">Matrix Green</option>
                     </select>
                                 </div>
                 <div class="setting-item">
@@ -1487,6 +1565,104 @@
             // Settings panel functionality
             document.getElementById('close-settings').addEventListener('click', () => {
                 document.getElementById('settings-panel').classList.remove('open');
+            });
+            
+            // Theme switching functionality
+            function applyTheme(themeName) {
+                // Remove all existing theme classes
+                document.body.classList.remove('theme-cyberpunk', 'theme-ocean', 'theme-forest', 'theme-sunset', 'theme-purple', 'theme-minimal', 'theme-matrix');
+                
+                // Apply new theme class
+                if (themeName !== 'batman') {
+                    document.body.classList.add(`theme-${themeName}`);
+                }
+                
+                // Save theme preference
+                localStorage.setItem('askmebot_theme', themeName);
+                
+                // Update UI elements with new theme colors
+                updateThemeColors(themeName);
+            }
+            
+            function updateThemeColors(themeName) {
+                const root = document.documentElement;
+                const themes = {
+                    batman: {
+                        primary: '#ffd700',
+                        secondary: '#1a1a1a',
+                        background: '#0a0a0a',
+                        text: '#e5e5e5',
+                        border: '#ffd700'
+                    },
+                    cyberpunk: {
+                        primary: '#00ffff',
+                        secondary: '#1a0d2e',
+                        background: '#0a0a0a',
+                        text: '#00ffff',
+                        border: '#ff0080'
+                    },
+                    ocean: {
+                        primary: '#00b4d8',
+                        secondary: '#023e8a',
+                        background: '#001d3d',
+                        text: '#caf0f8',
+                        border: '#0077b6'
+                    },
+                    forest: {
+                        primary: '#52c41a',
+                        secondary: '#135200',
+                        background: '#0a1f0a',
+                        text: '#b7eb8f',
+                        border: '#73d13d'
+                    },
+                    sunset: {
+                        primary: '#ff6b35',
+                        secondary: '#8b2c00',
+                        background: '#2d1b00',
+                        text: '#ffb366',
+                        border: '#ff8c42'
+                    },
+                    purple: {
+                        primary: '#9c27b0',
+                        secondary: '#4a148c',
+                        background: '#1a0033',
+                        text: '#e1bee7',
+                        border: '#ba68c8'
+                    },
+                    minimal: {
+                        primary: '#2563eb',
+                        secondary: '#f8fafc',
+                        background: '#ffffff',
+                        text: '#1e293b',
+                        border: '#e2e8f0'
+                    },
+                    matrix: {
+                        primary: '#00ff00',
+                        secondary: '#001100',
+                        background: '#000000',
+                        text: '#00ff00',
+                        border: '#00cc00'
+                    }
+                };
+                
+                const theme = themes[themeName];
+                if (theme) {
+                    root.style.setProperty('--primary-color', theme.primary);
+                    root.style.setProperty('--secondary-color', theme.secondary);
+                    root.style.setProperty('--background-color', theme.background);
+                    root.style.setProperty('--text-color', theme.text);
+                    root.style.setProperty('--border-color', theme.border);
+                }
+            }
+            
+            // Load saved theme on page load
+            const savedTheme = localStorage.getItem('askmebot_theme') || 'batman';
+            document.getElementById('theme-select').value = savedTheme;
+            applyTheme(savedTheme);
+            
+            // Theme selector event listener
+            document.getElementById('theme-select').addEventListener('change', (e) => {
+                applyTheme(e.target.value);
             });
             
             document.getElementById('export-chats').addEventListener('click', () => {
