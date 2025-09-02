@@ -349,6 +349,285 @@
             font-family: 'Orbitron', sans-serif;
         }
         
+        /* Sidebar Styles */
+        .sidebar {
+            width: 300px;
+            background: linear-gradient(135deg, var(--batman-dark) 0%, var(--batman-gray) 100%);
+            border-right: 2px solid var(--batman-accent);
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            position: relative;
+        }
+        
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+            background: linear-gradient(90deg, var(--batman-dark) 0%, var(--batman-gray) 50%, var(--batman-dark) 100%);
+        }
+        
+        .sidebar-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+        }
+        
+        .sidebar-footer {
+            padding: 1rem;
+            border-top: 1px solid rgba(255, 215, 0, 0.2);
+            background: linear-gradient(90deg, var(--batman-dark) 0%, var(--batman-gray) 50%, var(--batman-dark) 100%);
+        }
+        
+        .chat-item {
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            background: rgba(255, 215, 0, 0.05);
+            border: 1px solid rgba(255, 215, 0, 0.1);
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .chat-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.25rem;
+        }
+        
+        .chat-edit-btn, .chat-delete-btn {
+            background: none;
+            border: none;
+            color: var(--batman-accent);
+            cursor: pointer;
+            padding: 0.25rem;
+            border-radius: 0.25rem;
+            opacity: 0;
+            transition: all 0.3s ease;
+            font-size: 0.75rem;
+            margin-left: 0.25rem;
+        }
+        
+        .chat-delete-btn {
+            color: #dc2626;
+        }
+        
+        .chat-item:hover .chat-edit-btn,
+        .chat-item:hover .chat-delete-btn {
+            opacity: 1;
+        }
+        
+        .chat-edit-btn:hover {
+            background: rgba(255, 215, 0, 0.1);
+        }
+        
+        .chat-delete-btn:hover {
+            background: rgba(220, 38, 38, 0.1);
+        }
+        
+        .chat-actions {
+            display: flex;
+            align-items: center;
+        }
+        
+        .chat-title-input {
+            background: var(--batman-dark);
+            border: 1px solid var(--batman-accent);
+            color: var(--batman-accent);
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            width: 100%;
+            margin-bottom: 0.25rem;
+        }
+        
+        .chat-title-input:focus {
+            outline: none;
+            border-color: #ffed4e;
+            box-shadow: 0 0 5px rgba(255, 215, 0, 0.3);
+        }
+        
+        .chat-item:hover {
+            background: rgba(255, 215, 0, 0.1);
+            border-color: var(--batman-accent);
+            transform: translateX(4px);
+        }
+        
+        .chat-item.active {
+            background: rgba(255, 215, 0, 0.15);
+            border-color: var(--batman-accent);
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
+        }
+        
+        .chat-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--batman-accent);
+            margin-bottom: 0.25rem;
+        }
+        
+        .chat-preview {
+            font-size: 0.75rem;
+            color: #9ca3af;
+            line-height: 1.2;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .chat-time {
+            font-size: 0.625rem;
+            color: #6b7280;
+            margin-top: 0.25rem;
+        }
+        
+        .sidebar-button {
+            width: 100%;
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--batman-gray), var(--batman-light));
+            border: 1px solid var(--batman-accent);
+            color: var(--batman-accent);
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
+        .sidebar-button:hover {
+            background: linear-gradient(135deg, var(--batman-light), var(--batman-gray));
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+        }
+        
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                position: fixed;
+                top: 0;
+                left: -100%;
+                z-index: 1000;
+                transition: left 0.3s ease;
+            }
+            
+            .sidebar.open {
+                left: 0;
+            }
+            
+            .main-content {
+                width: 100%;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+                position: fixed;
+                top: 1rem;
+                left: 1rem;
+                z-index: 1001;
+                background: var(--batman-accent);
+                color: var(--batman-dark);
+                border: none;
+                padding: 0.5rem;
+                border-radius: 0.5rem;
+                cursor: pointer;
+            }
+        }
+        
+        @media (min-width: 769px) {
+            .mobile-menu-btn {
+                display: none;
+            }
+        }
+        
+        /* Settings Panel */
+        .settings-panel {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 400px;
+            height: 100vh;
+            background: linear-gradient(135deg, var(--batman-dark) 0%, var(--batman-gray) 100%);
+            border-left: 2px solid var(--batman-accent);
+            z-index: 1000;
+            transition: right 0.3s ease;
+            overflow-y: auto;
+        }
+        
+        .settings-panel.open {
+            right: 0;
+        }
+        
+        .settings-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .settings-content {
+            padding: 1.5rem;
+        }
+        
+        .settings-group {
+            margin-bottom: 2rem;
+        }
+        
+        .settings-group h3 {
+            color: var(--batman-accent);
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.1);
+        }
+        
+        .setting-item:last-child {
+            border-bottom: none;
+        }
+        
+        .setting-label {
+            color: #e5e5e5;
+            font-size: 0.9rem;
+        }
+        
+        .setting-control {
+            background: var(--batman-gray);
+            border: 1px solid var(--batman-accent);
+            color: var(--batman-accent);
+            padding: 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.8rem;
+        }
+        
+        .close-settings {
+            background: none;
+            border: none;
+            color: var(--batman-accent);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
         .floating-particles {
             position: fixed;
             top: 0;
@@ -384,34 +663,167 @@
                 opacity: 0;
             }
         }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
     </style>
 </head>
-<body class="h-screen flex items-center justify-center p-4">
+<body class="h-screen flex overflow-hidden">
     <!-- Animated Background -->
     <div class="batman-bg"></div>
     
     <!-- Floating Particles -->
     <div class="floating-particles" id="particles"></div>
     
+    <!-- Sidebar -->
+    <div class="sidebar relative z-10">
+        <!-- Sidebar Header -->
+        <div class="sidebar-header">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-r from-yellow-500 to-yellow-400 flex items-center justify-center shadow-lg">
+                    <i class="fas fa-bat text-black text-lg"></i>
+                </div>
+                <div>
+                    <h1 class="batman-logo text-xl font-bold font-['Orbitron']">ASKMEBOT</h1>
+                    <p class="text-gray-400 text-xs font-medium">AI Assistant</p>
+                </div>
+                </div>
+            </div>
+            
+        <!-- Sidebar Content - Chat History -->
+        <div class="sidebar-content">
+            <div class="mb-4">
+                <button id="new-chat-btn" class="sidebar-button">
+                    <i class="fas fa-plus"></i>
+                    New Chat
+                    </button>
+                </div>
+                
+            <div class="mb-4">
+                <h3 class="text-sm font-bold text-gray-300 mb-2">Recent Chats</h3>
+                <div id="chat-history" class="space-y-2">
+                    <!-- Chat items will be dynamically added here -->
+                        </div>
+                                </div>
+                            </div>
+        
+        <!-- Sidebar Footer - Settings -->
+        <div class="sidebar-footer">
+            <button id="settings-btn" class="sidebar-button">
+                <i class="fas fa-cog"></i>
+                Settings
+                    </button>
+            <button id="help-btn" class="sidebar-button">
+                <i class="fas fa-question-circle"></i>
+                Help
+            </button>
+                        </div>
+                                </div>
+    
+        <!-- Mobile Menu Button -->
+    <button id="mobile-menu-btn" class="mobile-menu-btn">
+        <i class="fas fa-bars"></i>
+    </button>
+    
+    <!-- Settings Panel -->
+    <div id="settings-panel" class="settings-panel">
+        <div class="settings-header">
+            <h2 class="text-xl font-bold text-gray-200">Settings</h2>
+            <button id="close-settings" class="close-settings">
+                <i class="fas fa-times"></i>
+            </button>
+                        </div>
+        <div class="settings-content">
+            <div class="settings-group">
+                <h3>Appearance</h3>
+                <div class="setting-item">
+                    <span class="setting-label">Theme</span>
+                    <select class="setting-control" id="theme-select">
+                        <option value="batman">Batman Dark</option>
+                        <option value="light">Light Mode</option>
+                    </select>
+                                </div>
+                <div class="setting-item">
+                    <span class="setting-label">Font Size</span>
+                    <select class="setting-control" id="font-size-select">
+                        <option value="small">Small</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="large">Large</option>
+                    </select>
+                            </div>
+                        </div>
+            
+                        <div class="settings-group">
+                <h3>Chat Settings</h3>
+                <div class="setting-item">
+                    <span class="setting-label">Auto-save Chats</span>
+                    <input type="checkbox" class="setting-control" id="auto-save" checked>
+                                </div>
+                <div class="setting-item">
+                    <span class="setting-label">Show Timestamps</span>
+                    <input type="checkbox" class="setting-control" id="show-timestamps" checked>
+                            </div>
+                <div class="setting-item">
+                    <span class="setting-label">Regenerate Current Title</span>
+                    <button class="setting-control" id="regenerate-title">Regenerate</button>
+                        </div>
+                                </div>
+            
+                        <div class="settings-group">
+                <h3>Data Management</h3>
+                <div class="setting-item">
+                    <span class="setting-label">Export Chats</span>
+                    <button class="setting-control" id="export-chats">Export</button>
+                            </div>
+                <div class="setting-item">
+                    <span class="setting-label">Delete All Chats</span>
+                    <button class="setting-control" id="delete-all-chats" style="background: #dc2626; border-color: #dc2626;">Delete All</button>
+                        </div>
+                <div class="setting-item">
+                    <span class="setting-label">Clear All Data</span>
+                    <button class="setting-control" id="clear-data" style="background: #dc2626; border-color: #dc2626;">Clear</button>
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+    
+    <!-- Main Content Area -->
+    <div class="main-content relative z-10">
     <!-- Main Container -->
-    <div class="max-w-4xl w-full h-[800px] batman-container rounded-2xl flex flex-col overflow-hidden relative z-10">
+        <div class="w-full h-full batman-container flex flex-col overflow-hidden">
         <!-- Header -->
         <div class="batman-header p-6 flex items-center justify-between">
             <div class="flex items-center space-x-4">
-                <div class="w-12 h-12 rounded-full bg-gradient-to-r from-yellow-500 to-yellow-400 flex items-center justify-center shadow-lg">
-                    <i class="fas fa-bat text-black text-xl"></i>
-                </div>
-                <div>
-                    <h1 class="batman-logo text-2xl font-bold font-['Orbitron']">ASKMEBOT</h1>
-                    <p class="text-gray-400 text-sm font-medium">AI Assistant</p>
-                </div>
-            </div>
+                                <div>
+                    <h2 class="text-lg font-bold text-gray-200">Current Chat</h2>
+                    <p class="text-gray-400 text-sm font-medium" id="current-chat-title">New Conversation</p>
+                                </div>
+                            </div>
             
             <div class="flex items-center space-x-4">
                 <div class="flex items-center space-x-2">
                     <div id="status-indicator" class="status-indicator"></div>
                     <span id="status-text" class="text-gray-300 text-sm font-medium">CHECKING...</span>
-                </div>
+                        </div>
                 
                 <div class="relative">
                     <button id="model-selector" class="batman-button px-4 py-2 rounded-lg flex items-center space-x-2 font-medium">
@@ -501,6 +913,568 @@
             const modelOptions = document.querySelectorAll('.model-option');
             
             let selectedModel = 'openai/gpt-oss-20b';
+            let currentChatId = null;
+            let chatHistory = [];
+            
+            // Chat storage functions
+            function generateChatId() {
+                return 'chat_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            }
+            
+            function saveChatToStorage() {
+                localStorage.setItem('askmebot_chats', JSON.stringify(chatHistory));
+            }
+            
+            function loadChatsFromStorage() {
+                const saved = localStorage.getItem('askmebot_chats');
+                if (saved) {
+                    chatHistory = JSON.parse(saved);
+                    renderChatHistory();
+                }
+            }
+            
+            function createNewChat() {
+                currentChatId = generateChatId();
+                const newChat = {
+                    id: currentChatId,
+                    title: 'New Chat',
+                    messages: [],
+                    createdAt: new Date().toISOString(),
+                    lastMessage: null
+                };
+                chatHistory.unshift(newChat);
+                saveChatToStorage();
+                renderChatHistory();
+                clearChatContainer();
+                updateCurrentChatTitle('New Chat');
+                setActiveChat(currentChatId);
+            }
+            
+            function setActiveChat(chatId) {
+                // Remove active class from all chat items
+                document.querySelectorAll('.chat-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+                
+                // Add active class to selected chat
+                const activeItem = document.querySelector(`[data-chat-id="${chatId}"]`);
+                if (activeItem) {
+                    activeItem.classList.add('active');
+                }
+            }
+            
+            function updateCurrentChatTitle(title) {
+                document.getElementById('current-chat-title').textContent = title;
+            }
+            
+            function clearChatContainer() {
+                const chatContainer = document.getElementById('chat-container');
+                chatContainer.innerHTML = `
+                    <div class="space-y-6">
+                        <!-- Welcome Message -->
+                        <div class="message flex">
+                            <div class="w-10 h-10 rounded-full bg-gradient-to-r from-yellow-500 to-yellow-400 flex items-center justify-center mr-3 flex-shrink-0">
+                                <i class="fas fa-bat text-black"></i>
+                            </div>
+                            <div class="bot-message rounded-2xl rounded-tl-none px-6 py-4 max-w-[80%]">
+                                <p class="text-gray-200 leading-relaxed">
+                                    <span class="batman-glow font-bold">Hello! I'm AskMeBot.</span><br><br>
+                                    Welcome to your AI assistant. I'm here to help you with any questions or tasks you may have. 
+                                    What would you like to know?<br><br>
+                                    <span class="text-yellow-400 text-sm"><strong>💡 Tip:</strong> You can rename this chat by saying "change my heading to [new name]" or "rename this chat to [new name]"</span>
+                                </p>
+                                <p class="text-xs text-gray-400 mt-2">Just now</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            function renderChatHistory() {
+                const chatHistoryContainer = document.getElementById('chat-history');
+                chatHistoryContainer.innerHTML = '';
+                
+                if (chatHistory.length === 0) {
+                    chatHistoryContainer.innerHTML = `
+                        <div class="text-center py-8">
+                            <div class="text-gray-400 text-sm">
+                                <i class="fas fa-comments text-2xl mb-2 block"></i>
+                                No chats yet
+                            </div>
+                            <div class="text-gray-500 text-xs mt-1">
+                                Start a new conversation to see it here
+                            </div>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                chatHistory.slice(0, 10).forEach(chat => {
+                    const chatItem = document.createElement('div');
+                    chatItem.className = 'chat-item';
+                    chatItem.setAttribute('data-chat-id', chat.id);
+                    
+                    const timeAgo = getTimeAgo(new Date(chat.createdAt));
+                    const preview = chat.lastMessage ? 
+                        (chat.lastMessage.length > 50 ? chat.lastMessage.substring(0, 50) + '...' : chat.lastMessage) : 
+                        'No messages yet';
+                    
+                    chatItem.innerHTML = `
+                        <div class="chat-item-header">
+                            <div class="chat-title">${chat.title}</div>
+                            <div class="chat-actions">
+                                <button class="chat-edit-btn" title="Rename chat">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="chat-delete-btn" title="Delete chat">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="chat-preview">${preview}</div>
+                        <div class="chat-time">${timeAgo}</div>
+                    `;
+                    
+                    // Add click event for loading chat
+                    chatItem.addEventListener('click', (e) => {
+                        // Don't load chat if clicking the edit or delete button
+                        if (!e.target.closest('.chat-edit-btn') && !e.target.closest('.chat-delete-btn')) {
+                            loadChat(chat.id);
+                        }
+                    });
+                    
+                    // Add edit functionality
+                    const editBtn = chatItem.querySelector('.chat-edit-btn');
+                    const deleteBtn = chatItem.querySelector('.chat-delete-btn');
+                    const titleDiv = chatItem.querySelector('.chat-title');
+                    
+                    editBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        renameChat(chat, titleDiv, chatItem);
+                    });
+                    
+                    deleteBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        deleteChat(chat.id, chatItem);
+                    });
+                    
+                    chatHistoryContainer.appendChild(chatItem);
+                });
+            }
+            
+            function renameChat(chat, titleDiv, chatItem) {
+                const currentTitle = chat.title;
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.className = 'chat-title-input';
+                input.value = currentTitle;
+                input.maxLength = 50;
+                
+                // Replace title div with input
+                titleDiv.style.display = 'none';
+                titleDiv.parentNode.insertBefore(input, titleDiv);
+                input.focus();
+                input.select();
+                
+                const saveRename = () => {
+                    const newTitle = input.value.trim();
+                    if (newTitle && newTitle !== currentTitle) {
+                        chat.title = newTitle;
+                        titleDiv.textContent = newTitle;
+                        saveChatToStorage();
+                        
+                        // Update current chat title if this is the active chat
+                        if (currentChatId === chat.id) {
+                            updateCurrentChatTitle(newTitle);
+                        }
+                    }
+                    
+                    // Restore title div
+                    input.remove();
+                    titleDiv.style.display = 'block';
+                };
+                
+                const cancelRename = () => {
+                    input.remove();
+                    titleDiv.style.display = 'block';
+                };
+                
+                input.addEventListener('blur', saveRename);
+                input.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        saveRename();
+                    } else if (e.key === 'Escape') {
+                        e.preventDefault();
+                        cancelRename();
+                    }
+                });
+            }
+            
+            function getTimeAgo(date) {
+                const now = new Date();
+                const diffInSeconds = Math.floor((now - date) / 1000);
+                
+                if (diffInSeconds < 60) return 'Just now';
+                if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m ago`;
+                if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`;
+                return `${Math.floor(diffInSeconds / 86400)}d ago`;
+            }
+            
+            function loadChat(chatId) {
+                const chat = chatHistory.find(c => c.id === chatId);
+                if (!chat) return;
+                
+                currentChatId = chatId;
+                setActiveChat(chatId);
+                updateCurrentChatTitle(chat.title);
+                
+                // Clear and rebuild chat container
+                const chatContainer = document.getElementById('chat-container');
+                chatContainer.innerHTML = '<div class="space-y-6"></div>';
+                
+                // Add all messages from the chat
+                chat.messages.forEach(message => {
+                    addMessageToContainer(message.text, message.sender, message.timestamp);
+                });
+                
+                // Scroll to bottom
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            }
+            
+            function addMessageToContainer(text, sender, timestamp) {
+                const chatContainer = document.getElementById('chat-container');
+                const messagesContainer = chatContainer.querySelector('.space-y-6');
+                
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message flex ${sender === 'user' ? 'justify-end' : ''}`;
+                
+                if (sender === 'user') {
+                    messageDiv.innerHTML = `
+                        <div class="user-message rounded-2xl rounded-tr-none px-6 py-4 max-w-[80%]">
+                            <p class="font-medium">${text}</p>
+                            <p class="text-xs text-yellow-800 mt-2 font-medium">${timestamp}</p>
+                        </div>
+                    `;
+                } else {
+                    messageDiv.innerHTML = `
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-r from-yellow-500 to-yellow-400 flex items-center justify-center mr-3 flex-shrink-0">
+                            <i class="fas fa-bat text-black"></i>
+                        </div>
+                        <div class="bot-message rounded-2xl rounded-tl-none px-6 py-4 max-w-[80%]">
+                            <div class="text-gray-200 leading-relaxed">${text}</div>
+                            <p class="text-xs text-gray-400 mt-2">${timestamp}</p>
+                        </div>
+                    `;
+                }
+                
+                messagesContainer.appendChild(messageDiv);
+            }
+            
+            async function generateChatTitle(chat) {
+                try {
+                    const response = await fetch('/generate-title', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            messages: chat.messages,
+                            model: selectedModel
+                        })
+                    });
+                    
+                    if (response.ok) {
+                        const data = await response.json();
+                        if (data.success) {
+                            chat.title = data.title;
+                            updateCurrentChatTitle(chat.title);
+                            saveChatToStorage();
+                            renderChatHistory();
+                            return true;
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error generating title:', error);
+                }
+                return false;
+            }
+            
+            function detectTitleChangeCommand(text) {
+                // Common patterns for title change commands
+                const patterns = [
+                    /change my heading to (.+)/i,
+                    /change my title to (.+)/i,
+                    /rename this chat to (.+)/i,
+                    /rename chat to (.+)/i,
+                    /change heading to (.+)/i,
+                    /change title to (.+)/i,
+                    /set title to (.+)/i,
+                    /set heading to (.+)/i,
+                    /call this (.+)/i,
+                    /name this (.+)/i,
+                    /make the title (.+)/i,
+                    /update title to (.+)/i,
+                    /update heading to (.+)/i,
+                    /change the title to (.+)/i,
+                    /change the heading to (.+)/i
+                ];
+                
+                for (const pattern of patterns) {
+                    const match = text.match(pattern);
+                    if (match) {
+                        return match[1].trim();
+                    }
+                }
+                return null;
+            }
+            
+            function changeChatTitle(newTitle) {
+                if (!currentChatId) return false;
+                
+                const chat = chatHistory.find(c => c.id === currentChatId);
+                if (chat) {
+                    chat.title = newTitle;
+                    updateCurrentChatTitle(newTitle);
+                    saveChatToStorage();
+                    renderChatHistory();
+                    return true;
+                }
+                return false;
+            }
+            
+            function deleteChat(chatId, chatItem) {
+                const chat = chatHistory.find(c => c.id === chatId);
+                if (!chat) return;
+                
+                const chatTitle = chat.title;
+                
+                // Show confirmation dialog
+                if (confirm(`Are you sure you want to delete "${chatTitle}"? This action cannot be undone.`)) {
+                    // Remove chat from history
+                    chatHistory = chatHistory.filter(c => c.id !== chatId);
+                    
+                    // If this was the current chat, clear the chat container
+                    if (currentChatId === chatId) {
+                        currentChatId = null;
+                        clearChatContainer();
+                        updateCurrentChatTitle('New Conversation');
+                    }
+                    
+                    // Save updated history
+                    saveChatToStorage();
+                    
+                    // Re-render chat history
+                    renderChatHistory();
+                    
+                    // Show success message
+                    showNotification(`Chat "${chatTitle}" has been deleted.`, 'success');
+                }
+            }
+            
+            function showNotification(message, type = 'info') {
+                // Create notification element
+                const notification = document.createElement('div');
+                notification.className = `notification notification-${type}`;
+                notification.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    background: ${type === 'success' ? 'var(--batman-accent)' : 'var(--batman-gray)'};
+                    color: ${type === 'success' ? 'var(--batman-dark)' : '#e5e5e5'};
+                    padding: 1rem 1.5rem;
+                    border-radius: 0.5rem;
+                    border: 1px solid var(--batman-accent);
+                    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+                    z-index: 10000;
+                    font-weight: 500;
+                    max-width: 300px;
+                    animation: slideIn 0.3s ease-out;
+                `;
+                notification.textContent = message;
+                
+                // Add to page
+                document.body.appendChild(notification);
+                
+                // Remove after 3 seconds
+                setTimeout(() => {
+                    notification.style.animation = 'slideOut 0.3s ease-in';
+                    setTimeout(() => {
+                        if (notification.parentNode) {
+                            notification.parentNode.removeChild(notification);
+                        }
+                    }, 300);
+                }, 3000);
+            }
+            
+            function saveMessageToChat(text, sender) {
+                if (!currentChatId) {
+                    createNewChat();
+                }
+                
+                const chat = chatHistory.find(c => c.id === currentChatId);
+                if (chat) {
+                    const timestamp = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                    const message = { text, sender, timestamp };
+                    chat.messages.push(message);
+                    chat.lastMessage = text;
+                    
+                    // Check for title change commands
+                    if (sender === 'user') {
+                        const newTitle = detectTitleChangeCommand(text);
+                        if (newTitle) {
+                            // Change the title immediately
+                            changeChatTitle(newTitle);
+                            
+                            // Add a confirmation message from the bot
+                            const confirmMessage = {
+                                text: `✅ Chat title changed to "${newTitle}"`,
+                                sender: 'bot',
+                                timestamp: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+                            };
+                            chat.messages.push(confirmMessage);
+                            chat.lastMessage = confirmMessage.text;
+                            
+                            // Add the confirmation to the UI
+                            addMessageToContainer(confirmMessage.text, confirmMessage.sender, confirmMessage.timestamp);
+                            
+                            saveChatToStorage();
+                            renderChatHistory();
+                            return; // Skip normal title generation
+                        }
+                    }
+                    
+                    // Update chat title if it's the first user message (simple fallback)
+                    if (sender === 'user' && chat.title === 'New Chat') {
+                        chat.title = text.length > 30 ? text.substring(0, 30) + '...' : text;
+                        updateCurrentChatTitle(chat.title);
+                    }
+                    
+                    // Generate AI title after 5 messages (2 user + 2 bot + 1 more = 5 total)
+                    if (chat.messages.length === 5 && chat.title !== 'New Chat') {
+                        // Show loading indicator
+                        const originalTitle = chat.title;
+                        chat.title = 'Generating title...';
+                        updateCurrentChatTitle('Generating title...');
+                        saveChatToStorage();
+                        renderChatHistory();
+                        
+                        // Generate title
+                        generateChatTitle(chat).then(success => {
+                            if (!success) {
+                                // Restore original title if generation failed
+                                chat.title = originalTitle;
+                                updateCurrentChatTitle(originalTitle);
+                                saveChatToStorage();
+                                renderChatHistory();
+                            }
+                        });
+                    }
+                    
+                    saveChatToStorage();
+                    renderChatHistory();
+                }
+            }
+            
+            // Sidebar event listeners
+            document.getElementById('new-chat-btn').addEventListener('click', createNewChat);
+            document.getElementById('settings-btn').addEventListener('click', () => {
+                document.getElementById('settings-panel').classList.add('open');
+            });
+            document.getElementById('help-btn').addEventListener('click', () => {
+                alert('Help documentation coming soon!');
+            });
+            
+            // Settings panel functionality
+            document.getElementById('close-settings').addEventListener('click', () => {
+                document.getElementById('settings-panel').classList.remove('open');
+            });
+            
+            document.getElementById('export-chats').addEventListener('click', () => {
+                const dataStr = JSON.stringify(chatHistory, null, 2);
+                const dataBlob = new Blob([dataStr], {type: 'application/json'});
+                const url = URL.createObjectURL(dataBlob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `askmebot-chats-${new Date().toISOString().split('T')[0]}.json`;
+                link.click();
+                URL.revokeObjectURL(url);
+            });
+            
+            document.getElementById('delete-all-chats').addEventListener('click', () => {
+                if (chatHistory.length === 0) {
+                    showNotification('No chats to delete.', 'info');
+                    return;
+                }
+                
+                if (confirm(`Are you sure you want to delete all ${chatHistory.length} chats? This action cannot be undone.`)) {
+                    chatHistory = [];
+                    saveChatToStorage();
+                    renderChatHistory();
+                    clearChatContainer();
+                    currentChatId = null;
+                    updateCurrentChatTitle('New Conversation');
+                    showNotification('All chats have been deleted.', 'success');
+                }
+            });
+            
+            document.getElementById('clear-data').addEventListener('click', () => {
+                if (confirm('Are you sure you want to clear all chat data? This action cannot be undone.')) {
+                    localStorage.removeItem('askmebot_chats');
+                    chatHistory = [];
+                    renderChatHistory();
+                    clearChatContainer();
+                    currentChatId = null;
+                    updateCurrentChatTitle('New Conversation');
+                    showNotification('All chat data has been cleared.', 'success');
+                }
+            });
+            
+            document.getElementById('regenerate-title').addEventListener('click', async () => {
+                if (!currentChatId) {
+                    alert('No active chat to regenerate title for.');
+                    return;
+                }
+                
+                const chat = chatHistory.find(c => c.id === currentChatId);
+                if (!chat || chat.messages.length < 2) {
+                    alert('Need at least 2 messages to generate a title.');
+                    return;
+                }
+                
+                const button = document.getElementById('regenerate-title');
+                const originalText = button.textContent;
+                button.textContent = 'Generating...';
+                button.disabled = true;
+                
+                const success = await generateChatTitle(chat);
+                
+                button.textContent = originalText;
+                button.disabled = false;
+                
+                if (success) {
+                    alert('Title regenerated successfully!');
+                } else {
+                    alert('Failed to regenerate title. Please try again.');
+                }
+            });
+            
+            // Mobile menu functionality
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const sidebar = document.querySelector('.sidebar');
+            
+            mobileMenuBtn.addEventListener('click', () => {
+                sidebar.classList.toggle('open');
+            });
+            
+            // Close sidebar when clicking outside on mobile
+            document.addEventListener('click', (e) => {
+                if (window.innerWidth <= 768) {
+                    if (!sidebar.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
+                        sidebar.classList.remove('open');
+                    }
+                }
+            });
             
             // Check API status
             async function checkAPIStatus() {
@@ -576,31 +1550,16 @@
             });
             
             function addMessage(text, sender) {
-                const messageDiv = document.createElement('div');
-                messageDiv.className = `message flex ${sender === 'user' ? 'justify-end' : ''}`;
-                
                 const timestamp = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
                 
-                if (sender === 'user') {
-                    messageDiv.innerHTML = `
-                        <div class="user-message rounded-2xl rounded-tr-none px-6 py-4 max-w-[80%]">
-                            <p class="font-medium">${text}</p>
-                            <p class="text-xs text-yellow-800 mt-2 font-medium">${timestamp}</p>
-                        </div>
-                    `;
-                } else {
-                    messageDiv.innerHTML = `
-                        <div class="w-10 h-10 rounded-full bg-gradient-to-r from-yellow-500 to-yellow-400 flex items-center justify-center mr-3 flex-shrink-0">
-                            <i class="fas fa-bat text-black"></i>
-                        </div>
-                        <div class="bot-message rounded-2xl rounded-tl-none px-6 py-4 max-w-[80%]">
-                            <div class="text-gray-200 leading-relaxed">${text}</div>
-                            <p class="text-xs text-gray-400 mt-2">${timestamp}</p>
-                        </div>
-                    `;
-                }
+                // Save message to current chat
+                saveMessageToChat(text, sender);
                 
-                chatContainer.appendChild(messageDiv);
+                // Add message to container
+                addMessageToContainer(text, sender, timestamp);
+                
+                // Scroll to bottom
+                const chatContainer = document.getElementById('chat-container');
                 chatContainer.scrollTop = chatContainer.scrollHeight;
             }
             
@@ -655,6 +1614,9 @@
                 }
             });
             
+            // Initialize the application
+            loadChatsFromStorage();
+            
             // Auto-focus input on load
             messageInput.focus();
             
@@ -663,6 +1625,18 @@
                 if (e.key === 'Enter' && !e.shiftKey) {
                     e.preventDefault();
                     chatForm.dispatchEvent(new Event('submit'));
+                }
+            });
+            
+            // Keyboard shortcuts
+            document.addEventListener('keydown', function(e) {
+                // Ctrl+Delete to delete current chat
+                if (e.ctrlKey && e.key === 'Delete' && currentChatId) {
+                    e.preventDefault();
+                    const chat = chatHistory.find(c => c.id === currentChatId);
+                    if (chat) {
+                        deleteChat(currentChatId, null);
+                    }
                 }
             });
         });
