@@ -107,41 +107,18 @@ jobs:
         # Create a clean deployment directory
         mkdir -p deploy
         
-        # Copy necessary files
-        cp -r app deploy/
-        cp -r static deploy/
-        cp requirements.txt deploy/
-        cp pyproject.toml deploy/
+        # Copy the static landing page and documentation
+        cp index.html deploy/
         cp README.md deploy/
         
-        # Create a simple server script for GitHub Pages
-        cat > deploy/server.py << 'EOF'
-        import os
-        import sys
-        from pathlib import Path
-        
-        # Add the app directory to Python path
-        sys.path.insert(0, str(Path(__file__).parent / 'app'))
-        
-        # Set environment variables for GitHub Pages
-        os.environ.setdefault('GROQ_API_KEY', 'demo-key-for-github-pages')
-        
-        # Import and run the FastAPI app
-        from app.main import app
-        
-        if __name__ == '__main__':
-            import uvicorn
-            uvicorn.run(app, host='0.0.0.0', port=8000)
-        EOF
-        
-        # Create a simple HTML file that can work with GitHub Pages
-        cat > deploy/index.html << 'EOF'
+        # Create a simple 404 page
+        cat > deploy/404.html << 'EOF'
         <!DOCTYPE html>
         <html lang="en">
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>AskMeBot - AI Chat Assistant</title>
+            <title>Page Not Found - AskMeBot</title>
             <style>
                 body {
                     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -164,7 +141,7 @@ jobs:
                     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
                 }
                 .logo {
-                    font-size: 3rem;
+                    font-size: 4rem;
                     margin-bottom: 20px;
                     color: #ffd700;
                 }
@@ -172,11 +149,6 @@ jobs:
                     color: #ffd700;
                     margin-bottom: 20px;
                     font-size: 2.5rem;
-                }
-                p {
-                    font-size: 1.2rem;
-                    line-height: 1.6;
-                    margin-bottom: 30px;
                 }
                 .btn {
                     display: inline-block;
@@ -195,56 +167,15 @@ jobs:
                     transform: translateY(-2px);
                     box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
                 }
-                .features {
-                    display: grid;
-                    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-                    gap: 20px;
-                    margin-top: 40px;
-                }
-                .feature {
-                    padding: 20px;
-                    background: rgba(255, 215, 0, 0.1);
-                    border-radius: 10px;
-                    border: 1px solid rgba(255, 215, 0, 0.3);
-                }
-                .feature h3 {
-                    color: #ffd700;
-                    margin-bottom: 10px;
-                }
             </style>
         </head>
         <body>
             <div class="container">
                 <div class="logo">🦇</div>
-                <h1>AskMeBot</h1>
-                <p>AI-Powered Chat Assistant with FastAPI and Groq LLM</p>
-                
-                <a href="https://github.com/nvdpsingh/FastAPITut" class="btn">View on GitHub</a>
-                <a href="https://github.com/nvdpsingh/FastAPITut#installation" class="btn">Get Started</a>
-                
-                <div class="features">
-                    <div class="feature">
-                        <h3>🤖 AI Chat</h3>
-                        <p>Powered by Groq's fast LLM inference</p>
-                    </div>
-                    <div class="feature">
-                        <h3>💬 Chat History</h3>
-                        <p>Persistent chat management and organization</p>
-                    </div>
-                    <div class="feature">
-                        <h3>🎨 Modern UI</h3>
-                        <p>Batman-themed responsive design</p>
-                    </div>
-                    <div class="feature">
-                        <h3>⚡ Fast API</h3>
-                        <p>Built with FastAPI for high performance</p>
-                    </div>
-                </div>
-                
-                <p style="margin-top: 40px; font-size: 0.9rem; color: #888;">
-                    This is a static preview. For the full interactive experience, 
-                    <a href="https://github.com/nvdpsingh/FastAPITut#installation" style="color: #ffd700;">clone and run locally</a>.
-                </p>
+                <h1>404 - Page Not Found</h1>
+                <p>The page you're looking for doesn't exist.</p>
+                <a href="/" class="btn">Go Home</a>
+                <a href="https://github.com/nvdpsingh/AskMeBot" class="btn">View on GitHub</a>
             </div>
         </body>
         </html>

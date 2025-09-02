@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AskMeBot - AI Chat Assistant</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            color: #e5e5e5;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            text-align: center;
+            max-width: 800px;
+            padding: 40px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 20px;
+            border: 1px solid #ffd700;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        .logo {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            color: #ffd700;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+        }
+        
+        h1 {
+            color: #ffd700;
+            margin-bottom: 20px;
+            font-size: 3rem;
+            font-weight: bold;
+        }
+        
+        .subtitle {
+            font-size: 1.3rem;
+            margin-bottom: 30px;
+            color: #ccc;
+        }
+        
+        .description {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 40px;
+            color: #e5e5e5;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 15px 30px;
+            background: #ffd700;
+            color: #1a1a1a;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            margin: 10px;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn:hover {
+            background: #ffed4e;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: #ffd700;
+            border: 2px solid #ffd700;
+        }
+        
+        .btn-secondary:hover {
+            background: #ffd700;
+            color: #1a1a1a;
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+        
+        .feature {
+            padding: 25px;
+            background: rgba(255, 215, 0, 0.1);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .feature:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(255, 215, 0, 0.2);
+        }
+        
+        .feature h3 {
+            color: #ffd700;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+        
+        .feature p {
+            color: #ccc;
+            line-height: 1.5;
+        }
+        
+        .demo-section {
+            margin-top: 50px;
+            padding: 30px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+        }
+        
+        .demo-section h2 {
+            color: #ffd700;
+            margin-bottom: 20px;
+        }
+        
+        .demo-note {
+            background: rgba(255, 215, 0, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #ffd700;
+            margin-top: 20px;
+        }
+        
+        .demo-note p {
+            color: #e5e5e5;
+            margin-bottom: 10px;
+        }
+        
+        .demo-note code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: #ffd700;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .footer {
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 215, 0, 0.3);
+            color: #888;
+        }
+        
+        .footer a {
+            color: #ffd700;
+            text-decoration: none;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .logo {
+                font-size: 3rem;
+            }
+            
+            .features {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">🦇</div>
+        <h1>AskMeBot</h1>
+        <p class="subtitle">AI-Powered Chat Assistant</p>
+        <p class="description">
+            A modern, intelligent chatbot built with FastAPI and Groq's LLM models. 
+            Features a sleek Batman-themed UI, real-time chat functionality, and intelligent conversation management.
+        </p>
+        
+        <a href="https://github.com/nvdpsingh/AskMeBot" class="btn">View on GitHub</a>
+        <a href="https://github.com/nvdpsingh/AskMeBot#installation" class="btn btn-secondary">Get Started</a>
+        
+        <div class="features">
+            <div class="feature">
+                <h3>🤖 AI Chat</h3>
+                <p>Powered by Groq's fast LLM inference with support for multiple models and real-time responses.</p>
+            </div>
+            <div class="feature">
+                <h3>💬 Chat Management</h3>
+                <p>Persistent chat history, smart title generation, and easy organization of conversations.</p>
+            </div>
+            <div class="feature">
+                <h3>🎨 Modern UI</h3>
+                <p>Batman-themed responsive design with smooth animations and mobile support.</p>
+            </div>
+            <div class="feature">
+                <h3>⚡ Fast API</h3>
+                <p>Built with FastAPI for high performance and automatic API documentation.</p>
+            </div>
+            <div class="feature">
+                <h3>🔒 Secure</h3>
+                <p>Environment-based configuration with proper API key management and security.</p>
+            </div>
+            <div class="feature">
+                <h3>📱 Responsive</h3>
+                <p>Works perfectly on desktop, tablet, and mobile devices with adaptive layouts.</p>
+            </div>
+        </div>
+        
+        <div class="demo-section">
+            <h2>🚀 Quick Start</h2>
+            <p>To run AskMeBot locally, follow these simple steps:</p>
+            
+            <div class="demo-note">
+                <p><strong>1. Clone the repository:</strong></p>
+                <code>git clone https://github.com/nvdpsingh/AskMeBot.git</code>
+                
+                <p><strong>2. Install dependencies:</strong></p>
+                <code>pip install -r requirements.txt</code>
+                
+                <p><strong>3. Set up environment:</strong></p>
+                <code>cp .env-example .env</code>
+                <p>Then edit <code>.env</code> and add your Groq API key.</p>
+                
+                <p><strong>4. Run the application:</strong></p>
+                <code>uvicorn app.main:app --reload</code>
+                
+                <p><strong>5. Open your browser:</strong></p>
+                <code>http://localhost:8000</code>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Made with ❤️ and ☕ by <a href="https://github.com/nvdpsingh">Navdeep Singh</a></p>
+            <p>
+                <a href="https://github.com/nvdpsingh/AskMeBot">📚 Documentation</a> •
+                <a href="https://github.com/nvdpsingh/AskMeBot/issues">🐛 Report Bug</a> •
+                <a href="https://github.com/nvdpsingh/AskMeBot/discussions">💬 Request Feature</a>
+            </p>
+        </div>
+    </div>
+</body>
+</html>
