@@ -818,17 +818,17 @@
         <!-- Header -->
         <div class="batman-header p-6 flex items-center justify-between">
             <div class="flex items-center space-x-4">
-                                <div>
+                <div>
                     <h2 class="text-lg font-bold text-gray-200">Current Chat</h2>
                     <p class="text-gray-400 text-sm font-medium" id="current-chat-title">New Conversation</p>
-                                </div>
-                            </div>
+                </div>
+            </div>
             
             <div class="flex items-center space-x-4">
                 <div class="flex items-center space-x-2">
                     <div id="status-indicator" class="status-indicator"></div>
                     <span id="status-text" class="text-gray-300 text-sm font-medium">CHECKING...</span>
-                        </div>
+                </div>
                 
                 <div class="relative">
                     <button id="model-selector" class="batman-button px-4 py-2 rounded-lg flex items-center space-x-2 font-medium">
@@ -837,15 +837,106 @@
                         <i class="fas fa-chevron-down text-xs"></i>
                     </button>
                     
-                    <div id="model-dropdown" class="model-dropdown hidden absolute right-0 top-12 w-64 rounded-xl py-3 z-[9999]">
+                    <div id="model-dropdown" class="model-dropdown hidden absolute right-0 top-12 w-80 rounded-xl py-3 z-[9999] max-h-96 overflow-y-auto">
                         <div class="px-4 py-2 border-b border-gray-700">
                             <p class="text-sm font-bold text-gray-300">SELECT MODEL</p>
                         </div>
+                        
+                        <!-- Production Models -->
+                        <div class="px-4 py-2">
+                            <p class="text-xs font-bold text-gray-400 uppercase tracking-wide">Production Models</p>
+                        </div>
+                        
+                        <div class="model-option px-4 py-3 cursor-pointer transition-all duration-200" data-model="llama-3.1-8b-instant">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm font-bold text-gray-200">Llama 3.1 8B Instant</p>
+                                    <p class="text-xs text-gray-400">Fast & Efficient</p>
+                                </div>
+                                <div class="status-indicator"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="model-option px-4 py-3 cursor-pointer transition-all duration-200" data-model="llama-3.3-70b-versatile">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm font-bold text-gray-200">Llama 3.3 70B Versatile</p>
+                                    <p class="text-xs text-gray-400">Most Capable</p>
+                                </div>
+                                <div class="status-indicator"></div>
+                            </div>
+                        </div>
+                        
                         <div class="model-option px-4 py-3 cursor-pointer transition-all duration-200" data-model="openai/gpt-oss-20b">
                             <div class="flex items-center justify-between">
                                 <div>
                                     <p class="text-sm font-bold text-gray-200">OpenAI GPT OSS 20B</p>
-                                    <p class="text-xs text-gray-400">Advanced AI Model</p>
+                                    <p class="text-xs text-gray-400">Balanced Performance</p>
+                                </div>
+                                <div class="status-indicator"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="model-option px-4 py-3 cursor-pointer transition-all duration-200" data-model="openai/gpt-oss-120b">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm font-bold text-gray-200">OpenAI GPT OSS 120B</p>
+                                    <p class="text-xs text-gray-400">High Performance</p>
+                                </div>
+                                <div class="status-indicator"></div>
+                            </div>
+                        </div>
+                        
+                        <!-- Preview Models -->
+                        <div class="px-4 py-2 mt-2">
+                            <p class="text-xs font-bold text-gray-400 uppercase tracking-wide">Preview Models</p>
+                        </div>
+                        
+                        <div class="model-option px-4 py-3 cursor-pointer transition-all duration-200" data-model="deepseek-r1-distill-llama-70b">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm font-bold text-gray-200">DeepSeek R1 Distill</p>
+                                    <p class="text-xs text-gray-400">Reasoning Model</p>
+                                </div>
+                                <div class="status-indicator"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="model-option px-4 py-3 cursor-pointer transition-all duration-200" data-model="meta-llama/llama-4-maverick-17b-128e-instruct">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm font-bold text-gray-200">Llama 4 Maverick 17B</p>
+                                    <p class="text-xs text-gray-400">Next Gen Preview</p>
+                                </div>
+                                <div class="status-indicator"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="model-option px-4 py-3 cursor-pointer transition-all duration-200" data-model="meta-llama/llama-4-scout-17b-16e-instruct">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm font-bold text-gray-200">Llama 4 Scout 17B</p>
+                                    <p class="text-xs text-gray-400">Next Gen Preview</p>
+                                </div>
+                                <div class="status-indicator"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="model-option px-4 py-3 cursor-pointer transition-all duration-200" data-model="moonshotai/kimi-k2-instruct">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm font-bold text-gray-200">Kimi K2 Instruct</p>
+                                    <p class="text-xs text-gray-400">Moonshot AI Model</p>
+                    </div>
+                                <div class="status-indicator"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="model-option px-4 py-3 cursor-pointer transition-all duration-200" data-model="qwen/qwen3-32b">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm font-bold text-gray-200">Qwen3 32B</p>
+                                    <p class="text-xs text-gray-400">Alibaba Model</p>
                                 </div>
                                 <div class="status-indicator"></div>
                             </div>
