@@ -1,6 +1,6 @@
 # 🦇 AskMeBot - AI-Powered Chat Assistant
 
-[![GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-Live-brightgreen)](https://nvdpsingh.github.io/FastAPITut/)
+[![GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-Live-brightgreen)](https://nvdpsingh.github.io/AskMeBot/)
 [![Python](https://img.shields.io/badge/Python-3.13+-blue)](https://python.org)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.104+-green)](https://fastapi.tiangolo.com)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
@@ -37,7 +37,7 @@ A modern, AI-powered chat assistant built with FastAPI and Groq's LLM models. Fe
 
 ## 🚀 Live Demo
 
-**Try AskMeBot now**: [https://nvdpsingh.github.io/FastAPITut/](https://nvdpsingh.github.io/FastAPITut/)
+**Try AskMeBot now**: [https://nvdpsingh.github.io/AskMeBot/](https://nvdpsingh.github.io/AskMeBot/)
 
 ## 📋 Prerequisites
 
@@ -49,8 +49,8 @@ A modern, AI-powered chat assistant built with FastAPI and Groq's LLM models. Fe
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/nvdpsingh/FastAPITut.git
-cd FastAPITut
+git clone https://github.com/nvdpsingh/AskMeBot.git
+cd AskMeBot
 ```
 
 ### 2. Create Virtual Environment
@@ -245,8 +245,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Support
 
-- **Issues**: [GitHub Issues](https://github.com/nvdpsingh/FastAPITut/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/nvdpsingh/FastAPITut/discussions)
+- **Issues**: [GitHub Issues](https://github.com/nvdpsingh/AskMeBot/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/nvdpsingh/AskMeBot/discussions)
 - **Email**: [Contact Developer](mailto:your-email@example.com)
 
 ---
@@ -254,8 +254,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 <div align="center">
   <p>Made with ❤️ and ☕ by <a href="https://github.com/nvdpsingh">Navdeep Singh</a></p>
   <p>
-    <a href="https://nvdpsingh.github.io/FastAPITut/">🌐 Live Demo</a> •
-    <a href="https://github.com/nvdpsingh/FastAPITut/issues">🐛 Report Bug</a> •
-    <a href="https://github.com/nvdpsingh/FastAPITut/discussions">💬 Request Feature</a>
+    <a href="https://nvdpsingh.github.io/AskMeBot/">🌐 Live Demo</a> •
+    <a href="https://github.com/nvdpsingh/AskMeBot/issues">🐛 Report Bug</a> •
+    <a href="https://github.com/nvdpsingh/AskMeBot/discussions">💬 Request Feature</a>
   </p>
 </div>

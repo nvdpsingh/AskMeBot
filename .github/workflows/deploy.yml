@@ -273,7 +273,7 @@ jobs:
       run: |
         if [ "${{ needs.deploy.result }}" == "success" ]; then
           echo "✅ Deployment successful! 🚀"
-          echo "🌐 Live site: https://nvdpsingh.github.io/FastAPITut/"
+          echo "🌐 Live site: https://nvdpsingh.github.io/AskMeBot/"
         else
           echo "❌ Deployment failed!"
           exit 1

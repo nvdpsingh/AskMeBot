@@ -3,7 +3,7 @@
 ## 🚀 Quick Setup Steps
 
 ### 1. Enable GitHub Pages
-1. Go to your repository: `https://github.com/nvdpsingh/FastAPITut`
+1. Go to your repository: `https://github.com/nvdpsingh/AskMeBot`
 2. Click on **Settings** tab
 3. Scroll down to **Pages** section in the left sidebar
 4. Under **Source**, select **GitHub Actions**
@@ -13,7 +13,7 @@
 1. Go to **Actions** tab in your repository
 2. You should see the "Deploy AskMeBot to GitHub Pages" workflow
 3. Click on it to see the deployment progress
-4. Once completed, your site will be available at: `https://nvdpsingh.github.io/FastAPITut/`
+4. Once completed, your site will be available at: `https://nvdpsingh.github.io/AskMeBot/`
 
 ### 3. Custom Domain (Optional)
 If you want to use a custom domain:
@@ -27,8 +27,8 @@ If you need to deploy manually:
 
 ```bash
 # Clone the repository
-git clone https://github.com/nvdpsingh/FastAPITut.git
-cd FastAPITut
+git clone https://github.com/nvdpsingh/AskMeBot.git
+cd AskMeBot
 
 # Run the deployment script
 ./deploy.sh local
@@ -51,13 +51,13 @@ cd FastAPITut
 
 ### Getting Help:
 - Check the [GitHub Pages documentation](https://docs.github.com/en/pages)
-- Review the [GitHub Actions logs](https://github.com/nvdpsingh/FastAPITut/actions)
-- Open an [issue](https://github.com/nvdpsingh/FastAPITut/issues) for support
+- Review the [GitHub Actions logs](https://github.com/nvdpsingh/AskMeBot/actions)
+- Open an [issue](https://github.com/nvdpsingh/AskMeBot/issues) for support
 
 ## 🎯 Next Steps
 
 Once GitHub Pages is set up:
-1. ✅ Your site will be live at `https://nvdpsingh.github.io/FastAPITut/`
+1. ✅ Your site will be live at `https://nvdpsingh.github.io/AskMeBot/`
 2. ✅ Every push to `main` branch will trigger automatic deployment
 3. ✅ You can monitor deployment status in the Actions tab
 4. ✅ The site will automatically update with your latest changes

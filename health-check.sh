@@ -44,7 +44,7 @@ check_server() {
 
 # Check GitHub Pages deployment
 check_github_pages() {
-    local url="https://nvdpsingh.github.io/FastAPITut/"
+    local url="https://nvdpsingh.github.io/AskMeBot/"
     print_status "Checking GitHub Pages deployment at $url..."
     
     if curl -s -f "$url" > /dev/null 2>&1; then
@@ -113,15 +113,15 @@ main() {
         print_success "All health checks passed! 🎉"
         echo ""
         echo "🌐 Local: http://localhost:8000"
-        echo "🌐 GitHub Pages: https://nvdpsingh.github.io/FastAPITut/"
+        echo "🌐 GitHub Pages: https://nvdpsingh.github.io/AskMeBot/"
         return 0
     else
         print_error "Some health checks failed"
         echo ""
         echo "💡 Troubleshooting tips:"
         echo "   - Start local server: ./deploy.sh local"
-        echo "   - Check GitHub Actions: https://github.com/nvdpsingh/FastAPITut/actions"
-        echo "   - Verify Pages settings: https://github.com/nvdpsingh/FastAPITut/settings/pages"
+        echo "   - Check GitHub Actions: https://github.com/nvdpsingh/AskMeBot/actions"
+        echo "   - Verify Pages settings: https://github.com/nvdpsingh/AskMeBot/settings/pages"
         return 1
     fi
 }
