@@ -1,7 +1,16 @@
-langchain
-langgraph
-fastapi
-uvicorn
-pydantic
-langchain-groq
-python-dotenv
+# Core dependencies
+langchain>=0.3.0
+langgraph>=0.2.0
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+pydantic>=2.0.0
+langchain-groq>=0.3.7
+python-dotenv>=1.0.0
+
+# Development and testing dependencies
+pytest>=7.0.0
+pytest-asyncio>=0.21.0
+httpx>=0.25.0
+flake8>=6.0.0
+black>=23.0.0
+bandit>=1.7.0
