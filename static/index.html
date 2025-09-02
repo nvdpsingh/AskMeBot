@@ -74,11 +74,11 @@
         
         .batman-container {
             background: 
-                linear-gradient(135deg, var(--batman-gray) 0%, var(--batman-dark) 100%),
+                linear-gradient(135deg, var(--secondary-color) 0%, var(--background-color) 100%),
                 var(--carbon-fiber);
-            border: 2px solid rgba(255, 215, 0, 0.3);
+            border: 2px solid var(--border-color);
             box-shadow: 
-                0 0 80px rgba(255, 215, 0, 0.15),
+                0 0 80px var(--primary-color),
                 inset 0 0 60px rgba(0, 0, 0, 0.6),
                 0 10px 30px rgba(0, 0, 0, 0.8);
             backdrop-filter: blur(15px);
@@ -101,12 +101,12 @@
         
         .batman-header {
             background: 
-                linear-gradient(90deg, var(--batman-dark) 0%, var(--batman-gray) 50%, var(--batman-dark) 100%),
+                linear-gradient(90deg, var(--background-color) 0%, var(--secondary-color) 50%, var(--background-color) 100%),
                 var(--snake-texture);
-            border-bottom: 3px solid var(--batman-accent);
+            border-bottom: 3px solid var(--border-color);
             position: relative;
             overflow: visible;
-            box-shadow: 0 2px 20px rgba(255, 215, 0, 0.2);
+            box-shadow: 0 2px 20px var(--primary-color);
             z-index: 1000;
         }
         
@@ -128,17 +128,17 @@
         }
         
         .batman-logo {
-            background: linear-gradient(45deg, var(--batman-accent), #ffed4e);
+            background: linear-gradient(45deg, var(--primary-color), var(--primary-color));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+            text-shadow: 0 0 20px var(--primary-color);
         }
         
         .batman-button {
-            background: linear-gradient(45deg, var(--batman-gray), var(--batman-light));
-            border: 1px solid var(--batman-accent);
-            color: var(--batman-accent);
+            background: linear-gradient(45deg, var(--secondary-color), var(--background-color));
+            border: 1px solid var(--border-color);
+            color: var(--primary-color);
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
@@ -161,12 +161,12 @@
         
         .batman-button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+            box-shadow: 0 5px 15px var(--primary-color);
         }
         
         .chat-container {
-            background: linear-gradient(135deg, var(--batman-dark) 0%, var(--batman-gray) 100%);
-            border: 1px solid rgba(255, 215, 0, 0.1);
+            background: linear-gradient(135deg, var(--background-color) 0%, var(--secondary-color) 100%);
+            border: 1px solid var(--border-color);
         }
         
         .message {
@@ -197,58 +197,58 @@
         }
         
         .user-message {
-            background: linear-gradient(135deg, var(--batman-accent) 0%, #ffed4e 100%);
-            color: var(--batman-dark);
-            border: 1px solid rgba(255, 215, 0, 0.3);
-            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.2);
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-color) 100%);
+            color: var(--background-color);
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 15px var(--primary-color);
             margin-bottom: 0.5rem;
         }
         
         .bot-message {
-            background: linear-gradient(135deg, var(--batman-light) 0%, var(--batman-gray) 100%);
-            border: 1px solid rgba(255, 215, 0, 0.2);
-            color: #e5e5e5;
+            background: linear-gradient(135deg, var(--secondary-color) 0%, var(--background-color) 100%);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
             margin-bottom: 0.5rem;
         }
         
         .input-container {
-            background: linear-gradient(135deg, var(--batman-gray) 0%, var(--batman-dark) 100%);
-            border-top: 2px solid var(--batman-accent);
+            background: linear-gradient(135deg, var(--secondary-color) 0%, var(--background-color) 100%);
+            border-top: 2px solid var(--border-color);
         }
         
         .message-input {
-            background: var(--batman-dark);
-            border: 2px solid var(--batman-accent);
-            color: #e5e5e5;
+            background: var(--background-color);
+            border: 2px solid var(--border-color);
+            color: var(--text-color);
             font-family: 'Rajdhani', sans-serif;
         }
         
         .message-input:focus {
             outline: none;
-            border-color: #ffed4e;
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+            border-color: var(--primary-color);
+            box-shadow: 0 0 20px var(--primary-color);
         }
         
         .send-button {
-            background: linear-gradient(45deg, var(--batman-accent), #ffed4e);
-            color: var(--batman-dark);
+            background: linear-gradient(45deg, var(--primary-color), var(--primary-color));
+            color: var(--background-color);
             border: none;
             transition: all 0.3s ease;
         }
         
         .send-button:hover {
             transform: scale(1.05);
-            box-shadow: 0 5px 20px rgba(255, 215, 0, 0.4);
+            box-shadow: 0 5px 20px var(--primary-color);
         }
         
         .typing-indicator {
-            background: linear-gradient(135deg, var(--batman-light) 0%, var(--batman-gray) 100%);
-            border: 1px solid rgba(255, 215, 0, 0.2);
+            background: linear-gradient(135deg, var(--secondary-color) 0%, var(--background-color) 100%);
+            border: 1px solid var(--border-color);
         }
         
         .typing-dot {
-            background: var(--batman-accent);
+            background: var(--primary-color);
             animation: typingPulse 1.5s infinite ease-in-out;
         }
         
@@ -264,16 +264,16 @@
         }
         
         .model-dropdown {
-            background: linear-gradient(135deg, var(--batman-dark) 0%, var(--batman-gray) 100%);
-            border: 1px solid var(--batman-accent);
+            background: linear-gradient(135deg, var(--background-color) 0%, var(--secondary-color) 100%);
+            border: 1px solid var(--border-color);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
             z-index: 99999 !important;
             position: absolute !important;
         }
         
         .model-option:hover {
-            background: linear-gradient(135deg, var(--batman-light) 0%, var(--batman-gray) 100%);
-            border-left: 3px solid var(--batman-accent);
+            background: linear-gradient(135deg, var(--secondary-color) 0%, var(--background-color) 100%);
+            border-left: 3px solid var(--primary-color);
         }
         
         .status-indicator {
@@ -285,7 +285,7 @@
         }
         
         .status-indicator.online {
-            background: var(--batman-accent);
+            background: var(--primary-color);
         }
         
         .status-indicator.offline {
@@ -432,8 +432,8 @@
         /* Sidebar Styles */
         .sidebar {
             width: 300px;
-            background: linear-gradient(135deg, var(--batman-dark) 0%, var(--batman-gray) 100%);
-            border-right: 2px solid var(--batman-accent);
+            background: linear-gradient(135deg, var(--background-color) 0%, var(--secondary-color) 100%);
+            border-right: 2px solid var(--border-color);
             display: flex;
             flex-direction: column;
             height: 100vh;
@@ -442,8 +442,8 @@
         
         .sidebar-header {
             padding: 1.5rem;
-            border-bottom: 1px solid rgba(255, 215, 0, 0.2);
-            background: linear-gradient(90deg, var(--batman-dark) 0%, var(--batman-gray) 50%, var(--batman-dark) 100%);
+            border-bottom: 1px solid var(--border-color);
+            background: linear-gradient(90deg, var(--background-color) 0%, var(--secondary-color) 50%, var(--background-color) 100%);
         }
         
         .sidebar-content {
@@ -454,15 +454,15 @@
         
         .sidebar-footer {
             padding: 1rem;
-            border-top: 1px solid rgba(255, 215, 0, 0.2);
-            background: linear-gradient(90deg, var(--batman-dark) 0%, var(--batman-gray) 50%, var(--batman-dark) 100%);
+            border-top: 1px solid var(--border-color);
+            background: linear-gradient(90deg, var(--background-color) 0%, var(--secondary-color) 50%, var(--background-color) 100%);
         }
         
         .chat-item {
             padding: 0.75rem;
             margin-bottom: 0.5rem;
-            background: rgba(255, 215, 0, 0.05);
-            border: 1px solid rgba(255, 215, 0, 0.1);
+            background: var(--secondary-color);
+            border: 1px solid var(--border-color);
             border-radius: 0.5rem;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -479,7 +479,7 @@
         .chat-edit-btn, .chat-delete-btn {
             background: none;
             border: none;
-            color: var(--batman-accent);
+            color: var(--primary-color);
             cursor: pointer;
             padding: 0.25rem;
             border-radius: 0.25rem;
@@ -499,7 +499,7 @@
         }
         
         .chat-edit-btn:hover {
-            background: rgba(255, 215, 0, 0.1);
+            background: var(--primary-color);
         }
         
         .chat-delete-btn:hover {
@@ -512,9 +512,9 @@
         }
         
         .chat-title-input {
-            background: var(--batman-dark);
-            border: 1px solid var(--batman-accent);
-            color: var(--batman-accent);
+            background: var(--background-color);
+            border: 1px solid var(--border-color);
+            color: var(--primary-color);
             padding: 0.25rem 0.5rem;
             border-radius: 0.25rem;
             font-size: 0.875rem;
@@ -525,32 +525,32 @@
         
         .chat-title-input:focus {
             outline: none;
-            border-color: #ffed4e;
-            box-shadow: 0 0 5px rgba(255, 215, 0, 0.3);
+            border-color: var(--primary-color);
+            box-shadow: 0 0 5px var(--primary-color);
         }
         
         .chat-item:hover {
-            background: rgba(255, 215, 0, 0.1);
-            border-color: var(--batman-accent);
+            background: var(--primary-color);
+            border-color: var(--primary-color);
             transform: translateX(4px);
         }
         
         .chat-item.active {
-            background: rgba(255, 215, 0, 0.15);
-            border-color: var(--batman-accent);
-            box-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+            box-shadow: 0 0 10px var(--primary-color);
         }
         
         .chat-title {
             font-size: 0.875rem;
             font-weight: 600;
-            color: var(--batman-accent);
+            color: var(--primary-color);
             margin-bottom: 0.25rem;
         }
         
         .chat-preview {
             font-size: 0.75rem;
-            color: #9ca3af;
+            color: var(--text-color);
             line-height: 1.2;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -559,7 +559,7 @@
         
         .chat-time {
             font-size: 0.625rem;
-            color: #6b7280;
+            color: var(--text-color);
             margin-top: 0.25rem;
         }
         
@@ -567,9 +567,9 @@
             width: 100%;
             padding: 0.75rem;
             margin-bottom: 0.5rem;
-            background: linear-gradient(135deg, var(--batman-gray), var(--batman-light));
-            border: 1px solid var(--batman-accent);
-            color: var(--batman-accent);
+            background: linear-gradient(135deg, var(--secondary-color), var(--background-color));
+            border: 1px solid var(--border-color);
+            color: var(--primary-color);
             border-radius: 0.5rem;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -581,9 +581,9 @@
         }
         
         .sidebar-button:hover {
-            background: linear-gradient(135deg, var(--batman-light), var(--batman-gray));
+            background: linear-gradient(135deg, var(--background-color), var(--secondary-color));
             transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+            box-shadow: 0 4px 15px var(--primary-color);
         }
         
         .main-content {
