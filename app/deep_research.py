@@ -10,11 +10,11 @@ from langchain.prompts import ChatPromptTemplate
 
 # Available open-source models for collaboration
 RESEARCH_MODELS = [
-    "meta-llama/llama-3.1-70b-versatile",
-    "mistralai/mixtral-8x7b-32768", 
-    "qwen/qwen-2.5-72b-instruct",
-    "deepseek-ai/deepseek-coder-33b-instruct",
-    "google/gemma-2-27b-it"
+    "llama-3.3-70b-versatile",
+    "deepseek-r1-distill-llama-70b", 
+    "qwen/qwen3-32b",
+    "meta-llama/llama-4-maverick-17b-128e-instruct",
+    "meta-llama/llama-4-scout-17b-16e-instruct"
 ]
 
 FINAL_SYNTHESIS_MODEL = "openai/gpt-oss-120b"
@@ -62,16 +62,16 @@ def get_model_insights(prompt: str) -> Dict[str, str]:
             llm = ChatGroq(model=model)
             
             # Create specialized prompts for each model
-            if "llama" in model.lower():
-                system_prompt = "You are Llama 3.1, a large language model. Provide a comprehensive analysis focusing on factual accuracy and logical reasoning."
-            elif "mixtral" in model.lower():
-                system_prompt = "You are Mixtral, a mixture of experts model. Provide insights from multiple perspectives and consider various approaches."
-            elif "qwen" in model.lower():
-                system_prompt = "You are Qwen 2.5, a multilingual model. Provide detailed analysis with cross-cultural and technical perspectives."
+            if "llama-3.3" in model.lower():
+                system_prompt = "You are Llama 3.3, a large language model. Provide a comprehensive analysis focusing on factual accuracy and logical reasoning."
             elif "deepseek" in model.lower():
-                system_prompt = "You are DeepSeek Coder, specialized in technical analysis. Focus on technical accuracy, code examples, and implementation details."
-            elif "gemma" in model.lower():
-                system_prompt = "You are Gemma 2, a Google model. Provide balanced, well-researched insights with consideration for different viewpoints."
+                system_prompt = "You are DeepSeek R1, specialized in reasoning and technical analysis. Focus on step-by-step reasoning, technical accuracy, and implementation details."
+            elif "qwen" in model.lower():
+                system_prompt = "You are Qwen 3, a multilingual model. Provide detailed analysis with cross-cultural and technical perspectives."
+            elif "maverick" in model.lower():
+                system_prompt = "You are Llama 4 Maverick, an innovative model. Provide creative insights and alternative approaches to problems."
+            elif "scout" in model.lower():
+                system_prompt = "You are Llama 4 Scout, a research-focused model. Provide well-researched insights with consideration for different viewpoints and evidence."
             else:
                 system_prompt = "You are an AI assistant. Provide your best analysis of the given prompt."
             
@@ -97,7 +97,7 @@ def create_model_debate(prompt: str, insights: Dict[str, str]) -> str:
     """
     try:
         # Use a model to facilitate the debate
-        debate_llm = ChatGroq(model="meta-llama/llama-3.1-70b-versatile")
+        debate_llm = ChatGroq(model="llama-3.3-70b-versatile")
         
         # Create debate prompt
         debate_prompt = f"""
