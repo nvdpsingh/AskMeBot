@@ -114,8 +114,7 @@ def create_agent_llm(agent_type: str) -> ChatGroq:
     
     llm = ChatGroq(
         model=model,
-        temperature=0.7,
-        system_message=system_prompts[agent_type]
+        temperature=0.7
     )
     
     return llm
@@ -356,7 +355,44 @@ def deep_research_analysis(prompt: str, primary_model: str) -> Dict[str, Any]:
                 print(f"Getting insights from {agent_type} using {model}")
                 llm = create_agent_llm(agent_type)
                 
-                # Create agent-specific prompt
+                # Create agent-specific prompt with system message
+                system_prompts = {
+                    "analyst": """You are an AI Research Analyst. Your role is to:
+                    - Analyze questions with factual accuracy and logical reasoning
+                    - Break down complex problems into manageable components
+                    - Provide evidence-based insights
+                    - Use tools to research and validate information
+                    - Ask clarifying questions when needed""",
+                    
+                    "researcher": """You are an AI Research Specialist. Your role is to:
+                    - Provide cross-cultural and multilingual perspectives
+                    - Research diverse viewpoints and approaches
+                    - Consider global and cultural contexts
+                    - Use tools to explore different angles
+                    - Challenge assumptions and explore alternatives""",
+                    
+                    "technician": """You are an AI Technical Expert. Your role is to:
+                    - Focus on technical accuracy and implementation details
+                    - Provide step-by-step reasoning and analysis
+                    - Use tools to validate technical claims
+                    - Consider practical implementation aspects
+                    - Ask technical questions for clarification""",
+                    
+                    "innovator": """You are an AI Innovation Specialist. Your role is to:
+                    - Provide creative insights and alternative approaches
+                    - Think outside conventional frameworks
+                    - Propose novel solutions and perspectives
+                    - Use tools to explore creative possibilities
+                    - Challenge traditional thinking patterns""",
+                    
+                    "reviewer": """You are an AI Critical Reviewer. Your role is to:
+                    - Review and validate other agents' findings
+                    - Identify gaps and inconsistencies
+                    - Provide critical analysis and feedback
+                    - Use tools to verify claims and evidence
+                    - Ensure quality and accuracy of research"""
+                }
+                
                 agent_prompts = {
                     "analyst": f"As a Research Analyst, analyze this question with factual accuracy and logical reasoning: {prompt}",
                     "researcher": f"As a Research Specialist, provide cross-cultural and multilingual perspectives on: {prompt}",
@@ -365,7 +401,10 @@ def deep_research_analysis(prompt: str, primary_model: str) -> Dict[str, Any]:
                     "reviewer": f"As a Critical Reviewer, provide critical analysis and validation of: {prompt}"
                 }
                 
-                messages = [HumanMessage(content=agent_prompts[agent_type])]
+                messages = [
+                    SystemMessage(content=system_prompts[agent_type]),
+                    HumanMessage(content=agent_prompts[agent_type])
+                ]
                 response = llm.invoke(messages)
                 agent_insights[agent_type] = response.content
                 print(f"Got response from {agent_type}")
@@ -384,7 +423,16 @@ def deep_research_analysis(prompt: str, primary_model: str) -> Dict[str, Any]:
             
             Create a structured debate where agents challenge each other and collaborate."""
             
-            messages = [HumanMessage(content=debate_prompt)]
+            messages = [
+                SystemMessage(content="""You are an AI Critical Reviewer. Your role is to:
+                - Review and validate other agents' findings
+                - Identify gaps and inconsistencies
+                - Provide critical analysis and feedback
+                - Use tools to verify claims and evidence
+                - Ensure quality and accuracy of research
+                - Facilitate structured debates between agents"""),
+                HumanMessage(content=debate_prompt)
+            ]
             debate_response = debate_llm.invoke(messages)
             debate_content = debate_response.content
             
@@ -405,7 +453,15 @@ def deep_research_analysis(prompt: str, primary_model: str) -> Dict[str, Any]:
             
             Create a comprehensive, well-structured final response that synthesizes all findings."""
             
-            messages = [HumanMessage(content=synthesis_prompt)]
+            messages = [
+                SystemMessage(content="""You are an AI Synthesis Expert. Your role is to:
+                - Synthesize findings from all agents into a coherent response
+                - Resolve contradictions and find common ground
+                - Create comprehensive, well-structured answers
+                - Maintain objectivity and avoid bias
+                - Present the collective wisdom of all agents"""),
+                HumanMessage(content=synthesis_prompt)
+            ]
             synthesis_response = synthesis_llm.invoke(messages)
             final_synthesis = synthesis_response.content
             
