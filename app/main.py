@@ -84,18 +84,29 @@ def chat(chat_input: dict):
         
         prompt = chat_input.get("prompt", "")
         model = chat_input.get("model", "openai/gpt-oss-20b")
+        deep_research_mode = chat_input.get("deepResearchMode", False)
+        
         logger.info(f"📝 User Prompt: {prompt}")
         logger.info(f"🤖 Selected Model: {model}")
+        logger.info(f"🧠 Deep Research Mode: {deep_research_mode}")
         logger.info(f"⏰ Timestamp: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
         
         if not prompt:
             logger.warning("Empty prompt provided")
             return {"error": "No prompt provided"}
         
-        logger.info("💬 Starting regular chat mode")
-        # Use the groq_router to get the response
-        result = query_llm(prompt, model)
-        logger.info("✅ Regular chat completed")
+        if deep_research_mode:
+            logger.info("🚀 Starting LangGraph Deep Research Mode")
+            logger.info("🔄 Initializing multi-agent collaboration...")
+            # Use LangGraph deep research mode with ReAct agents
+            from app.langgraph_research import deep_research_analysis
+            result = deep_research_analysis(prompt, model)
+            logger.info("✅ LangGraph Deep Research completed")
+        else:
+            logger.info("💬 Starting regular chat mode")
+            # Use the groq_router to get the response
+            result = query_llm(prompt, model)
+            logger.info("✅ Regular chat completed")
         
         logger.info(f"📊 Response Model: {result.get('model', 'Unknown')}")
         logger.info(f"📏 Response Length: {len(str(result.get('response', '')))} characters")
