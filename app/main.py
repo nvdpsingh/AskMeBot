@@ -55,8 +55,32 @@ class ChangeTitleInput(BaseModel):
     chat_id: str
 
 @app.post("/chat")
-def chat(chat_input: ChatInput):
-    return query_llm(chat_input.prompt, chat_input.model)
+def chat(chat_input: dict):
+    """Main chat endpoint with deep research mode support"""
+    try:
+        if not os.getenv("GROQ_API_KEY"):
+            return {"error": "GROQ_API_KEY not found"}
+        
+        prompt = chat_input.get("prompt", "")
+        model = chat_input.get("model", "openai/gpt-oss-20b")
+        deep_research_mode = chat_input.get("deepResearchMode", False)
+        
+        if not prompt:
+            return {"error": "No prompt provided"}
+        
+        if deep_research_mode:
+            # Use deep research mode with multiple models
+            from app.deep_research import deep_research_analysis
+            result = deep_research_analysis(prompt, model)
+        else:
+            # Use the groq_router to get the response
+            result = query_llm(prompt, model)
+        
+        return result
+        
+    except Exception as e:
+        print(f"Chat error: {e}")
+        return {"error": str(e)}
 
 @app.post("/generate-title")
 def generate_chat_title(title_input: ChatTitleInput):
