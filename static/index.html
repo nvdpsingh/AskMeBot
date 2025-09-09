@@ -3,2263 +3,556 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AskMeBot - AI Assistant</title>
+    <title>AskMeBot - Professional AI Assistant</title>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <!-- Favicon with cache busting -->
-    <link rel="icon" type="image/x-icon" href="/static/favicon.ico?v=2">
-    <link rel="icon" type="image/svg+xml" href="/static/favicon.svg?v=2">
-    <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon.png?v=2">
-    <link rel="icon" type="image/png" sizes="16x16" href="/static/favicon.png?v=2">
-    <link rel="apple-touch-icon" sizes="180x180" href="/static/favicon.png?v=2">
-    <link rel="shortcut icon" href="/static/favicon.ico?v=2">
-    <meta name="theme-color" content="#ffd700">
-    <meta name="msapplication-TileColor" content="#ffd700">
+    <link rel="icon" type="image/x-icon" href="/static/favicon.ico?v=3">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
         
         :root {
-            --batman-dark: #0a0a0a;
-            --batman-gray: #1a1a1a;
-            --batman-light: #2a2a2a;
-            --batman-accent: #ffd700;
-            --batman-red: #dc2626;
-            --carbon-fiber: 
-                radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.08) 0%, transparent 70%),
-                repeating-linear-gradient(
-                    60deg,
-                    transparent,
-                    transparent 8px,
-                    rgba(255, 215, 0, 0.02) 8px,
-                    rgba(255, 215, 0, 0.02) 9px
-                ),
-                repeating-linear-gradient(
-                    -60deg,
-                    transparent,
-                    transparent 8px,
-                    rgba(255, 215, 0, 0.02) 8px,
-                    rgba(255, 215, 0, 0.02) 9px
-                ),
-                repeating-linear-gradient(
-                    0deg,
-                    transparent,
-                    transparent 8px,
-                    rgba(255, 215, 0, 0.02) 8px,
-                    rgba(255, 215, 0, 0.02) 9px
-                ),
-                radial-gradient(circle at 30% 30%, rgba(255, 215, 0, 0.04) 0%, transparent 40%),
-                radial-gradient(circle at 70% 70%, rgba(255, 215, 0, 0.03) 0%, transparent 40%);
-        }
-        
-        body {
-            font-family: 'Rajdhani', sans-serif;
-            background: var(--batman-dark);
-            overflow: hidden;
-        }
-        
-        .batman-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: 
-                radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 60%),
-                radial-gradient(circle at 20% 80%, rgba(255, 215, 0, 0.12) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(220, 38, 38, 0.08) 0%, transparent 50%),
-                var(--carbon-fiber);
-            animation: batmanPulse 8s ease-in-out infinite;
-        }
-        
-        @keyframes batmanPulse {
-            0%, 100% { opacity: 0.3; }
-            50% { opacity: 0.6; }
-        }
-        
-        .batman-container {
-            background: 
-                linear-gradient(135deg, var(--secondary-color) 0%, var(--background-color) 100%),
-                var(--carbon-fiber);
-            border: 2px solid var(--border-color);
-            box-shadow: 
-                0 0 80px var(--primary-color),
-                inset 0 0 60px rgba(0, 0, 0, 0.6),
-                0 10px 30px rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(15px);
-            position: relative;
-        }
-        
-        .batman-container::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: 
-                radial-gradient(circle at 40% 40%, rgba(255, 255, 255, 0.05) 0%, transparent 50%),
-                radial-gradient(circle at 60% 60%, rgba(255, 215, 0, 0.06) 0%, transparent 50%);
-            pointer-events: none;
-            border-radius: inherit;
-        }
-        
-        .batman-header {
-            background: 
-                linear-gradient(90deg, var(--background-color) 0%, var(--secondary-color) 50%, var(--background-color) 100%),
-                var(--snake-texture);
-            border-bottom: 3px solid var(--border-color);
-            position: relative;
-            overflow: visible;
-            box-shadow: 0 2px 20px var(--primary-color);
-            z-index: 1000;
-        }
-        
-        .batman-header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.1), transparent);
-            animation: batmanShine 3s ease-in-out infinite;
-        }
-        
-        @keyframes batmanShine {
-            0% { left: -100%; }
-            50% { left: 100%; }
-            100% { left: 100%; }
-        }
-        
-        .batman-logo {
-            background: linear-gradient(45deg, var(--primary-color), var(--primary-color));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-shadow: 0 0 20px var(--primary-color);
-        }
-        
-        .batman-button {
-            background: linear-gradient(45deg, var(--secondary-color), var(--background-color));
-            border: 1px solid var(--border-color);
-            color: var(--primary-color);
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .batman-button::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.2), transparent);
-            transition: left 0.5s ease;
-        }
-        
-        .batman-button:hover::before {
-            left: 100%;
-        }
-        
-        .batman-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px var(--primary-color);
-        }
-        
-        .chat-container {
-            background: linear-gradient(135deg, var(--background-color) 0%, var(--secondary-color) 100%);
-            border: 1px solid var(--border-color);
-        }
-        
-        .message {
-            animation: messageSlide 0.4s ease-out;
-            position: relative;
-            margin-bottom: 1.5rem;
-        }
-        
-        .message:not(:last-child)::after {
-            content: '';
-            position: absolute;
-            bottom: -0.75rem;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.1), transparent);
-        }
-        
-        @keyframes messageSlide {
-            from { 
-                opacity: 0; 
-                transform: translateY(20px) scale(0.95);
-            }
-            to { 
-                opacity: 1; 
-                transform: translateY(0) scale(1);
-            }
-        }
-        
-        .user-message {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-color) 100%);
-            color: var(--background-color);
-            border: 1px solid var(--border-color);
-            box-shadow: 0 4px 15px var(--primary-color);
-            margin-bottom: 0.5rem;
-        }
-        
-        .bot-message {
-            background: linear-gradient(135deg, var(--secondary-color) 0%, var(--background-color) 100%);
-            border: 1px solid var(--border-color);
-            color: var(--text-color);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-            margin-bottom: 0.5rem;
-        }
-        
-        .input-container {
-            background: linear-gradient(135deg, var(--secondary-color) 0%, var(--background-color) 100%);
-            border-top: 2px solid var(--border-color);
-        }
-        
-        .message-input {
-            background: var(--background-color);
-            border: 2px solid var(--border-color);
-            color: var(--text-color);
-            font-family: 'Rajdhani', sans-serif;
-        }
-        
-        .message-input:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 20px var(--primary-color);
-        }
-        
-        .send-button {
-            background: linear-gradient(45deg, var(--primary-color), var(--primary-color));
-            color: var(--background-color);
-            border: none;
-            transition: all 0.3s ease;
-        }
-        
-        .enhance-prompt-button {
-            background: linear-gradient(45deg, #8b5cf6, #a855f7);
-            color: white;
-            border: none;
-            transition: all 0.3s ease;
-        }
-        
-        .send-button:hover {
-            transform: scale(1.05);
-            box-shadow: 0 5px 20px var(--primary-color);
-        }
-        
-        .enhance-prompt-button:hover {
-            transform: scale(1.05);
-            box-shadow: 0 5px 20px rgba(139, 92, 246, 0.4);
-        }
-        
-        .deep-research-toggle {
-            background: linear-gradient(45deg, #10b981, #059669);
-            color: white;
-            border: none;
-            transition: all 0.3s ease;
-        }
-        
-        .deep-research-toggle.active {
-            background: linear-gradient(45deg, #f59e0b, #d97706);
-            animation: pulse 2s infinite;
-        }
-        
-        .deep-research-toggle:hover {
-            transform: scale(1.05);
-            box-shadow: 0 5px 20px rgba(16, 185, 129, 0.4);
-        }
-        
-        .deep-research-toggle.active:hover {
-            box-shadow: 0 5px 20px rgba(245, 158, 11, 0.4);
-        }
-        
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.8; }
-        }
-        
-        .typing-indicator {
-            background: linear-gradient(135deg, var(--secondary-color) 0%, var(--background-color) 100%);
-            border: 1px solid var(--border-color);
-        }
-        
-        .typing-dot {
-            background: var(--primary-color);
-            animation: typingPulse 1.5s infinite ease-in-out;
-        }
-        
-        @keyframes typingPulse {
-            0%, 100% { 
-                transform: scale(1); 
-                opacity: 0.5; 
-            }
-            50% { 
-                transform: scale(1.2); 
-                opacity: 1; 
-            }
-        }
-        
-        .model-dropdown {
-            background: linear-gradient(135deg, var(--background-color) 0%, var(--secondary-color) 100%);
-            border: 1px solid var(--border-color);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            z-index: 99999 !important;
-            position: absolute !important;
-        }
-        
-        .model-option:hover {
-            background: linear-gradient(135deg, var(--secondary-color) 0%, var(--background-color) 100%);
-            border-left: 3px solid var(--primary-color);
-        }
-        
-        .status-indicator {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
-            animation: statusPulse 2s infinite;
-        }
-        
-        .status-indicator.online {
-            background: var(--primary-color);
-        }
-        
-        .status-indicator.offline {
-            background: #dc2626;
-            animation: none;
-        }
-        
-        .status-indicator.checking {
-            background: #f59e0b;
-        }
-        
-        @keyframes statusPulse {
-            0%, 100% { 
-                box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
-            }
-            50% { 
-                box-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
-            }
-        }
-        
-        .scrollbar-thin {
-            scrollbar-width: thin;
-            scrollbar-color: var(--batman-accent) var(--batman-dark);
-        }
-        
-        .scrollbar-thin::-webkit-scrollbar {
-            width: 6px;
-        }
-        
-        .scrollbar-thin::-webkit-scrollbar-track {
-            background: var(--batman-dark);
-        }
-        
-        .scrollbar-thin::-webkit-scrollbar-thumb {
-            background: var(--batman-accent);
-            border-radius: 3px;
-        }
-        
-        .scrollbar-thin::-webkit-scrollbar-thumb:hover {
-            background: #ffed4e;
-        }
-        
-        .batman-glow {
-            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
-        }
-        
-        /* Theme Variables */
-        :root {
-            --primary-color: var(--batman-accent);
-            --secondary-color: var(--batman-gray);
-            --background-color: var(--batman-dark);
-            --text-color: #e5e5e5;
-            --border-color: var(--batman-accent);
-        }
-        
-        /* Cyberpunk Theme */
-        .theme-cyberpunk {
-            --primary-color: #00ffff;
-            --secondary-color: #1a0d2e;
-            --background-color: #0a0a0a;
-            --text-color: #00ffff;
-            --border-color: #ff0080;
-        }
-        
-        /* Ocean Theme */
-        .theme-ocean {
-            --primary-color: #00b4d8;
-            --secondary-color: #023e8a;
-            --background-color: #001d3d;
-            --text-color: #caf0f8;
-            --border-color: #0077b6;
-        }
-        
-        /* Forest Theme */
-        .theme-forest {
-            --primary-color: #52c41a;
-            --secondary-color: #135200;
-            --background-color: #0a1f0a;
-            --text-color: #b7eb8f;
-            --border-color: #73d13d;
-        }
-        
-        /* Sunset Theme */
-        .theme-sunset {
-            --primary-color: #ff6b35;
-            --secondary-color: #8b2c00;
-            --background-color: #2d1b00;
-            --text-color: #ffb366;
-            --border-color: #ff8c42;
-        }
-        
-        /* Purple Theme */
-        .theme-purple {
-            --primary-color: #9c27b0;
-            --secondary-color: #4a148c;
-            --background-color: #1a0033;
-            --text-color: #e1bee7;
-            --border-color: #ba68c8;
-        }
-        
-        /* Minimal Theme */
-        .theme-minimal {
             --primary-color: #2563eb;
-            --secondary-color: #f8fafc;
+            --secondary-color: #1d4ed8;
+            --accent-color: #0ea5e9;
             --background-color: #ffffff;
-            --text-color: #1e293b;
+            --surface-color: #f8fafc;
+            --text-color: #0f172a;
+            --text-secondary-color: #64748b;
             --border-color: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         }
-        
-        /* Matrix Theme */
-        .theme-matrix {
-            --primary-color: #00ff00;
-            --secondary-color: #001100;
-            --background-color: #000000;
-            --text-color: #00ff00;
-            --border-color: #00cc00;
+
+        [data-theme="dark"] {
+            --primary-color: #3b82f6;
+            --secondary-color: #2563eb;
+            --accent-color: #0ea5e9;
+            --background-color: #0f172a;
+            --surface-color: #1e293b;
+            --text-color: #f1f5f9;
+            --text-secondary-color: #94a3b8;
+            --border-color: #334155;
         }
-        
-        /* Markdown formatting styles */
-        .bot-message strong {
-            color: var(--batman-accent);
-            font-weight: bold;
+
+        * {
+            font-family: 'Inter', sans-serif;
         }
-        
-        .bot-message em {
-            color: #e5e5e5;
-            font-style: italic;
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            transition: all 0.3s ease;
         }
-        
-        .bot-message code {
-            background: rgba(0, 0, 0, 0.3);
-            color: var(--batman-accent);
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-family: 'Courier New', monospace;
-            font-size: 0.9em;
+
+        .gradient-bg {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
         }
-        
-        .bot-message h1, .bot-message h2, .bot-message h3 {
-            margin: 8px 0 4px 0;
-            font-family: 'Orbitron', sans-serif;
+
+        .message-bubble {
+            border-radius: 18px;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
         }
-        
-        /* Sidebar Styles */
-        .sidebar {
-            width: 300px;
-            background: linear-gradient(135deg, var(--background-color) 0%, var(--secondary-color) 100%);
-            border-right: 2px solid var(--border-color);
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-            position: relative;
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+            border-radius: 8px;
+            transition: all 0.3s ease;
         }
-        
-        .sidebar-header {
-            padding: 1.5rem;
-            border-bottom: 1px solid var(--border-color);
-            background: linear-gradient(90deg, var(--background-color) 0%, var(--secondary-color) 50%, var(--background-color) 100%);
-        }
-        
-        .sidebar-content {
-            flex: 1;
-            overflow-y: auto;
-            padding: 1rem;
-        }
-        
-        .sidebar-footer {
-            padding: 1rem;
-            border-top: 1px solid var(--border-color);
-            background: linear-gradient(90deg, var(--background-color) 0%, var(--secondary-color) 50%, var(--background-color) 100%);
-        }
-        
-        .chat-item {
-            padding: 0.75rem;
-            margin-bottom: 0.5rem;
+
+        .btn-primary:hover {
             background: var(--secondary-color);
+            transform: translateY(-1px);
+        }
+
+        .input-container {
+            background: var(--surface-color);
             border: 1px solid var(--border-color);
-            border-radius: 0.5rem;
-            cursor: pointer;
+            border-radius: 12px;
             transition: all 0.3s ease;
-            position: relative;
         }
-        
-        .chat-item-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 0.25rem;
-        }
-        
-        .chat-edit-btn, .chat-delete-btn {
-            background: none;
-            border: none;
-            color: var(--primary-color);
-            cursor: pointer;
-            padding: 0.25rem;
-            border-radius: 0.25rem;
-            opacity: 0;
-            transition: all 0.3s ease;
-            font-size: 0.75rem;
-            margin-left: 0.25rem;
-        }
-        
-        .chat-delete-btn {
-            color: #dc2626;
-        }
-        
-        .chat-item:hover .chat-edit-btn,
-        .chat-item:hover .chat-delete-btn {
-            opacity: 1;
-        }
-        
-        .chat-edit-btn:hover {
-            background: var(--primary-color);
-        }
-        
-        .chat-delete-btn:hover {
-            background: rgba(220, 38, 38, 0.1);
-        }
-        
-        .chat-actions {
-            display: flex;
-            align-items: center;
-        }
-        
-        .chat-title-input {
-            background: var(--background-color);
-            border: 1px solid var(--border-color);
-            color: var(--primary-color);
-            padding: 0.25rem 0.5rem;
-            border-radius: 0.25rem;
-            font-size: 0.875rem;
-            font-weight: 600;
-            width: 100%;
-            margin-bottom: 0.25rem;
-        }
-        
-        .chat-title-input:focus {
-            outline: none;
+
+        .input-container:focus-within {
             border-color: var(--primary-color);
-            box-shadow: 0 0 5px var(--primary-color);
-        }
-        
-        .chat-item:hover {
-            background: var(--primary-color);
-            border-color: var(--primary-color);
-            transform: translateX(4px);
-        }
-        
-        .chat-item.active {
-            background: var(--primary-color);
-            border-color: var(--primary-color);
-            box-shadow: 0 0 10px var(--primary-color);
-        }
-        
-        .chat-title {
-            font-size: 0.875rem;
-            font-weight: 600;
-            color: var(--primary-color);
-            margin-bottom: 0.25rem;
-        }
-        
-        .chat-preview {
-            font-size: 0.75rem;
-            color: var(--text-color);
-            line-height: 1.2;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-        
-        .chat-time {
-            font-size: 0.625rem;
-            color: var(--text-color);
-            margin-top: 0.25rem;
-        }
-        
-        .sidebar-button {
-            width: 100%;
-            padding: 0.75rem;
-            margin-bottom: 0.5rem;
-            background: linear-gradient(135deg, var(--secondary-color), var(--background-color));
-            border: 1px solid var(--border-color);
-            color: var(--primary-color);
-            border-radius: 0.5rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-        }
-        
-        .sidebar-button:hover {
-            background: linear-gradient(135deg, var(--background-color), var(--secondary-color));
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px var(--primary-color);
-        }
-        
-        .main-content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-        }
-        
-        /* Mobile Responsive */
-        @media (max-width: 768px) {
-            .sidebar {
-                width: 100%;
-                position: fixed;
-                top: 0;
-                left: -100%;
-                z-index: 1000;
-                transition: left 0.3s ease;
-            }
-            
-            .sidebar.open {
-                left: 0;
-            }
-            
-            .main-content {
-                width: 100%;
-            }
-            
-            .mobile-menu-btn {
-                display: block;
-                position: fixed;
-                top: 1rem;
-                left: 1rem;
-                z-index: 1001;
-                background: var(--batman-accent);
-                color: var(--batman-dark);
-                border: none;
-                padding: 0.5rem;
-                border-radius: 0.5rem;
-                cursor: pointer;
-            }
-        }
-        
-        @media (min-width: 769px) {
-            .mobile-menu-btn {
-                display: none;
-            }
-        }
-        
-        /* Settings Panel */
-        .settings-panel {
-            position: fixed;
-            top: 0;
-            right: -400px;
-            width: 400px;
-            height: 100vh;
-            background: linear-gradient(135deg, var(--batman-dark) 0%, var(--batman-gray) 100%);
-            border-left: 2px solid var(--batman-accent);
-            z-index: 1000;
-            transition: right 0.3s ease;
-            overflow-y: auto;
-        }
-        
-        .settings-panel.open {
-            right: 0;
-        }
-        
-        .settings-header {
-            padding: 1.5rem;
-            border-bottom: 1px solid rgba(255, 215, 0, 0.2);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .settings-content {
-            padding: 1.5rem;
-        }
-        
-        .settings-group {
-            margin-bottom: 2rem;
-        }
-        
-        .settings-group h3 {
-            color: var(--batman-accent);
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-        }
-        
-        .setting-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.75rem 0;
-            border-bottom: 1px solid rgba(255, 215, 0, 0.1);
-        }
-        
-        .setting-item:last-child {
-            border-bottom: none;
-        }
-        
-        .setting-label {
-            color: #e5e5e5;
-            font-size: 0.9rem;
-        }
-        
-        .setting-control {
-            background: var(--batman-gray);
-            border: 1px solid var(--batman-accent);
-            color: var(--batman-accent);
-            padding: 0.5rem;
-            border-radius: 0.25rem;
-            font-size: 0.8rem;
-        }
-        
-        .close-settings {
-            background: none;
-            border: none;
-            color: var(--batman-accent);
-            font-size: 1.5rem;
-            cursor: pointer;
-        }
-        
-        .floating-particles {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 1;
-        }
-        
-        .particle {
-            position: absolute;
-            width: 2px;
-            height: 2px;
-            background: var(--batman-accent);
-            border-radius: 50%;
-            animation: float 6s infinite linear;
-        }
-        
-        @keyframes float {
-            0% {
-                transform: translateY(100vh) rotate(0deg);
-                opacity: 0;
-            }
-            10% {
-                opacity: 1;
-            }
-            90% {
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(-100px) rotate(360deg);
-                opacity: 0;
-            }
-        }
-        
-        @keyframes slideIn {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-        
-        @keyframes slideOut {
-            from {
-                transform: translateX(0);
-                opacity: 1;
-            }
-            to {
-                transform: translateX(100%);
-                opacity: 0;
-            }
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
         }
     </style>
 </head>
-<body class="h-screen flex overflow-hidden">
-    <!-- Animated Background -->
-    <div class="batman-bg"></div>
-    
-    <!-- Floating Particles -->
-    <div class="floating-particles" id="particles"></div>
-    
-    <!-- Sidebar -->
-    <div class="sidebar relative z-10">
-        <!-- Sidebar Header -->
-        <div class="sidebar-header">
-            <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 rounded-full bg-gradient-to-r from-yellow-500 to-yellow-400 flex items-center justify-center shadow-lg">
-                    <i class="fas fa-bat text-black text-lg"></i>
-                </div>
-                <div>
-                    <h1 class="batman-logo text-xl font-bold font-['Orbitron']">ASKMEBOT</h1>
-                    <p class="text-gray-400 text-xs font-medium">AI Assistant</p>
-                </div>
-                </div>
-            </div>
-            
-        <!-- Sidebar Content - Chat History -->
-        <div class="sidebar-content">
-            <div class="mb-4">
-                <button id="new-chat-btn" class="sidebar-button">
-                    <i class="fas fa-plus"></i>
-                    New Chat
-                    </button>
-                </div>
-                
-            <div class="mb-4">
-                <h3 class="text-sm font-bold text-gray-300 mb-2">Recent Chats</h3>
-                <div id="chat-history" class="space-y-2">
-                    <!-- Chat items will be dynamically added here -->
-                        </div>
-                                </div>
-                            </div>
-        
-        <!-- Sidebar Footer - Settings -->
-        <div class="sidebar-footer">
-            <button id="settings-btn" class="sidebar-button">
-                <i class="fas fa-cog"></i>
-                Settings
-                    </button>
-            <button id="help-btn" class="sidebar-button">
-                <i class="fas fa-question-circle"></i>
-                Help
-            </button>
-                        </div>
-                                </div>
-    
-        <!-- Mobile Menu Button -->
-    <button id="mobile-menu-btn" class="mobile-menu-btn">
-        <i class="fas fa-bars"></i>
-    </button>
-    
-    <!-- Settings Panel -->
-    <div id="settings-panel" class="settings-panel">
-        <div class="settings-header">
-            <h2 class="text-xl font-bold text-gray-200">Settings</h2>
-            <button id="close-settings" class="close-settings">
-                <i class="fas fa-times"></i>
-            </button>
-                        </div>
-        <div class="settings-content">
-            <div class="settings-group">
-                <h3>Appearance</h3>
-                <div class="setting-item">
-                    <span class="setting-label">Theme</span>
-                    <select class="setting-control" id="theme-select">
-                        <option value="batman" selected>Batman Dark</option>
-                        <option value="cyberpunk">Cyberpunk Neon</option>
-                        <option value="ocean">Ocean Blue</option>
-                        <option value="forest">Forest Green</option>
-                        <option value="sunset">Sunset Orange</option>
-                        <option value="purple">Purple Haze</option>
-                        <option value="minimal">Minimal White</option>
-                        <option value="matrix">Matrix Green</option>
-                    </select>
-                                </div>
-                <div class="setting-item">
-                    <span class="setting-label">Font Size</span>
-                    <select class="setting-control" id="font-size-select">
-                        <option value="small">Small</option>
-                        <option value="medium" selected>Medium</option>
-                        <option value="large">Large</option>
-                    </select>
-                            </div>
-                        </div>
-            
-                        <div class="settings-group">
-                <h3>Chat Settings</h3>
-                <div class="setting-item">
-                    <span class="setting-label">Auto-save Chats</span>
-                    <input type="checkbox" class="setting-control" id="auto-save" checked>
-                                </div>
-                <div class="setting-item">
-                    <span class="setting-label">Show Timestamps</span>
-                    <input type="checkbox" class="setting-control" id="show-timestamps" checked>
-                            </div>
-                <div class="setting-item">
-                    <span class="setting-label">Regenerate Current Title</span>
-                    <button class="setting-control" id="regenerate-title">Regenerate</button>
-                        </div>
-                                </div>
-            
-                        <div class="settings-group">
-                <h3>Data Management</h3>
-                <div class="setting-item">
-                    <span class="setting-label">Export Chats</span>
-                    <button class="setting-control" id="export-chats">Export</button>
-                            </div>
-                <div class="setting-item">
-                    <span class="setting-label">Delete All Chats</span>
-                    <button class="setting-control" id="delete-all-chats" style="background: #dc2626; border-color: #dc2626;">Delete All</button>
-                        </div>
-                <div class="setting-item">
-                    <span class="setting-label">Clear All Data</span>
-                    <button class="setting-control" id="clear-data" style="background: #dc2626; border-color: #dc2626;">Clear</button>
-                                </div>
-                            </div>
-                        </div>
-                        </div>
-    
-    <!-- Main Content Area -->
-    <div class="main-content relative z-10">
-    <!-- Main Container -->
-        <div class="w-full h-full batman-container flex flex-col overflow-hidden">
-        <!-- Header -->
-        <div class="batman-header p-6 flex items-center justify-between">
-            <div class="flex items-center space-x-4">
-                <div>
-                    <h2 class="text-lg font-bold text-gray-200">Current Chat</h2>
-                    <p class="text-gray-400 text-sm font-medium" id="current-chat-title">New Conversation</p>
-                </div>
-            </div>
-            
-            <div class="flex items-center space-x-4">
-                <div class="flex items-center space-x-2">
-                    <div id="status-indicator" class="status-indicator"></div>
-                    <span id="status-text" class="text-gray-300 text-sm font-medium">CHECKING...</span>
-                </div>
-                
-                <div class="relative z-[1001]">
-                    <button id="model-selector" class="batman-button px-4 py-2 rounded-lg flex items-center space-x-2 font-medium">
-                        <i class="fas fa-brain text-sm"></i>
-                        <span>OpenAI GPT OSS 20B</span>
-                        <i class="fas fa-chevron-down text-xs"></i>
-                    </button>
-                    
-                    <div id="model-dropdown" class="model-dropdown hidden absolute right-0 top-12 w-80 rounded-xl py-3 z-[99999] max-h-96 overflow-y-auto">
-                        <div class="px-4 py-2 border-b border-gray-700">
-                            <p class="text-sm font-bold text-gray-300">SELECT MODEL</p>
-                        </div>
-                        
-                        <!-- Production Models -->
-                        <div class="px-4 py-2">
-                            <p class="text-xs font-bold text-gray-400 uppercase tracking-wide">Production Models</p>
-                        </div>
-                        
-                        <div class="model-option px-4 py-3 cursor-pointer transition-all duration-200" data-model="llama-3.1-8b-instant">
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <p class="text-sm font-bold text-gray-200">Llama 3.1 8B Instant</p>
-                                    <p class="text-xs text-gray-400">Fast & Efficient</p>
-                                </div>
-                                <div class="status-indicator"></div>
-                            </div>
-                        </div>
-                        
-                        <div class="model-option px-4 py-3 cursor-pointer transition-all duration-200" data-model="llama-3.3-70b-versatile">
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <p class="text-sm font-bold text-gray-200">Llama 3.3 70B Versatile</p>
-                                    <p class="text-xs text-gray-400">Most Capable</p>
-                                </div>
-                                <div class="status-indicator"></div>
-                            </div>
-                        </div>
-                        
-                        <div class="model-option px-4 py-3 cursor-pointer transition-all duration-200" data-model="openai/gpt-oss-20b">
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <p class="text-sm font-bold text-gray-200">OpenAI GPT OSS 20B</p>
-                                    <p class="text-xs text-gray-400">Balanced Performance</p>
-                                </div>
-                                <div class="status-indicator"></div>
-                            </div>
-                        </div>
-                        
-                        <div class="model-option px-4 py-3 cursor-pointer transition-all duration-200" data-model="openai/gpt-oss-120b">
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <p class="text-sm font-bold text-gray-200">OpenAI GPT OSS 120B</p>
-                                    <p class="text-xs text-gray-400">High Performance</p>
-                                </div>
-                                <div class="status-indicator"></div>
-                            </div>
-                        </div>
-                        
-                        <!-- Preview Models -->
-                        <div class="px-4 py-2 mt-2">
-                            <p class="text-xs font-bold text-gray-400 uppercase tracking-wide">Preview Models</p>
-                        </div>
-                        
-                        <div class="model-option px-4 py-3 cursor-pointer transition-all duration-200" data-model="deepseek-r1-distill-llama-70b">
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <p class="text-sm font-bold text-gray-200">DeepSeek R1 Distill</p>
-                                    <p class="text-xs text-gray-400">Reasoning Model</p>
-                                </div>
-                                <div class="status-indicator"></div>
-                            </div>
-                        </div>
-                        
-                        <div class="model-option px-4 py-3 cursor-pointer transition-all duration-200" data-model="meta-llama/llama-4-maverick-17b-128e-instruct">
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <p class="text-sm font-bold text-gray-200">Llama 4 Maverick 17B</p>
-                                    <p class="text-xs text-gray-400">Next Gen Preview</p>
-                                </div>
-                                <div class="status-indicator"></div>
-                            </div>
-                        </div>
-                        
-                        <div class="model-option px-4 py-3 cursor-pointer transition-all duration-200" data-model="meta-llama/llama-4-scout-17b-16e-instruct">
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <p class="text-sm font-bold text-gray-200">Llama 4 Scout 17B</p>
-                                    <p class="text-xs text-gray-400">Next Gen Preview</p>
-                                </div>
-                                <div class="status-indicator"></div>
-                            </div>
-                        </div>
-                        
-                        <div class="model-option px-4 py-3 cursor-pointer transition-all duration-200" data-model="moonshotai/kimi-k2-instruct">
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <p class="text-sm font-bold text-gray-200">Kimi K2 Instruct</p>
-                                    <p class="text-xs text-gray-400">Moonshot AI Model</p>
+<body class="h-screen overflow-hidden">
+    <div class="flex h-screen">
+        <!-- Sidebar -->
+        <div class="w-80 bg-gray-50 dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 flex flex-col">
+            <!-- Header -->
+            <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 gradient-bg rounded-lg flex items-center justify-center">
+                        <i class="fas fa-robot text-white text-lg"></i>
                     </div>
-                                <div class="status-indicator"></div>
-                            </div>
-                        </div>
-                        
-                        <div class="model-option px-4 py-3 cursor-pointer transition-all duration-200" data-model="qwen/qwen3-32b">
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <p class="text-sm font-bold text-gray-200">Qwen3 32B</p>
-                                    <p class="text-xs text-gray-400">Alibaba Model</p>
-                                </div>
-                                <div class="status-indicator"></div>
-                            </div>
-                        </div>
+                    <div>
+                        <h1 class="text-xl font-bold text-gray-900 dark:text-white">AskMeBot</h1>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">Professional AI Assistant</p>
+                    </div>
+                </div>
+            </div>
 
+            <!-- Chat History -->
+            <div class="flex-1 overflow-y-auto p-4">
+                <div class="mb-4">
+                    <button id="new-chat-btn" class="w-full btn-primary py-3 px-4 flex items-center justify-center space-x-2">
+                        <i class="fas fa-plus"></i>
+                        <span>New Chat</span>
+                    </button>
+                </div>
+                
+                <div class="space-y-2">
+                    <h3 class="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">Recent Chats</h3>
+                    <div id="chat-history" class="space-y-1">
+                        <!-- Chat items will be populated here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings -->
+            <div class="p-4 border-t border-gray-200 dark:border-gray-700">
+                <div class="space-y-4">
+                    <!-- Model Selection -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Model</label>
+                        <select id="model-select" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <option value="openai/gpt-oss-20b">GPT-OSS 20B</option>
+                            <option value="openai/gpt-oss-120b">GPT-OSS 120B</option>
+                            <option value="llama-3.3-70b-versatile">Llama 3.3 70B</option>
+                            <option value="llama-3.1-70b-versatile">Llama 3.1 70B</option>
+                            <option value="llama-3.1-8b-instant">Llama 3.1 8B</option>
+                            <option value="llama-3.1-1b-instant">Llama 3.1 1B</option>
+                            <option value="mixtral-8x7b-32768">Mixtral 8x7B</option>
+                            <option value="gemma-7b-it">Gemma 7B</option>
+                        </select>
+                    </div>
+
+                    <!-- Theme Selection -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Theme</label>
+                        <select id="theme-select" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <option value="light">Light</option>
+                            <option value="dark">Dark</option>
+                        </select>
                     </div>
                 </div>
             </div>
         </div>
-        
-        <!-- Chat Container -->
-        <div id="chat-container" class="chat-container flex-1 p-6 overflow-y-auto scrollbar-thin">
-            <div class="space-y-6">
-                <!-- Welcome Message -->
-                <div class="message flex">
-                    <div class="w-10 h-10 rounded-full bg-gradient-to-r from-yellow-500 to-yellow-400 flex items-center justify-center mr-3 flex-shrink-0">
-                        <i class="fas fa-bat text-black"></i>
-                    </div>
-                    <div class="bot-message rounded-2xl rounded-tl-none px-6 py-4 max-w-[80%]">
-                        <p class="text-gray-200 leading-relaxed">
-                            <span class="batman-glow font-bold">Hello! I'm AskMeBot.</span><br><br>
-                            Welcome to your AI assistant. I'm here to help you with any questions or tasks you may have. 
-                            What would you like to know?
-                        </p>
-                        <p class="text-xs text-gray-400 mt-2">Just now</p>
+
+        <!-- Main Chat Area -->
+        <div class="flex-1 flex flex-col">
+            <!-- Chat Header -->
+            <div class="border-b border-gray-200 dark:border-gray-700 p-4">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h2 id="current-chat-title" class="text-lg font-semibold text-gray-900 dark:text-white">New Chat</h2>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">Start a conversation with your AI assistant</p>
                     </div>
                 </div>
             </div>
-            
+
+            <!-- Chat Messages -->
+            <div id="chat-container" class="flex-1 overflow-y-auto p-6 space-y-6">
+                <div class="text-center py-12">
+                    <div class="w-16 h-16 gradient-bg rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-robot text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Welcome to AskMeBot</h3>
+                    <p class="text-gray-500 dark:text-gray-400">Your professional AI assistant is ready to help. Start by typing a message below.</p>
+                </div>
+            </div>
+
             <!-- Typing Indicator -->
-            <div id="typing-indicator" class="typing-indicator hidden flex items-center space-x-2 px-6 py-4 rounded-2xl max-w-[80%] mt-6 mb-4">
-                <div class="w-10 h-10 rounded-full bg-gradient-to-r from-yellow-500 to-yellow-400 flex items-center justify-center mr-3 flex-shrink-0">
-                    <i class="fas fa-bat text-black"></i>
-                </div>
-                <div class="flex space-x-1">
-                    <div class="typing-dot w-2 h-2 rounded-full"></div>
-                    <div class="typing-dot w-2 h-2 rounded-full"></div>
-                    <div class="typing-dot w-2 h-2 rounded-full"></div>
+            <div id="typing-indicator" class="hidden px-6 py-4">
+                <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 bg-gray-200 dark:bg-gray-700 rounded-full flex items-center justify-center">
+                        <i class="fas fa-robot text-gray-500"></i>
+                    </div>
+                    <div class="flex space-x-1">
+                        <div class="w-2 h-2 bg-gray-400 rounded-full animate-pulse"></div>
+                        <div class="w-2 h-2 bg-gray-400 rounded-full animate-pulse" style="animation-delay: 0.2s"></div>
+                        <div class="w-2 h-2 bg-gray-400 rounded-full animate-pulse" style="animation-delay: 0.4s"></div>
+                    </div>
+                    <span class="text-sm text-gray-500 dark:text-gray-400">AI is thinking...</span>
                 </div>
             </div>
-            
-            <!-- Deep Research Thinking Process -->
-            <div id="deep-research-container" class="deep-research-container hidden mb-4">
-                <div class="bg-gradient-to-r from-blue-900 to-purple-900 rounded-lg p-4 border border-blue-500">
-                    <div class="flex items-center mb-3">
-                        <i class="fas fa-brain text-blue-400 mr-2"></i>
-                        <h3 class="text-lg font-bold text-blue-300">Deep Research Mode</h3>
-                        <div class="ml-auto text-sm text-blue-200">Multiple models collaborating...</div>
-                    </div>
-                    <div id="thinking-process" class="space-y-3 max-h-96 overflow-y-auto">
-                        <!-- Thinking process will be populated here -->
+
+            <!-- Input Area -->
+            <div class="p-6 border-t border-gray-200 dark:border-gray-700">
+                <div class="input-container p-4">
+                    <div class="flex items-end space-x-3">
+                        <div class="flex-1">
+                            <textarea 
+                                id="message-input" 
+                                placeholder="Type your message here..." 
+                                class="w-full resize-none border-0 outline-none bg-transparent text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+                                rows="1"
+                                style="max-height: 120px;"
+                            ></textarea>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <button id="enhance-prompt-button" class="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200" title="Enhance Prompt">
+                                <i class="fas fa-magic"></i>
+                            </button>
+                            <button id="send-button" class="btn-primary px-6 py-2 flex items-center space-x-2">
+                                <i class="fas fa-paper-plane"></i>
+                                <span>Send</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        
-        <!-- Input Container -->
-        <div class="input-container p-6">
-            <form id="chat-form" class="flex items-center space-x-4">
-                <div class="flex-1 relative">
-                    <input 
-                        type="text" 
-                        id="message-input" 
-                        placeholder="Type your message here..." 
-                        class="message-input w-full px-4 py-3 rounded-xl font-medium placeholder-gray-500 focus:placeholder-gray-400"
-                        autocomplete="off"
-                    >
-                </div>
-                <button 
-                    type="button" 
-                    id="enhance-prompt-button" 
-                    class="enhance-prompt-button px-4 py-3 rounded-xl font-bold hover:shadow-lg transition-all duration-200"
-                    title="Enhance prompt for better results"
-                >
-                    <i class="fas fa-magic"></i>
-                </button>
-                <button 
-                    type="button" 
-                    id="deep-research-toggle" 
-                    class="deep-research-toggle px-4 py-3 rounded-xl font-bold hover:shadow-lg transition-all duration-200"
-                    title="Toggle Deep Research Mode - Multiple models collaborate"
-                >
-                    <i class="fas fa-brain"></i>
-                </button>
-                <button type="submit" class="send-button px-6 py-3 rounded-xl font-bold hover:shadow-lg transition-all duration-200">
-                    <i class="fas fa-paper-plane"></i>
-                </button>
-            </form>
         </div>
     </div>
 
     <script>
+        // Global variables
+        let currentChatId = null;
+        let chatHistory = [];
+        let isGenerating = false;
+
+        // DOM elements
+        const chatContainer = document.getElementById('chat-container');
+        const messageInput = document.getElementById('message-input');
+        const sendButton = document.getElementById('send-button');
+        const typingIndicator = document.getElementById('typing-indicator');
+        const newChatBtn = document.getElementById('new-chat-btn');
+        const chatHistoryContainer = document.getElementById('chat-history');
+        const currentChatTitle = document.getElementById('current-chat-title');
+        const modelSelect = document.getElementById('model-select');
+        const themeSelect = document.getElementById('theme-select');
+        const enhancePromptBtn = document.getElementById('enhance-prompt-button');
+
+        // Initialize
         document.addEventListener('DOMContentLoaded', function() {
-            const chatForm = document.getElementById('chat-form');
-            const messageInput = document.getElementById('message-input');
-            const chatContainer = document.getElementById('chat-container');
-            const typingIndicator = document.getElementById('typing-indicator');
-            const modelSelector = document.getElementById('model-selector');
-            const modelDropdown = document.getElementById('model-dropdown');
-            const modelOptions = document.querySelectorAll('.model-option');
-            
-            let selectedModel = 'openai/gpt-oss-20b';
-            let currentChatId = null;
-            let chatHistory = [];
-            let deepResearchMode = false;
-            
-            // Chat storage functions
-            function generateChatId() {
-                return 'chat_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-            }
-            
-            function saveChatToStorage() {
-                localStorage.setItem('askmebot_chats', JSON.stringify(chatHistory));
-            }
-            
-            function loadChatsFromStorage() {
-                const saved = localStorage.getItem('askmebot_chats');
-                if (saved) {
-                    chatHistory = JSON.parse(saved);
-                    renderChatHistory();
-                }
-            }
-            
-            function createNewChat() {
-                currentChatId = generateChatId();
-                const newChat = {
-                    id: currentChatId,
-                    title: 'New Chat',
-                    messages: [],
-                    createdAt: new Date().toISOString(),
-                    lastMessage: null
-                };
-                chatHistory.unshift(newChat);
-                saveChatToStorage();
-                renderChatHistory();
-                clearChatContainer();
-                updateCurrentChatTitle('New Chat');
-                setActiveChat(currentChatId);
-            }
-            
-            function setActiveChat(chatId) {
-                // Remove active class from all chat items
-                document.querySelectorAll('.chat-item').forEach(item => {
-                    item.classList.remove('active');
-                });
-                
-                // Add active class to selected chat
-                const activeItem = document.querySelector(`[data-chat-id="${chatId}"]`);
-                if (activeItem) {
-                    activeItem.classList.add('active');
-                }
-            }
-            
-            function updateCurrentChatTitle(title) {
-                document.getElementById('current-chat-title').textContent = title;
-            }
-            
-            function clearChatContainer() {
-                const chatContainer = document.getElementById('chat-container');
-                chatContainer.innerHTML = `
-                    <div class="space-y-6">
-                        <!-- Welcome Message -->
-                        <div class="message flex">
-                            <div class="w-10 h-10 rounded-full bg-gradient-to-r from-yellow-500 to-yellow-400 flex items-center justify-center mr-3 flex-shrink-0">
-                                <i class="fas fa-bat text-black"></i>
-                            </div>
-                            <div class="bot-message rounded-2xl rounded-tl-none px-6 py-4 max-w-[80%]">
-                                <p class="text-gray-200 leading-relaxed">
-                                    <span class="batman-glow font-bold">Hello! I'm AskMeBot.</span><br><br>
-                                    Welcome to your AI assistant. I'm here to help you with any questions or tasks you may have. 
-                                    What would you like to know?<br><br>
-                                    <span class="text-yellow-400 text-sm"><strong>💡 Tip:</strong> You can rename this chat by saying "change my heading to [new name]" or "rename this chat to [new name]"</span>
-                                </p>
-                                <p class="text-xs text-gray-400 mt-2">Just now</p>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }
-            
-            function renderChatHistory() {
-                const chatHistoryContainer = document.getElementById('chat-history');
-                chatHistoryContainer.innerHTML = '';
-                
-                if (chatHistory.length === 0) {
-                    chatHistoryContainer.innerHTML = `
-                        <div class="text-center py-8">
-                            <div class="text-gray-400 text-sm">
-                                <i class="fas fa-comments text-2xl mb-2 block"></i>
-                                No chats yet
-                            </div>
-                            <div class="text-gray-500 text-xs mt-1">
-                                Start a new conversation to see it here
-                            </div>
-                        </div>
-                    `;
-                    return;
-                }
-                
-                chatHistory.slice(0, 10).forEach(chat => {
-                    const chatItem = document.createElement('div');
-                    chatItem.className = 'chat-item';
-                    chatItem.setAttribute('data-chat-id', chat.id);
-                    
-                    const timeAgo = getTimeAgo(new Date(chat.createdAt));
-                    const preview = chat.lastMessage ? 
-                        (chat.lastMessage.length > 50 ? chat.lastMessage.substring(0, 50) + '...' : chat.lastMessage) : 
-                        'No messages yet';
-                    
-                    chatItem.innerHTML = `
-                        <div class="chat-item-header">
-                            <div class="chat-title">${chat.title}</div>
-                            <div class="chat-actions">
-                                <button class="chat-edit-btn" title="Rename chat">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <button class="chat-delete-btn" title="Delete chat">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="chat-preview">${preview}</div>
-                        <div class="chat-time">${timeAgo}</div>
-                    `;
-                    
-                    // Add click event for loading chat
-                    chatItem.addEventListener('click', (e) => {
-                        // Don't load chat if clicking the edit or delete button
-                        if (!e.target.closest('.chat-edit-btn') && !e.target.closest('.chat-delete-btn')) {
-                            loadChat(chat.id);
-                        }
-                    });
-                    
-                    // Add edit functionality
-                    const editBtn = chatItem.querySelector('.chat-edit-btn');
-                    const deleteBtn = chatItem.querySelector('.chat-delete-btn');
-                    const titleDiv = chatItem.querySelector('.chat-title');
-                    
-                    editBtn.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        renameChat(chat, titleDiv, chatItem);
-                    });
-                    
-                    deleteBtn.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        deleteChat(chat.id, chatItem);
-                    });
-                    
-                    chatHistoryContainer.appendChild(chatItem);
-                });
-            }
-            
-            function renameChat(chat, titleDiv, chatItem) {
-                const currentTitle = chat.title;
-                const input = document.createElement('input');
-                input.type = 'text';
-                input.className = 'chat-title-input';
-                input.value = currentTitle;
-                input.maxLength = 50;
-                
-                // Replace title div with input
-                titleDiv.style.display = 'none';
-                titleDiv.parentNode.insertBefore(input, titleDiv);
-                input.focus();
-                input.select();
-                
-                const saveRename = () => {
-                    const newTitle = input.value.trim();
-                    if (newTitle && newTitle !== currentTitle) {
-                        chat.title = newTitle;
-                        titleDiv.textContent = newTitle;
-                        saveChatToStorage();
-                        
-                        // Update current chat title if this is the active chat
-                        if (currentChatId === chat.id) {
-                            updateCurrentChatTitle(newTitle);
-                        }
-                    }
-                    
-                    // Restore title div
-                    input.remove();
-                    titleDiv.style.display = 'block';
-                };
-                
-                const cancelRename = () => {
-                    input.remove();
-                    titleDiv.style.display = 'block';
-                };
-                
-                input.addEventListener('blur', saveRename);
-                input.addEventListener('keydown', (e) => {
-                    if (e.key === 'Enter') {
-                        e.preventDefault();
-                        saveRename();
-                    } else if (e.key === 'Escape') {
-                        e.preventDefault();
-                        cancelRename();
-                    }
-                });
-            }
-            
-            function getTimeAgo(date) {
-                const now = new Date();
-                const diffInSeconds = Math.floor((now - date) / 1000);
-                
-                if (diffInSeconds < 60) return 'Just now';
-                if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m ago`;
-                if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`;
-                return `${Math.floor(diffInSeconds / 86400)}d ago`;
-            }
-            
-            function loadChat(chatId) {
-                const chat = chatHistory.find(c => c.id === chatId);
-                if (!chat) return;
-                
-                currentChatId = chatId;
-                setActiveChat(chatId);
-                updateCurrentChatTitle(chat.title);
-                
-                // Clear and rebuild chat container
-                const chatContainer = document.getElementById('chat-container');
-                chatContainer.innerHTML = '<div class="space-y-6"></div>';
-                
-                // Add all messages from the chat
-                chat.messages.forEach(message => {
-                    addMessageToContainer(message.text, message.sender, message.timestamp);
-                });
-                
-                // Scroll to bottom
-                chatContainer.scrollTop = chatContainer.scrollHeight;
-            }
-            
-            function addMessageToContainer(text, sender, timestamp) {
-                const chatContainer = document.getElementById('chat-container');
-                const messagesContainer = chatContainer.querySelector('.space-y-6');
-                
-                const messageDiv = document.createElement('div');
-                messageDiv.className = `message flex ${sender === 'user' ? 'justify-end' : ''}`;
-                
-                if (sender === 'user') {
-                    messageDiv.innerHTML = `
-                        <div class="user-message rounded-2xl rounded-tr-none px-6 py-4 max-w-[80%]">
-                            <p class="font-medium">${text}</p>
-                            <p class="text-xs text-yellow-800 mt-2 font-medium">${timestamp}</p>
-                        </div>
-                    `;
-                } else {
-                    messageDiv.innerHTML = `
-                        <div class="w-10 h-10 rounded-full bg-gradient-to-r from-yellow-500 to-yellow-400 flex items-center justify-center mr-3 flex-shrink-0">
-                            <i class="fas fa-bat text-black"></i>
-                        </div>
-                        <div class="bot-message rounded-2xl rounded-tl-none px-6 py-4 max-w-[80%]">
-                            <div class="text-gray-200 leading-relaxed">${text}</div>
-                            <p class="text-xs text-gray-400 mt-2">${timestamp}</p>
-                        </div>
-                    `;
-                }
-                
-                messagesContainer.appendChild(messageDiv);
-            }
-            
-            async function generateChatTitle(chat) {
-                try {
-                    const response = await fetch('/generate-title', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            messages: chat.messages,
-                            model: selectedModel
-                        })
-                    });
-                    
-                    if (response.ok) {
-                        const data = await response.json();
-                        if (data.success) {
-                            chat.title = data.title;
-                            updateCurrentChatTitle(chat.title);
-                            saveChatToStorage();
-                            renderChatHistory();
-                            return true;
-                        }
-                    }
-                } catch (error) {
-                    console.error('Error generating title:', error);
-                }
-                return false;
-            }
-            
-            function detectTitleChangeCommand(text) {
-                // Common patterns for title change commands
-                const patterns = [
-                    /change my heading to (.+)/i,
-                    /change my title to (.+)/i,
-                    /rename this chat to (.+)/i,
-                    /rename chat to (.+)/i,
-                    /change heading to (.+)/i,
-                    /change title to (.+)/i,
-                    /set title to (.+)/i,
-                    /set heading to (.+)/i,
-                    /call this (.+)/i,
-                    /name this (.+)/i,
-                    /make the title (.+)/i,
-                    /update title to (.+)/i,
-                    /update heading to (.+)/i,
-                    /change the title to (.+)/i,
-                    /change the heading to (.+)/i
-                ];
-                
-                for (const pattern of patterns) {
-                    const match = text.match(pattern);
-                    if (match) {
-                        return match[1].trim();
-                    }
-                }
-                return null;
-            }
-            
-            function changeChatTitle(newTitle) {
-                if (!currentChatId) return false;
-                
-                const chat = chatHistory.find(c => c.id === currentChatId);
-                if (chat) {
-                    chat.title = newTitle;
-                    updateCurrentChatTitle(newTitle);
-                    saveChatToStorage();
-                    renderChatHistory();
-                    return true;
-                }
-                return false;
-            }
-            
-            function deleteChat(chatId, chatItem) {
-                const chat = chatHistory.find(c => c.id === chatId);
-                if (!chat) return;
-                
-                const chatTitle = chat.title;
-                
-                // Show confirmation dialog
-                if (confirm(`Are you sure you want to delete "${chatTitle}"? This action cannot be undone.`)) {
-                    // Remove chat from history
-                    chatHistory = chatHistory.filter(c => c.id !== chatId);
-                    
-                    // If this was the current chat, clear the chat container
-                    if (currentChatId === chatId) {
-                        currentChatId = null;
-                        clearChatContainer();
-                        updateCurrentChatTitle('New Conversation');
-                    }
-                    
-                    // Save updated history
-                    saveChatToStorage();
-                    
-                    // Re-render chat history
-                    renderChatHistory();
-                    
-                    // Show success message
-                    showNotification(`Chat "${chatTitle}" has been deleted.`, 'success');
-                }
-            }
-            
-            function showThinkingProcess() {
-                const thinkingProcess = document.getElementById('thinking-process');
-                thinkingProcess.innerHTML = '';
-                
-                // Show initial thinking process with real-time updates
-                const agents = [
-                    { agent: 'Research Analyst', action: 'Starting analysis...', color: 'blue', status: 'pending' },
-                    { agent: 'Research Specialist', action: 'Preparing research...', color: 'green', status: 'pending' },
-                    { agent: 'Technical Expert', action: 'Initializing technical analysis...', color: 'purple', status: 'pending' },
-                    { agent: 'Innovation Specialist', action: 'Preparing creative insights...', color: 'orange', status: 'pending' },
-                    { agent: 'Critical Reviewer', action: 'Setting up review process...', color: 'red', status: 'pending' },
-                    { agent: 'Debate Facilitator', action: 'Preparing collaboration...', color: 'indigo', status: 'pending' },
-                    { agent: 'Synthesis Expert', action: 'Ready for synthesis...', color: 'yellow', status: 'pending' }
-                ];
-                
-                // Add all agents initially as pending
-                agents.forEach((agent, index) => {
-                    addThinkingStep(agent.agent, agent.action, false, agent.color, 'pending');
-                });
-                
-                // Show typing animation during thinking process
-                showTypingAnimation();
-                
-                // Simulate real-time progress updates
-                updateThinkingProgress(agents);
-            }
-            
-            function showTypingAnimation() {
-                const typingIndicator = document.getElementById('typing-indicator');
-                if (typingIndicator) {
-                    typingIndicator.classList.remove('hidden');
-                    
-                    // Show typing dots animation
-                    const dots = typingIndicator.querySelector('.typing-dots');
-                    if (dots) {
-                        dots.style.animation = 'typing 1.5s infinite';
-                    }
-                }
-            }
-            
-            function updateThinkingProgress(agents) {
-                const thinkingProcess = document.getElementById('thinking-process');
-                let currentAgent = 0;
-                
-                const progressSteps = [
-                    { agent: 0, action: 'Analyzing question with logical reasoning...', status: 'working' },
-                    { agent: 0, action: 'Completed analysis', status: 'completed' },
-                    { agent: 1, action: 'Exploring cross-cultural perspectives...', status: 'working' },
-                    { agent: 1, action: 'Research completed', status: 'completed' },
-                    { agent: 2, action: 'Providing technical analysis and validation...', status: 'working' },
-                    { agent: 2, action: 'Technical analysis completed', status: 'completed' },
-                    { agent: 3, action: 'Generating creative insights...', status: 'working' },
-                    { agent: 3, action: 'Creative insights completed', status: 'completed' },
-                    { agent: 4, action: 'Reviewing and validating findings...', status: 'working' },
-                    { agent: 4, action: 'Review completed', status: 'completed' },
-                    { agent: 5, action: 'Facilitating agent collaboration...', status: 'working' },
-                    { agent: 5, action: 'Debate facilitated', status: 'completed' },
-                    { agent: 6, action: 'Synthesizing final response...', status: 'working' },
-                    { agent: 6, action: 'Final synthesis completed', status: 'completed' }
-                ];
-                
-                let stepIndex = 0;
-                const updateInterval = setInterval(() => {
-                    if (stepIndex < progressSteps.length) {
-                        const step = progressSteps[stepIndex];
-                        const agent = agents[step.agent];
-                        
-                        // Update the specific agent's status
-                        updateAgentStatus(step.agent, step.action, step.status, agent.color);
-                        stepIndex++;
-                    } else {
-                        clearInterval(updateInterval);
-                    }
-                }, 2000); // Update every 2 seconds
-            }
-            
-            function updateAgentStatus(agentIndex, action, status, color) {
-                const thinkingProcess = document.getElementById('thinking-process');
-                const agentDivs = thinkingProcess.querySelectorAll('.thinking-step');
-                const agentDiv = agentDivs[agentIndex];
-                
-                if (agentDiv) {
-                    const actionSpan = agentDiv.querySelector('.agent-action');
-                    const statusDot = agentDiv.querySelector('.status-dot');
-                    
-                    if (actionSpan) actionSpan.textContent = action;
-                    if (statusDot) {
-                        statusDot.className = `status-dot w-3 h-3 rounded-full mr-3 ${
-                            status === 'working' ? 'bg-yellow-400 animate-pulse' :
-                            status === 'completed' ? 'bg-green-400' : 'bg-gray-400'
-                        }`;
-                    }
-                    
-                    // Update the overall status
-                    if (status === 'working') {
-                        agentDiv.className = agentDiv.className.replace('opacity-50', 'opacity-100');
-                    } else if (status === 'completed') {
-                        agentDiv.className = agentDiv.className.replace('opacity-50', 'opacity-100');
-                    }
-                }
-            }
-            
-            function addThinkingStep(agent, action, isFinal = false, color = 'blue', status = 'pending') {
-                const thinkingProcess = document.getElementById('thinking-process');
-                const stepDiv = document.createElement('div');
-                
-                // Color mapping for different agents
-                const colorClasses = {
-                    'blue': 'border-blue-400 bg-blue-900/20',
-                    'green': 'border-green-400 bg-green-900/20',
-                    'purple': 'border-purple-400 bg-purple-900/20',
-                    'orange': 'border-orange-400 bg-orange-900/20',
-                    'red': 'border-red-400 bg-red-900/20',
-                    'indigo': 'border-indigo-400 bg-indigo-900/20',
-                    'yellow': 'border-yellow-400 bg-yellow-900/20'
-                };
-                
-                const dotColors = {
-                    'blue': 'bg-blue-400',
-                    'green': 'bg-green-400',
-                    'purple': 'bg-purple-400',
-                    'orange': 'bg-orange-400',
-                    'red': 'bg-red-400',
-                    'indigo': 'bg-indigo-400',
-                    'yellow': 'bg-yellow-400'
-                };
-                
-                // Status-based styling
-                const statusClasses = {
-                    'pending': 'opacity-50',
-                    'working': 'opacity-100',
-                    'completed': 'opacity-100'
-                };
-                
-                const statusDotClasses = {
-                    'pending': 'bg-gray-400',
-                    'working': 'bg-yellow-400 animate-pulse',
-                    'completed': 'bg-green-400'
-                };
-                
-                stepDiv.className = `thinking-step p-3 rounded-lg border-l-4 ${
-                    isFinal ? 'border-yellow-400 bg-yellow-900/20' : colorClasses[color] || 'border-blue-400 bg-blue-900/20'
-                } ${statusClasses[status] || 'opacity-50'}`;
-                
-                stepDiv.innerHTML = `
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center">
-                            <div class="status-dot w-3 h-3 rounded-full mr-3 ${statusDotClasses[status] || 'bg-gray-400'}"></div>
-                            <span class="font-semibold text-blue-200">${agent}</span>
-                        </div>
-                        <span class="agent-action text-sm text-blue-300">${action}</span>
-                    </div>
-                `;
-                
-                thinkingProcess.appendChild(stepDiv);
-                
-                // Scroll to bottom
-                thinkingProcess.scrollTop = thinkingProcess.scrollHeight;
-            }
-            
-            function showNotification(message, type = 'info') {
-                // Create notification element
-                const notification = document.createElement('div');
-                notification.className = `notification notification-${type}`;
-                notification.style.cssText = `
-                    position: fixed;
-                    top: 20px;
-                    right: 20px;
-                    background: ${type === 'success' ? 'var(--batman-accent)' : 'var(--batman-gray)'};
-                    color: ${type === 'success' ? 'var(--batman-dark)' : '#e5e5e5'};
-                    padding: 1rem 1.5rem;
-                    border-radius: 0.5rem;
-                    border: 1px solid var(--batman-accent);
-                    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-                    z-index: 10000;
-                    font-weight: 500;
-                    max-width: 300px;
-                    animation: slideIn 0.3s ease-out;
-                `;
-                notification.textContent = message;
-                
-                // Add to page
-                document.body.appendChild(notification);
-                
-                // Remove after 3 seconds
-                setTimeout(() => {
-                    notification.style.animation = 'slideOut 0.3s ease-in';
-                    setTimeout(() => {
-                        if (notification.parentNode) {
-                            notification.parentNode.removeChild(notification);
-                        }
-                    }, 300);
-                }, 3000);
-            }
-            
-            function saveMessageToChat(text, sender) {
-                if (!currentChatId) {
-                    createNewChat();
-                }
-                
-                const chat = chatHistory.find(c => c.id === currentChatId);
-                if (chat) {
-                    const timestamp = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-                    const message = { text, sender, timestamp };
-                    chat.messages.push(message);
-                    chat.lastMessage = text;
-                    
-                    // Check for title change commands
-                    if (sender === 'user') {
-                        const newTitle = detectTitleChangeCommand(text);
-                        if (newTitle) {
-                            // Change the title immediately
-                            changeChatTitle(newTitle);
-                            
-                            // Add a confirmation message from the bot
-                            const confirmMessage = {
-                                text: `✅ Chat title changed to "${newTitle}"`,
-                                sender: 'bot',
-                                timestamp: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
-                            };
-                            chat.messages.push(confirmMessage);
-                            chat.lastMessage = confirmMessage.text;
-                            
-                            // Add the confirmation to the UI
-                            addMessageToContainer(confirmMessage.text, confirmMessage.sender, confirmMessage.timestamp);
-                            
-                            saveChatToStorage();
-                            renderChatHistory();
-                            return; // Skip normal title generation
-                        }
-                    }
-                    
-                    // Update chat title if it's the first user message (simple fallback)
-                    if (sender === 'user' && chat.title === 'New Chat') {
-                        chat.title = text.length > 30 ? text.substring(0, 30) + '...' : text;
-                        updateCurrentChatTitle(chat.title);
-                    }
-                    
-                    // Generate AI title after 5 messages (2 user + 2 bot + 1 more = 5 total)
-                    if (chat.messages.length === 5 && chat.title !== 'New Chat') {
-                        // Show loading indicator
-                        const originalTitle = chat.title;
-                        chat.title = 'Generating title...';
-                        updateCurrentChatTitle('Generating title...');
-                        saveChatToStorage();
-                        renderChatHistory();
-                        
-                        // Generate title
-                        generateChatTitle(chat).then(success => {
-                            if (!success) {
-                                // Restore original title if generation failed
-                                chat.title = originalTitle;
-                                updateCurrentChatTitle(originalTitle);
-                                saveChatToStorage();
-                                renderChatHistory();
-                            }
-                        });
-                    }
-                    
-                    saveChatToStorage();
-                    renderChatHistory();
-                }
-            }
-            
-            // Sidebar event listeners
-            document.getElementById('new-chat-btn').addEventListener('click', createNewChat);
-            document.getElementById('settings-btn').addEventListener('click', () => {
-                document.getElementById('settings-panel').classList.add('open');
-            });
-            document.getElementById('help-btn').addEventListener('click', () => {
-                alert('Help documentation coming soon!');
-            });
-            
-            // Settings panel functionality
-            document.getElementById('close-settings').addEventListener('click', () => {
-                document.getElementById('settings-panel').classList.remove('open');
-            });
-            
-            // Theme switching functionality
-            function applyTheme(themeName) {
-                // Remove all existing theme classes
-                document.body.classList.remove('theme-cyberpunk', 'theme-ocean', 'theme-forest', 'theme-sunset', 'theme-purple', 'theme-minimal', 'theme-matrix');
-                
-                // Apply new theme class
-                if (themeName !== 'batman') {
-                    document.body.classList.add(`theme-${themeName}`);
-                }
-                
-                // Save theme preference
-                localStorage.setItem('askmebot_theme', themeName);
-                
-                // Update UI elements with new theme colors
-                updateThemeColors(themeName);
-            }
-            
-            function updateThemeColors(themeName) {
-                const root = document.documentElement;
-                const themes = {
-                    batman: {
-                        primary: '#ffd700',
-                        secondary: '#1a1a1a',
-                        background: '#0a0a0a',
-                        text: '#e5e5e5',
-                        border: '#ffd700'
-                    },
-                    cyberpunk: {
-                        primary: '#00ffff',
-                        secondary: '#1a0d2e',
-                        background: '#0a0a0a',
-                        text: '#00ffff',
-                        border: '#ff0080'
-                    },
-                    ocean: {
-                        primary: '#00b4d8',
-                        secondary: '#023e8a',
-                        background: '#001d3d',
-                        text: '#caf0f8',
-                        border: '#0077b6'
-                    },
-                    forest: {
-                        primary: '#52c41a',
-                        secondary: '#135200',
-                        background: '#0a1f0a',
-                        text: '#b7eb8f',
-                        border: '#73d13d'
-                    },
-                    sunset: {
-                        primary: '#ff6b35',
-                        secondary: '#8b2c00',
-                        background: '#2d1b00',
-                        text: '#ffb366',
-                        border: '#ff8c42'
-                    },
-                    purple: {
-                        primary: '#9c27b0',
-                        secondary: '#4a148c',
-                        background: '#1a0033',
-                        text: '#e1bee7',
-                        border: '#ba68c8'
-                    },
-                    minimal: {
-                        primary: '#2563eb',
-                        secondary: '#f8fafc',
-                        background: '#ffffff',
-                        text: '#1e293b',
-                        border: '#e2e8f0'
-                    },
-                    matrix: {
-                        primary: '#00ff00',
-                        secondary: '#001100',
-                        background: '#000000',
-                        text: '#00ff00',
-                        border: '#00cc00'
-                    }
-                };
-                
-                const theme = themes[themeName];
-                if (theme) {
-                    root.style.setProperty('--primary-color', theme.primary);
-                    root.style.setProperty('--secondary-color', theme.secondary);
-                    root.style.setProperty('--background-color', theme.background);
-                    root.style.setProperty('--text-color', theme.text);
-                    root.style.setProperty('--border-color', theme.border);
-                }
-            }
-            
-            // Load saved theme on page load
-            const savedTheme = localStorage.getItem('askmebot_theme') || 'batman';
-            document.getElementById('theme-select').value = savedTheme;
-            applyTheme(savedTheme);
-            
-            // Theme selector event listener
-            document.getElementById('theme-select').addEventListener('change', (e) => {
-                applyTheme(e.target.value);
-            });
-            
-            document.getElementById('export-chats').addEventListener('click', () => {
-                const dataStr = JSON.stringify(chatHistory, null, 2);
-                const dataBlob = new Blob([dataStr], {type: 'application/json'});
-                const url = URL.createObjectURL(dataBlob);
-                const link = document.createElement('a');
-                link.href = url;
-                link.download = `askmebot-chats-${new Date().toISOString().split('T')[0]}.json`;
-                link.click();
-                URL.revokeObjectURL(url);
-            });
-            
-            document.getElementById('delete-all-chats').addEventListener('click', () => {
-                if (chatHistory.length === 0) {
-                    showNotification('No chats to delete.', 'info');
-                    return;
-                }
-                
-                if (confirm(`Are you sure you want to delete all ${chatHistory.length} chats? This action cannot be undone.`)) {
-                    chatHistory = [];
-                    saveChatToStorage();
-                    renderChatHistory();
-                    clearChatContainer();
-                    currentChatId = null;
-                    updateCurrentChatTitle('New Conversation');
-                    showNotification('All chats have been deleted.', 'success');
-                }
-            });
-            
-            document.getElementById('clear-data').addEventListener('click', () => {
-                if (confirm('Are you sure you want to clear all chat data? This action cannot be undone.')) {
-                    localStorage.removeItem('askmebot_chats');
-                    chatHistory = [];
-                    renderChatHistory();
-                    clearChatContainer();
-                    currentChatId = null;
-                    updateCurrentChatTitle('New Conversation');
-                    showNotification('All chat data has been cleared.', 'success');
-                }
-            });
-            
-            document.getElementById('regenerate-title').addEventListener('click', async () => {
-                if (!currentChatId) {
-                    alert('No active chat to regenerate title for.');
-                    return;
-                }
-                
-                const chat = chatHistory.find(c => c.id === currentChatId);
-                if (!chat || chat.messages.length < 2) {
-                    alert('Need at least 2 messages to generate a title.');
-                    return;
-                }
-                
-                const button = document.getElementById('regenerate-title');
-                const originalText = button.textContent;
-                button.textContent = 'Generating...';
-                button.disabled = true;
-                
-                const success = await generateChatTitle(chat);
-                
-                button.textContent = originalText;
-                button.disabled = false;
-                
-                if (success) {
-                    alert('Title regenerated successfully!');
-                } else {
-                    alert('Failed to regenerate title. Please try again.');
-                }
-            });
-            
-            // Mobile menu functionality
-            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-            const sidebar = document.querySelector('.sidebar');
-            
-            mobileMenuBtn.addEventListener('click', () => {
-                sidebar.classList.toggle('open');
-            });
-            
-            // Close sidebar when clicking outside on mobile
-            document.addEventListener('click', (e) => {
-                if (window.innerWidth <= 768) {
-                    if (!sidebar.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
-                        sidebar.classList.remove('open');
-                    }
-                }
-            });
-            
-            // Check API status
-            async function checkAPIStatus() {
-                try {
-                    const response = await fetch('/health');
-                    const data = await response.json();
-                    
-                    const statusIndicator = document.getElementById('status-indicator');
-                    const statusText = document.getElementById('status-text');
-                    
-                    if (data.api_key_available) {
-                        statusIndicator.className = 'status-indicator online';
-                        statusText.textContent = 'ONLINE';
-                        statusText.className = 'text-green-400 text-sm font-medium';
-                    } else {
-                        statusIndicator.className = 'status-indicator offline';
-                        statusText.textContent = 'OFFLINE';
-                        statusText.className = 'text-red-400 text-sm font-medium';
-                    }
-                } catch (error) {
-                    const statusIndicator = document.getElementById('status-indicator');
-                    const statusText = document.getElementById('status-text');
-                    
-                    statusIndicator.className = 'status-indicator offline';
-                    statusText.textContent = 'ERROR';
-                    statusText.className = 'text-red-400 text-sm font-medium';
-                }
-            }
-            
-            // Check status on page load
-            checkAPIStatus();
-            
-            // Create floating particles
-            function createParticles() {
-                const particlesContainer = document.getElementById('particles');
-                for (let i = 0; i < 20; i++) {
-                    const particle = document.createElement('div');
-                    particle.className = 'particle';
-                    particle.style.left = Math.random() * 100 + '%';
-                    particle.style.animationDelay = Math.random() * 6 + 's';
-                    particle.style.animationDuration = (Math.random() * 3 + 3) + 's';
-                    particlesContainer.appendChild(particle);
-                }
-            }
-            
-            createParticles();
-            
-            // Model selector functionality
-            modelSelector.addEventListener('click', function() {
-                modelDropdown.classList.toggle('hidden');
-            });
-            
-            modelOptions.forEach(option => {
-                option.addEventListener('click', function() {
-                    selectedModel = this.dataset.model;
-                    modelDropdown.classList.add('hidden');
-                    
-                    // Update button text
-                    const modelName = this.querySelector('p').textContent;
-                    modelSelector.innerHTML = `
-                        <i class="fas fa-brain text-sm"></i>
-                        <span>${modelName}</span>
-                        <i class="fas fa-chevron-down text-xs"></i>
-                    `;
-                });
-            });
-            
-            // Close dropdown when clicking outside
-            document.addEventListener('click', function(e) {
-                if (!modelSelector.contains(e.target) && !modelDropdown.contains(e.target)) {
-                    modelDropdown.classList.add('hidden');
-                }
-            });
-            
-            function addMessage(text, sender) {
-                const timestamp = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-                
-                // Save message to current chat
-                saveMessageToChat(text, sender);
-                
-                // Add message to container
-                addMessageToContainer(text, sender, timestamp);
-                
-                // Scroll to bottom
-                const chatContainer = document.getElementById('chat-container');
-                chatContainer.scrollTop = chatContainer.scrollHeight;
-            }
-            
-            // Deep research toggle functionality
-            const deepResearchToggle = document.getElementById('deep-research-toggle');
-            deepResearchToggle.addEventListener('click', function() {
-                deepResearchMode = !deepResearchMode;
-                if (deepResearchMode) {
-                    this.classList.add('active');
-                    this.title = 'Deep Research Mode: ON - Multiple models will collaborate';
-                    showNotification('Deep Research Mode activated! Multiple models will collaborate.', 'success');
-                } else {
-                    this.classList.remove('active');
-                    this.title = 'Toggle Deep Research Mode - Multiple models collaborate';
-                    showNotification('Deep Research Mode deactivated.', 'info');
-                }
-            });
-            
-            // Enhance prompt button functionality
-            const enhancePromptButton = document.getElementById('enhance-prompt-button');
-            enhancePromptButton.addEventListener('click', async function() {
-                const message = messageInput.value.trim();
-                
-                if (!message) {
-                    showNotification('Please enter a message to enhance', 'warning');
-                    return;
-                }
-                
-                // Show loading state
-                const originalText = enhancePromptButton.innerHTML;
-                enhancePromptButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-                enhancePromptButton.disabled = true;
-                
-                try {
-                    // Get current chat history for context
-                    const currentChat = currentChatId ? chatHistory.find(c => c.id === currentChatId) : null;
-                    const chatHistoryForEnhancement = currentChat ? currentChat.messages.slice(-5) : []; // Last 5 messages for context
-                    
-                    // Send enhancement request
-                    const response = await fetch('/enhance-prompt', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            prompt: message,
-                            model: selectedModel,
-                            chatHistory: chatHistoryForEnhancement
-                        })
-                    });
-                    
-                    const data = await response.json();
-                    
-                    if (data.success) {
-                        // Replace the input with enhanced prompt
-                        messageInput.value = data.enhanced_prompt;
-                        showNotification('Prompt enhanced successfully!', 'success');
-                    } else {
-                        showNotification('Failed to enhance prompt: ' + (data.error || 'Unknown error'), 'error');
-                    }
-                } catch (error) {
-                    console.error('Enhance prompt error:', error);
-                    showNotification('Failed to enhance prompt. Please try again.', 'error');
-                } finally {
-                    // Restore button state
-                    enhancePromptButton.innerHTML = originalText;
-                    enhancePromptButton.disabled = false;
-                }
-            });
-            
-            chatForm.addEventListener('submit', async function(e) {
-                e.preventDefault();
-                const message = messageInput.value.trim();
-                
-                if (message) {
-                    // Add user message
-                    addMessage(message, 'user');
-                    messageInput.value = '';
-                    
-                    // Show typing indicator
-                    typingIndicator.classList.remove('hidden');
-                    chatContainer.scrollTop = chatContainer.scrollHeight;
-                    
-                    try {
-                        // Add a small delay to make typing indicator visible
-                        await new Promise(resolve => setTimeout(resolve, 500));
-                        
-                        // Show deep research container if in deep research mode
-                        if (deepResearchMode) {
-                            const deepResearchContainer = document.getElementById('deep-research-container');
-                            deepResearchContainer.classList.remove('hidden');
-                            showThinkingProcess();
-                        }
-                        
-                        // Send message to AskMeBot API
-                        const response = await fetch('/chat', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify({
-                                prompt: message,
-                                model: selectedModel,
-                                deepResearchMode: deepResearchMode
-                            })
-                        });
-                        
-                        console.log('Response status:', response.status);
-                        console.log('Response ok:', response.ok);
-                        
-                        if (response.ok) {
-                            const data = await response.json();
-                            console.log('Response data:', data);
-                            
-                            // Check for errors in response (only for actual error strings)
-                            if (data.error && typeof data.error === 'string' && data.error.trim() !== '') {
-                                console.error('API Error:', data.error);
-                                showNotification(`Error: ${data.error}`, 'error');
-                                
-                                // Hide deep research container on error
-                                if (deepResearchMode) {
-                                    const deepResearchContainer = document.getElementById('deep-research-container');
-                                    deepResearchContainer.classList.add('hidden');
-                                }
-                                
-                                // Add error message to chat
-                                addMessage(`Sorry, I encountered an error: ${data.error}`, 'bot');
-                                return;
-                            }
-                            typingIndicator.classList.add('hidden');
-                            
-                            // Add the response to chat
-                                addMessage(data.response || 'I received your message but couldn\'t process it properly.', 'bot');
-                            
-                            // Hide typing indicator and deep research container after response
-                            const typingIndicator = document.getElementById('typing-indicator');
-                            if (typingIndicator) {
-                                typingIndicator.classList.add('hidden');
-                            }
-                            
-                            if (deepResearchMode) {
-                                const deepResearchContainer = document.getElementById('deep-research-container');
-                                deepResearchContainer.classList.add('hidden');
-                            }
-                        } else {
-                            console.error('API request failed. Status:', response.status);
-                            console.error('Response text:', await response.text());
-                            throw new Error('API request failed');
-                        }
-                    } catch (error) {
-                        console.error('Error:', error);
-                        typingIndicator.classList.add('hidden');
-                        addMessage('Sorry, I encountered an error while processing your request. Please try again.', 'bot');
-                        
-                        // Hide deep research container on error
-                        if (deepResearchMode) {
-                            const deepResearchContainer = document.getElementById('deep-research-container');
-                            deepResearchContainer.classList.add('hidden');
-                        }
-                    }
-                }
-            });
-            
-            // Initialize the application
-            loadChatsFromStorage();
-            
-            // Auto-focus input on load
-            messageInput.focus();
-            
-                         // Add some enhanced interactions
+            loadSettings();
+            loadChatHistory();
+            setupEventListeners();
+            applyTheme(localStorage.getItem('theme') || 'light');
+        });
+
+        // Event listeners
+        function setupEventListeners() {
+            sendButton.addEventListener('click', sendMessage);
             messageInput.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter' && !e.shiftKey) {
                     e.preventDefault();
-                    chatForm.dispatchEvent(new Event('submit'));
+                    sendMessage();
                 }
             });
             
-            // Keyboard shortcuts
-            document.addEventListener('keydown', function(e) {
-                // Ctrl+Delete to delete current chat
-                if (e.ctrlKey && e.key === 'Delete' && currentChatId) {
-                    e.preventDefault();
-                    const chat = chatHistory.find(c => c.id === currentChatId);
-                    if (chat) {
-                        deleteChat(currentChatId, null);
-                    }
-                }
+            messageInput.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = Math.min(this.scrollHeight, 120) + 'px';
             });
-        });
+
+            newChatBtn.addEventListener('click', startNewChat);
+            modelSelect.addEventListener('change', saveSettings);
+            themeSelect.addEventListener('change', function() {
+                applyTheme(this.value);
+                saveSettings();
+            });
+            enhancePromptBtn.addEventListener('click', enhancePrompt);
+        }
+
+        // Send message
+        async function sendMessage() {
+            const message = messageInput.value.trim();
+            if (!message || isGenerating) return;
+
+            // Add user message
+            addMessage(message, 'user');
+            messageInput.value = '';
+            messageInput.style.height = 'auto';
+
+            // Show typing indicator
+            showTypingIndicator();
+
+            try {
+                const response = await fetch('/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        prompt: message,
+                        model: modelSelect.value
+                    })
+                });
+
+                const data = await response.json();
+                hideTypingIndicator();
+
+                if (response.ok) {
+                    addMessage(data.response || 'I received your message but couldn\'t process it properly.', 'bot');
+                    
+                    // Generate title for new chat
+                    if (!currentChatId) {
+                        generateChatTitle(message);
+                    }
+                } else {
+                    addMessage(`Error: ${data.error || 'Something went wrong'}`, 'bot');
+                }
+            } catch (error) {
+                hideTypingIndicator();
+                addMessage('Sorry, I encountered an error while processing your request. Please try again.', 'bot');
+                console.error('Error:', error);
+            }
+        }
+
+        // Add message to chat
+        function addMessage(content, sender) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `flex ${sender === 'user' ? 'justify-end' : 'justify-start'} mb-4`;
+            
+            const messageBubble = document.createElement('div');
+            messageBubble.className = `message-bubble max-w-3xl px-4 py-3 ${
+                sender === 'user' 
+                    ? 'bg-blue-500 text-white' 
+                    : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white'
+            }`;
+            
+            if (sender === 'bot') {
+                messageBubble.innerHTML = parseMarkdown(content);
+            } else {
+                messageBubble.textContent = content;
+            }
+            
+            messageDiv.appendChild(messageBubble);
+            chatContainer.appendChild(messageDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+
+            // Save to chat history
+            if (currentChatId) {
+                const chat = chatHistory.find(c => c.id === currentChatId);
+                if (chat) {
+                    chat.messages.push({ content, sender, timestamp: new Date().toISOString() });
+                    saveChatHistory();
+                }
+            }
+        }
+
+        // Parse markdown to HTML
+        function parseMarkdown(text) {
+            return text
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                .replace(/`(.*?)`/g, '<code>$1</code>')
+                .replace(/^### (.*$)/gim, '<h3>$1</h3>')
+                .replace(/^## (.*$)/gim, '<h2>$1</h2>')
+                .replace(/^# (.*$)/gim, '<h1>$1</h1>')
+                .replace(/\n/g, '<br>');
+        }
+
+        // Show/hide typing indicator
+        function showTypingIndicator() {
+            typingIndicator.classList.remove('hidden');
+            isGenerating = true;
+            sendButton.disabled = true;
+        }
+
+        function hideTypingIndicator() {
+            typingIndicator.classList.add('hidden');
+            isGenerating = false;
+            sendButton.disabled = false;
+        }
+
+        // New chat
+        function startNewChat() {
+            currentChatId = null;
+            currentChatTitle.textContent = 'New Chat';
+            chatContainer.innerHTML = `
+                <div class="text-center py-12">
+                    <div class="w-16 h-16 gradient-bg rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-robot text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Welcome to AskMeBot</h3>
+                    <p class="text-gray-500 dark:text-gray-400">Your professional AI assistant is ready to help. Start by typing a message below.</p>
+                </div>
+            `;
+        }
+
+        // Generate chat title
+        async function generateChatTitle(firstMessage) {
+            try {
+                const response = await fetch('/generate-title', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        firstMessage: firstMessage.substring(0, 100)
+                    })
+                });
+
+                const data = await response.json();
+                if (response.ok && data.title) {
+                    currentChatTitle.textContent = data.title;
+                    
+                    // Create new chat entry
+                    const chatId = Date.now().toString();
+                    currentChatId = chatId;
+                    const newChat = {
+                        id: chatId,
+                        title: data.title,
+                        messages: [],
+                        timestamp: new Date().toISOString()
+                    };
+                    chatHistory.unshift(newChat);
+                    saveChatHistory();
+                    updateChatHistoryDisplay();
+                }
+            } catch (error) {
+                console.error('Error generating title:', error);
+            }
+        }
+
+        // Load chat history
+        function loadChatHistory() {
+            const saved = localStorage.getItem('chatHistory');
+            if (saved) {
+                chatHistory = JSON.parse(saved);
+                updateChatHistoryDisplay();
+            }
+        }
+
+        // Save chat history
+        function saveChatHistory() {
+            localStorage.setItem('chatHistory', JSON.stringify(chatHistory));
+        }
+
+        // Update chat history display
+        function updateChatHistoryDisplay() {
+            chatHistoryContainer.innerHTML = '';
+            chatHistory.forEach(chat => {
+                const chatItem = document.createElement('div');
+                chatItem.className = 'chat-item p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer group';
+                chatItem.innerHTML = `
+                    <div class="flex items-center justify-between">
+                        <div class="flex-1 min-w-0">
+                            <p class="text-sm font-medium text-gray-900 dark:text-white truncate">${chat.title}</p>
+                            <p class="text-xs text-gray-500 dark:text-gray-400">${new Date(chat.timestamp).toLocaleDateString()}</p>
+                        </div>
+                        <div class="flex items-center space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <button class="p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300" onclick="editChatTitle('${chat.id}')">
+                                <i class="fas fa-edit text-xs"></i>
+                            </button>
+                            <button class="p-1 text-red-400 hover:text-red-600" onclick="deleteChat('${chat.id}')">
+                                <i class="fas fa-trash text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                chatItem.addEventListener('click', () => loadChat(chat.id));
+                chatHistoryContainer.appendChild(chatItem);
+            });
+        }
+
+        // Load chat
+        function loadChat(chatId) {
+            const chat = chatHistory.find(c => c.id === chatId);
+            if (!chat) return;
+
+            currentChatId = chatId;
+            currentChatTitle.textContent = chat.title;
+            
+            chatContainer.innerHTML = '';
+            chat.messages.forEach(msg => {
+                addMessage(msg.content, msg.sender);
+            });
+        }
+
+        // Edit chat title
+        function editChatTitle(chatId) {
+            const chat = chatHistory.find(c => c.id === chatId);
+            if (!chat) return;
+
+            const newTitle = prompt('Enter new title:', chat.title);
+            if (newTitle && newTitle.trim() !== '') {
+                chat.title = newTitle.trim();
+                saveChatHistory();
+                updateChatHistoryDisplay();
+                
+                if (currentChatId === chatId) {
+                    currentChatTitle.textContent = newTitle.trim();
+                }
+            }
+        }
+
+        // Delete chat
+        function deleteChat(chatId) {
+            if (confirm('Are you sure you want to delete this chat?')) {
+                chatHistory = chatHistory.filter(c => c.id !== chatId);
+                saveChatHistory();
+                updateChatHistoryDisplay();
+                
+                if (currentChatId === chatId) {
+                    startNewChat();
+                }
+            }
+        }
+
+        // Load settings
+        function loadSettings() {
+            const savedModel = localStorage.getItem('selectedModel');
+            if (savedModel) {
+                modelSelect.value = savedModel;
+            }
+            
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                themeSelect.value = savedTheme;
+            }
+        }
+
+        // Save settings
+        function saveSettings() {
+            localStorage.setItem('selectedModel', modelSelect.value);
+            localStorage.setItem('theme', themeSelect.value);
+        }
+
+        // Apply theme
+        function applyTheme(themeName) {
+            document.documentElement.setAttribute('data-theme', themeName);
+        }
+
+        // Enhance prompt
+        async function enhancePrompt() {
+            const message = messageInput.value.trim();
+            if (!message) {
+                alert('Please enter a message to enhance');
+                return;
+            }
+
+            try {
+                const response = await fetch('/enhance-prompt', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        prompt: message
+                    })
+                });
+
+                const data = await response.json();
+                if (response.ok && data.enhancedPrompt) {
+                    messageInput.value = data.enhancedPrompt;
+                    alert('Prompt enhanced successfully!');
+                } else {
+                    alert('Failed to enhance prompt');
+                }
+            } catch (error) {
+                alert('Error enhancing prompt');
+                console.error('Error:', error);
+            }
+        }
     </script>
 </body>
-</html> 
+</html>
