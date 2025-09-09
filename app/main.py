@@ -126,6 +126,73 @@ def change_chat_title(title_input: ChangeTitleInput):
     except Exception as e:
         return {"error": str(e), "success": False}
 
+@app.post("/enhance-prompt")
+def enhance_prompt(enhance_input: dict):
+    """Enhance a prompt using the COSTAR principle with chat history context"""
+    try:
+        if not os.getenv("GROQ_API_KEY"):
+            return {"error": "GROQ_API_KEY not found", "success": False}
+        
+        from langchain_groq import ChatGroq
+        from langchain.prompts import ChatPromptTemplate
+        
+        prompt = enhance_input.get("prompt", "")
+        model = enhance_input.get("model", "openai/gpt-oss-20b")
+        chat_history = enhance_input.get("chatHistory", [])
+        
+        if not prompt:
+            return {"error": "No prompt provided", "success": False}
+        
+        # Build context from chat history
+        context = ""
+        if chat_history:
+            context = "Previous conversation context:\n"
+            for msg in chat_history[-3:]:  # Last 3 messages for context
+                context += f"{msg.get('sender', 'user')}: {msg.get('text', '')}\n"
+            context += "\n"
+        
+        # COSTAR enhancement prompt
+        enhancement_prompt = ChatPromptTemplate.from_messages([
+            ("system", f"""You are an expert prompt engineer. Your task is to enhance user prompts using the COSTAR principle to make them more effective and specific.
+
+COSTAR Framework:
+- C: Context - Provide background and information on the task
+- O: Objective - Define the task that you want the LLM to perform  
+- S: Style - Specify the writing style you want the LLM to use
+- T: Tone - Set the attitude and tone of the response
+- A: Audience - Identify who the response is for
+- R: Response - Provide the response format and style
+
+{context}
+
+Instructions:
+1. Analyze the user's prompt and identify what they're trying to achieve
+2. Enhance it using the COSTAR framework to make it more specific and effective
+3. Keep the enhanced prompt concise but comprehensive
+4. Maintain the user's original intent while adding necessary context and structure
+5. Make the prompt more likely to produce high-quality, relevant responses
+6. If the prompt is already well-structured, make minor improvements for clarity
+
+Return only the enhanced prompt, nothing else."""),
+            ("user", "Please enhance this prompt: {prompt}")
+        ])
+        
+        llm = ChatGroq(model=model)
+        formatted_prompt = enhancement_prompt.format_messages(prompt=prompt)
+        response = llm.invoke(formatted_prompt)
+        
+        enhanced_prompt = response.content.strip()
+        
+        return {
+            "success": True,
+            "enhanced_prompt": enhanced_prompt,
+            "original_prompt": prompt
+        }
+        
+    except Exception as e:
+        print(f"Prompt enhancement error: {e}")
+        return {"error": str(e), "success": False}
+
 @app.post("/save")
 def save():
     return {"message": "Save endpoint"}

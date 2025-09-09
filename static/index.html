@@ -237,9 +237,21 @@
             transition: all 0.3s ease;
         }
         
+        .enhance-prompt-button {
+            background: linear-gradient(45deg, #8b5cf6, #a855f7);
+            color: white;
+            border: none;
+            transition: all 0.3s ease;
+        }
+        
         .send-button:hover {
             transform: scale(1.05);
             box-shadow: 0 5px 20px var(--primary-color);
+        }
+        
+        .enhance-prompt-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(139, 92, 246, 0.4);
         }
         
         .typing-indicator {
@@ -1072,6 +1084,14 @@
                         autocomplete="off"
                     >
                 </div>
+                <button 
+                    type="button" 
+                    id="enhance-prompt-button" 
+                    class="enhance-prompt-button px-4 py-3 rounded-xl font-bold hover:shadow-lg transition-all duration-200"
+                    title="Enhance prompt using COSTAR principle"
+                >
+                    <i class="fas fa-magic"></i>
+                </button>
                 <button type="submit" class="send-button px-6 py-3 rounded-xl font-bold hover:shadow-lg transition-all duration-200">
                     <i class="fas fa-paper-plane"></i>
                 </button>
@@ -1837,6 +1857,58 @@
                 const chatContainer = document.getElementById('chat-container');
                 chatContainer.scrollTop = chatContainer.scrollHeight;
             }
+            
+            // Enhance prompt button functionality
+            const enhancePromptButton = document.getElementById('enhance-prompt-button');
+            enhancePromptButton.addEventListener('click', async function() {
+                const message = messageInput.value.trim();
+                
+                if (!message) {
+                    showNotification('Please enter a message to enhance', 'warning');
+                    return;
+                }
+                
+                // Show loading state
+                const originalText = enhancePromptButton.innerHTML;
+                enhancePromptButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                enhancePromptButton.disabled = true;
+                
+                try {
+                    // Get current chat history for context
+                    const currentChat = getCurrentChat();
+                    const chatHistory = currentChat ? currentChat.messages.slice(-5) : []; // Last 5 messages for context
+                    
+                    // Send enhancement request
+                    const response = await fetch('/enhance-prompt', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            prompt: message,
+                            model: selectedModel,
+                            chatHistory: chatHistory
+                        })
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        // Replace the input with enhanced prompt
+                        messageInput.value = data.enhanced_prompt;
+                        showNotification('Prompt enhanced successfully!', 'success');
+                    } else {
+                        showNotification('Failed to enhance prompt: ' + (data.error || 'Unknown error'), 'error');
+                    }
+                } catch (error) {
+                    console.error('Enhance prompt error:', error);
+                    showNotification('Failed to enhance prompt. Please try again.', 'error');
+                } finally {
+                    // Restore button state
+                    enhancePromptButton.innerHTML = originalText;
+                    enhancePromptButton.disabled = false;
+                }
+            });
             
             chatForm.addEventListener('submit', async function(e) {
                 e.preventDefault();
