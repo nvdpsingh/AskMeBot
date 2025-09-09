@@ -26,7 +26,7 @@ RESEARCH_MODELS = {
     "technician": "deepseek-r1-distill-llama-70b",  # Technical analysis and reasoning
     "innovator": "meta-llama/llama-4-maverick-17b-128e-instruct",  # Creative approaches
     "reviewer": "meta-llama/llama-4-scout-17b-16e-instruct",  # Critical review and validation
-    "synthesizer": "openai/gpt-oss-120b"  # Final synthesis
+    "synthesizer": "llama-3.3-70b-versatile"  # Final synthesis
 }
 
 class ResearchState(TypedDict):
@@ -488,13 +488,23 @@ def deep_research_analysis(prompt: str, primary_model: str) -> Dict[str, Any]:
         logger.info("=" * 40)
         try:
             synthesis_llm = create_agent_llm("synthesizer")
+            # Truncate inputs to prevent token limit issues
+            def truncate_text(text, max_length=2000):
+                if len(text) <= max_length:
+                    return text
+                return text[:max_length] + "... [truncated]"
+            
+            # Truncate agent insights and debate content
+            truncated_insights = {agent: truncate_text(insight) for agent, insight in agent_insights.items()}
+            truncated_debate = truncate_text(debate_content)
+            
             synthesis_prompt = f"""Synthesize a final response for: {prompt}
             
             All agent insights:
-            {chr(10).join([f"{agent}: {insight}" for agent, insight in agent_insights.items()])}
+            {chr(10).join([f"{agent}: {insight}" for agent, insight in truncated_insights.items()])}
             
             Debate:
-            {debate_content}
+            {truncated_debate}
             
             Create a comprehensive, well-structured final response that synthesizes all findings."""
             

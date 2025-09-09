@@ -2175,8 +2175,12 @@
                             })
                         });
                         
+                        console.log('Response status:', response.status);
+                        console.log('Response ok:', response.ok);
+                        
                         if (response.ok) {
                             const data = await response.json();
+                            console.log('Response data:', data);
                             
                             // Check for errors in response (only for actual error strings)
                             if (data.error && typeof data.error === 'string' && data.error.trim() !== '') {
@@ -2209,6 +2213,8 @@
                                 deepResearchContainer.classList.add('hidden');
                             }
                         } else {
+                            console.error('API request failed. Status:', response.status);
+                            console.error('Response text:', await response.text());
                             throw new Error('API request failed');
                         }
                     } catch (error) {
