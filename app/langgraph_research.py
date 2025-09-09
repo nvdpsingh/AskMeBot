@@ -5,6 +5,7 @@ Multiple AI agents collaborate using LangGraph's ReAct pattern
 
 import os
 import logging
+import time
 from datetime import datetime
 from typing import Dict, List, Any, TypedDict, Annotated
 from langgraph.graph import StateGraph, END
@@ -420,6 +421,10 @@ def deep_research_analysis(prompt: str, primary_model: str) -> Dict[str, Any]:
                 ]
                 
                 logger.info(f"📤 Sending request to {agent_type}...")
+                
+                # Add small delay to respect rate limits
+                time.sleep(1)
+                
                 response = llm.invoke(messages)
                 agent_insights[agent_type] = response.content
                 
@@ -461,6 +466,10 @@ def deep_research_analysis(prompt: str, primary_model: str) -> Dict[str, Any]:
             ]
             
             logger.info("📤 Sending debate request to reviewer...")
+            
+            # Add small delay to respect rate limits
+            time.sleep(1)
+            
             debate_response = debate_llm.invoke(messages)
             debate_content = debate_response.content
             
@@ -503,6 +512,10 @@ def deep_research_analysis(prompt: str, primary_model: str) -> Dict[str, Any]:
             ]
             
             logger.info("📤 Sending synthesis request...")
+            
+            # Add small delay to respect rate limits
+            time.sleep(1)
+            
             synthesis_response = synthesis_llm.invoke(messages)
             final_synthesis = synthesis_response.content
             
