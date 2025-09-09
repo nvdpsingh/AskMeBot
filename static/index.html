@@ -2179,18 +2179,13 @@
                             }
                             typingIndicator.classList.add('hidden');
                             
-                            // Check if there's an error in the response
-                            if (data.error) {
-                                let errorMessage = data.response || 'An error occurred while processing your request.';
-                                addMessage(errorMessage, 'bot');
-                            } else {
+                            // Add the response to chat
                                 addMessage(data.response || 'I received your message but couldn\'t process it properly.', 'bot');
-                                
-                                // Hide deep research container after response
-                                if (deepResearchMode) {
-                                    const deepResearchContainer = document.getElementById('deep-research-container');
-                                    deepResearchContainer.classList.add('hidden');
-                                }
+                            
+                            // Hide deep research container after response
+                            if (deepResearchMode) {
+                                const deepResearchContainer = document.getElementById('deep-research-container');
+                                deepResearchContainer.classList.add('hidden');
                             }
                         } else {
                             throw new Error('API request failed');
