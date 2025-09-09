@@ -258,6 +258,32 @@
             box-shadow: 0 5px 20px rgba(139, 92, 246, 0.4);
         }
         
+        .deep-research-toggle {
+            background: linear-gradient(45deg, #10b981, #059669);
+            color: white;
+            border: none;
+            transition: all 0.3s ease;
+        }
+        
+        .deep-research-toggle.active {
+            background: linear-gradient(45deg, #f59e0b, #d97706);
+            animation: pulse 2s infinite;
+        }
+        
+        .deep-research-toggle:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(16, 185, 129, 0.4);
+        }
+        
+        .deep-research-toggle.active:hover {
+            box-shadow: 0 5px 20px rgba(245, 158, 11, 0.4);
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+        
         .typing-indicator {
             background: linear-gradient(135deg, var(--secondary-color) 0%, var(--background-color) 100%);
             border: 1px solid var(--border-color);
@@ -1074,6 +1100,20 @@
                     <div class="typing-dot w-2 h-2 rounded-full"></div>
                 </div>
             </div>
+            
+            <!-- Deep Research Thinking Process -->
+            <div id="deep-research-container" class="deep-research-container hidden mb-4">
+                <div class="bg-gradient-to-r from-blue-900 to-purple-900 rounded-lg p-4 border border-blue-500">
+                    <div class="flex items-center mb-3">
+                        <i class="fas fa-brain text-blue-400 mr-2"></i>
+                        <h3 class="text-lg font-bold text-blue-300">Deep Research Mode</h3>
+                        <div class="ml-auto text-sm text-blue-200">Multiple models collaborating...</div>
+                    </div>
+                    <div id="thinking-process" class="space-y-3 max-h-96 overflow-y-auto">
+                        <!-- Thinking process will be populated here -->
+                    </div>
+                </div>
+            </div>
         </div>
         
         <!-- Input Container -->
@@ -1096,6 +1136,14 @@
                 >
                     <i class="fas fa-magic"></i>
                 </button>
+                <button 
+                    type="button" 
+                    id="deep-research-toggle" 
+                    class="deep-research-toggle px-4 py-3 rounded-xl font-bold hover:shadow-lg transition-all duration-200"
+                    title="Toggle Deep Research Mode - Multiple models collaborate"
+                >
+                    <i class="fas fa-brain"></i>
+                </button>
                 <button type="submit" class="send-button px-6 py-3 rounded-xl font-bold hover:shadow-lg transition-all duration-200">
                     <i class="fas fa-paper-plane"></i>
                 </button>
@@ -1116,6 +1164,7 @@
             let selectedModel = 'openai/gpt-oss-20b';
             let currentChatId = null;
             let chatHistory = [];
+            let deepResearchMode = false;
             
             // Chat storage functions
             function generateChatId() {
@@ -1471,6 +1520,50 @@
                     // Show success message
                     showNotification(`Chat "${chatTitle}" has been deleted.`, 'success');
                 }
+            }
+            
+            function showThinkingProcess() {
+                const thinkingProcess = document.getElementById('thinking-process');
+                thinkingProcess.innerHTML = '';
+                
+                // Show initial thinking steps
+                const steps = [
+                    { model: 'Llama 3.1 70B', action: 'Analyzing the question...', delay: 1000 },
+                    { model: 'Mixtral 8x7B', action: 'Gathering initial insights...', delay: 2000 },
+                    { model: 'Qwen 2.5 72B', action: 'Cross-referencing information...', delay: 3000 },
+                    { model: 'DeepSeek Coder', action: 'Technical analysis...', delay: 4000 },
+                    { model: 'Gemma 2 27B', action: 'Alternative perspectives...', delay: 5000 },
+                    { model: 'OpenAI 120B', action: 'Synthesizing final response...', delay: 6000 }
+                ];
+                
+                steps.forEach((step, index) => {
+                    setTimeout(() => {
+                        addThinkingStep(step.model, step.action, index === steps.length - 1);
+                    }, step.delay);
+                });
+            }
+            
+            function addThinkingStep(model, action, isFinal = false) {
+                const thinkingProcess = document.getElementById('thinking-process');
+                const stepDiv = document.createElement('div');
+                stepDiv.className = `thinking-step p-3 rounded-lg border-l-4 ${
+                    isFinal ? 'border-yellow-400 bg-yellow-900/20' : 'border-blue-400 bg-blue-900/20'
+                }`;
+                
+                stepDiv.innerHTML = `
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <div class="w-3 h-3 rounded-full ${isFinal ? 'bg-yellow-400' : 'bg-blue-400'} mr-3 animate-pulse"></div>
+                            <span class="font-semibold text-blue-200">${model}</span>
+                        </div>
+                        <span class="text-sm text-blue-300">${action}</span>
+                    </div>
+                `;
+                
+                thinkingProcess.appendChild(stepDiv);
+                
+                // Scroll to bottom
+                thinkingProcess.scrollTop = thinkingProcess.scrollHeight;
             }
             
             function showNotification(message, type = 'info') {
@@ -1862,6 +1955,21 @@
                 chatContainer.scrollTop = chatContainer.scrollHeight;
             }
             
+            // Deep research toggle functionality
+            const deepResearchToggle = document.getElementById('deep-research-toggle');
+            deepResearchToggle.addEventListener('click', function() {
+                deepResearchMode = !deepResearchMode;
+                if (deepResearchMode) {
+                    this.classList.add('active');
+                    this.title = 'Deep Research Mode: ON - Multiple models will collaborate';
+                    showNotification('Deep Research Mode activated! Multiple models will collaborate.', 'success');
+                } else {
+                    this.classList.remove('active');
+                    this.title = 'Toggle Deep Research Mode - Multiple models collaborate';
+                    showNotification('Deep Research Mode deactivated.', 'info');
+                }
+            });
+            
             // Enhance prompt button functionality
             const enhancePromptButton = document.getElementById('enhance-prompt-button');
             enhancePromptButton.addEventListener('click', async function() {
@@ -1931,6 +2039,13 @@
                         // Add a small delay to make typing indicator visible
                         await new Promise(resolve => setTimeout(resolve, 500));
                         
+                        // Show deep research container if in deep research mode
+                        if (deepResearchMode) {
+                            const deepResearchContainer = document.getElementById('deep-research-container');
+                            deepResearchContainer.classList.remove('hidden');
+                            showThinkingProcess();
+                        }
+                        
                         // Send message to AskMeBot API
                         const response = await fetch('/chat', {
                             method: 'POST',
@@ -1939,7 +2054,8 @@
                             },
                             body: JSON.stringify({
                                 prompt: message,
-                                model: selectedModel
+                                model: selectedModel,
+                                deepResearchMode: deepResearchMode
                             })
                         });
                         
