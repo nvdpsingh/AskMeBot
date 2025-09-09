@@ -1875,8 +1875,8 @@
                 
                 try {
                     // Get current chat history for context
-                    const currentChat = getCurrentChat();
-                    const chatHistory = currentChat ? currentChat.messages.slice(-5) : []; // Last 5 messages for context
+                    const currentChat = currentChatId ? chatHistory.find(c => c.id === currentChatId) : null;
+                    const chatHistoryForEnhancement = currentChat ? currentChat.messages.slice(-5) : []; // Last 5 messages for context
                     
                     // Send enhancement request
                     const response = await fetch('/enhance-prompt', {
@@ -1887,7 +1887,7 @@
                         body: JSON.stringify({
                             prompt: message,
                             model: selectedModel,
-                            chatHistory: chatHistory
+                            chatHistory: chatHistoryForEnhancement
                         })
                     });
                     
