@@ -69,8 +69,8 @@ def chat(chat_input: dict):
             return {"error": "No prompt provided"}
         
         if deep_research_mode:
-            # Use deep research mode with multiple models
-            from app.deep_research import deep_research_analysis
+            # Use LangGraph deep research mode with ReAct agents
+            from app.langgraph_research import deep_research_analysis
             result = deep_research_analysis(prompt, model)
         else:
             # Use the groq_router to get the response
