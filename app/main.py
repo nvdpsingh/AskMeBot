@@ -151,27 +151,21 @@ def enhance_prompt(enhance_input: dict):
                 context += f"{msg.get('sender', 'user')}: {msg.get('text', '')}\n"
             context += "\n"
         
-        # COSTAR enhancement prompt
+        # Enhanced prompt generation
         enhancement_prompt = ChatPromptTemplate.from_messages([
-            ("system", f"""You are an expert prompt engineer. Your task is to enhance user prompts using the COSTAR principle to make them more effective and specific.
-
-COSTAR Framework:
-- C: Context - Provide background and information on the task
-- O: Objective - Define the task that you want the LLM to perform  
-- S: Style - Specify the writing style you want the LLM to use
-- T: Tone - Set the attitude and tone of the response
-- A: Audience - Identify who the response is for
-- R: Response - Provide the response format and style
+            ("system", f"""You are an expert prompt engineer. Your task is to enhance user prompts to make them more effective and specific.
 
 {context}
 
 Instructions:
 1. Analyze the user's prompt and identify what they're trying to achieve
-2. Enhance it using the COSTAR framework to make it more specific and effective
-3. Keep the enhanced prompt concise but comprehensive
-4. Maintain the user's original intent while adding necessary context and structure
-5. Make the prompt more likely to produce high-quality, relevant responses
-6. If the prompt is already well-structured, make minor improvements for clarity
+2. Enhance it by adding necessary context, clarity, and structure
+3. Make the prompt more specific and actionable
+4. Keep the enhanced prompt concise but comprehensive
+5. Maintain the user's original intent while improving effectiveness
+6. Add relevant background information if needed
+7. Specify the desired output format or style when appropriate
+8. If the prompt is already well-structured, make minor improvements for clarity
 
 Return only the enhanced prompt, nothing else."""),
             ("user", "Please enhance this prompt: {prompt}")
