@@ -2162,8 +2162,8 @@
                         if (response.ok) {
                             const data = await response.json();
                             
-                            // Check for errors in response
-                            if (data.error) {
+                            // Check for errors in response (only for actual error strings)
+                            if (data.error && typeof data.error === 'string' && data.error.trim() !== '') {
                                 console.error('API Error:', data.error);
                                 showNotification(`Error: ${data.error}`, 'error');
                                 
