@@ -1526,25 +1526,89 @@
                 const thinkingProcess = document.getElementById('thinking-process');
                 thinkingProcess.innerHTML = '';
                 
-                // Show LangGraph ReAct agent steps
-                const steps = [
-                    { agent: 'Research Analyst', action: 'Analyzing question with logical reasoning...', delay: 1000, color: 'blue' },
-                    { agent: 'Research Specialist', action: 'Exploring cross-cultural perspectives...', delay: 2000, color: 'green' },
-                    { agent: 'Technical Expert', action: 'Providing technical analysis and validation...', delay: 3000, color: 'purple' },
-                    { agent: 'Innovation Specialist', action: 'Generating creative insights...', delay: 4000, color: 'orange' },
-                    { agent: 'Critical Reviewer', action: 'Reviewing and validating findings...', delay: 5000, color: 'red' },
-                    { agent: 'Debate Facilitator', action: 'Facilitating agent collaboration...', delay: 6000, color: 'indigo' },
-                    { agent: 'Synthesis Expert', action: 'Synthesizing final response...', delay: 7000, color: 'yellow' }
+                // Show initial thinking process with real-time updates
+                const agents = [
+                    { agent: 'Research Analyst', action: 'Starting analysis...', color: 'blue', status: 'pending' },
+                    { agent: 'Research Specialist', action: 'Preparing research...', color: 'green', status: 'pending' },
+                    { agent: 'Technical Expert', action: 'Initializing technical analysis...', color: 'purple', status: 'pending' },
+                    { agent: 'Innovation Specialist', action: 'Preparing creative insights...', color: 'orange', status: 'pending' },
+                    { agent: 'Critical Reviewer', action: 'Setting up review process...', color: 'red', status: 'pending' },
+                    { agent: 'Debate Facilitator', action: 'Preparing collaboration...', color: 'indigo', status: 'pending' },
+                    { agent: 'Synthesis Expert', action: 'Ready for synthesis...', color: 'yellow', status: 'pending' }
                 ];
                 
-                steps.forEach((step, index) => {
-                    setTimeout(() => {
-                        addThinkingStep(step.agent, step.action, index === steps.length - 1, step.color);
-                    }, step.delay);
+                // Add all agents initially as pending
+                agents.forEach((agent, index) => {
+                    addThinkingStep(agent.agent, agent.action, false, agent.color, 'pending');
                 });
+                
+                // Simulate real-time progress updates
+                updateThinkingProgress(agents);
             }
             
-            function addThinkingStep(agent, action, isFinal = false, color = 'blue') {
+            function updateThinkingProgress(agents) {
+                const thinkingProcess = document.getElementById('thinking-process');
+                let currentAgent = 0;
+                
+                const progressSteps = [
+                    { agent: 0, action: 'Analyzing question with logical reasoning...', status: 'working' },
+                    { agent: 0, action: 'Completed analysis', status: 'completed' },
+                    { agent: 1, action: 'Exploring cross-cultural perspectives...', status: 'working' },
+                    { agent: 1, action: 'Research completed', status: 'completed' },
+                    { agent: 2, action: 'Providing technical analysis and validation...', status: 'working' },
+                    { agent: 2, action: 'Technical analysis completed', status: 'completed' },
+                    { agent: 3, action: 'Generating creative insights...', status: 'working' },
+                    { agent: 3, action: 'Creative insights completed', status: 'completed' },
+                    { agent: 4, action: 'Reviewing and validating findings...', status: 'working' },
+                    { agent: 4, action: 'Review completed', status: 'completed' },
+                    { agent: 5, action: 'Facilitating agent collaboration...', status: 'working' },
+                    { agent: 5, action: 'Debate facilitated', status: 'completed' },
+                    { agent: 6, action: 'Synthesizing final response...', status: 'working' },
+                    { agent: 6, action: 'Final synthesis completed', status: 'completed' }
+                ];
+                
+                let stepIndex = 0;
+                const updateInterval = setInterval(() => {
+                    if (stepIndex < progressSteps.length) {
+                        const step = progressSteps[stepIndex];
+                        const agent = agents[step.agent];
+                        
+                        // Update the specific agent's status
+                        updateAgentStatus(step.agent, step.action, step.status, agent.color);
+                        stepIndex++;
+                    } else {
+                        clearInterval(updateInterval);
+                    }
+                }, 2000); // Update every 2 seconds
+            }
+            
+            function updateAgentStatus(agentIndex, action, status, color) {
+                const thinkingProcess = document.getElementById('thinking-process');
+                const agentDivs = thinkingProcess.querySelectorAll('.thinking-step');
+                const agentDiv = agentDivs[agentIndex];
+                
+                if (agentDiv) {
+                    const actionSpan = agentDiv.querySelector('.agent-action');
+                    const statusDot = agentDiv.querySelector('.status-dot');
+                    
+                    if (actionSpan) actionSpan.textContent = action;
+                    if (statusDot) {
+                        statusDot.className = `status-dot w-3 h-3 rounded-full mr-3 ${
+                            status === 'working' ? 'bg-yellow-400 animate-pulse' :
+                            status === 'completed' ? 'bg-green-400' : 'bg-gray-400'
+                        }`;
+                    }
+                    
+                    // Update the overall status
+                    if (status === 'working') {
+                        agentDiv.className = agentDiv.className.replace('opacity-50', 'opacity-100');
+                    } else if (status === 'completed') {
+                        agentDiv.className = agentDiv.className.replace('opacity-50', 'opacity-100');
+                    }
+                }
+            }
+            
+            function addThinkingStep(agent, action, isFinal = false, color = 'blue', status = 'pending') {
                 const thinkingProcess = document.getElementById('thinking-process');
                 const stepDiv = document.createElement('div');
                 
@@ -1569,17 +1633,30 @@
                     'yellow': 'bg-yellow-400'
                 };
                 
+                // Status-based styling
+                const statusClasses = {
+                    'pending': 'opacity-50',
+                    'working': 'opacity-100',
+                    'completed': 'opacity-100'
+                };
+                
+                const statusDotClasses = {
+                    'pending': 'bg-gray-400',
+                    'working': 'bg-yellow-400 animate-pulse',
+                    'completed': 'bg-green-400'
+                };
+                
                 stepDiv.className = `thinking-step p-3 rounded-lg border-l-4 ${
                     isFinal ? 'border-yellow-400 bg-yellow-900/20' : colorClasses[color] || 'border-blue-400 bg-blue-900/20'
-                }`;
+                } ${statusClasses[status] || 'opacity-50'}`;
                 
                 stepDiv.innerHTML = `
                     <div class="flex items-center justify-between">
                         <div class="flex items-center">
-                            <div class="w-3 h-3 rounded-full ${isFinal ? 'bg-yellow-400' : dotColors[color] || 'bg-blue-400'} mr-3 animate-pulse"></div>
+                            <div class="status-dot w-3 h-3 rounded-full mr-3 ${statusDotClasses[status] || 'bg-gray-400'}"></div>
                             <span class="font-semibold text-blue-200">${agent}</span>
                         </div>
-                        <span class="text-sm text-blue-300">${action}</span>
+                        <span class="agent-action text-sm text-blue-300">${action}</span>
                     </div>
                 `;
                 
@@ -2084,6 +2161,22 @@
                         
                         if (response.ok) {
                             const data = await response.json();
+                            
+                            // Check for errors in response
+                            if (data.error) {
+                                console.error('API Error:', data.error);
+                                showNotification(`Error: ${data.error}`, 'error');
+                                
+                                // Hide deep research container on error
+                                if (deepResearchMode) {
+                                    const deepResearchContainer = document.getElementById('deep-research-container');
+                                    deepResearchContainer.classList.add('hidden');
+                                }
+                                
+                                // Add error message to chat
+                                addMessage('bot', `Sorry, I encountered an error: ${data.error}`, false);
+                                return;
+                            }
                             typingIndicator.classList.add('hidden');
                             
                             // Check if there's an error in the response

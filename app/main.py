@@ -7,9 +7,24 @@ from app.groq_router import query_llm
 from app.chat_parser import parse_llm_output
 from dotenv import load_dotenv
 import os
+import logging
+from datetime import datetime
 
 # Load environment variables from .env file
 load_dotenv()
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.StreamHandler(),  # Console output
+        logging.FileHandler('askmebot.log')  # File output
+    ]
+)
+
+# Create logger
+logger = logging.getLogger(__name__)
 
 
 app = FastAPI()
@@ -29,8 +44,9 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 # Health check endpoint
 @app.get("/health")
 def health_check():
-    import os
+    logger.info("Health check requested")
     has_api_key = bool(os.getenv("GROQ_API_KEY"))
+    logger.info(f"API key available: {has_api_key}")
     return {
         "status": "healthy", 
         "message": "AskMeBot is running!",
@@ -57,34 +73,58 @@ class ChangeTitleInput(BaseModel):
 @app.post("/chat")
 def chat(chat_input: dict):
     """Main chat endpoint with deep research mode support"""
+    logger.info("=" * 80)
+    logger.info("NEW CHAT REQUEST RECEIVED")
+    logger.info("=" * 80)
+    
     try:
         if not os.getenv("GROQ_API_KEY"):
+            logger.error("GROQ_API_KEY not found in environment")
             return {"error": "GROQ_API_KEY not found"}
         
         prompt = chat_input.get("prompt", "")
         model = chat_input.get("model", "openai/gpt-oss-20b")
         deep_research_mode = chat_input.get("deepResearchMode", False)
         
+        logger.info(f"📝 User Prompt: {prompt}")
+        logger.info(f"🤖 Selected Model: {model}")
+        logger.info(f"🧠 Deep Research Mode: {deep_research_mode}")
+        logger.info(f"⏰ Timestamp: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+        
         if not prompt:
+            logger.warning("Empty prompt provided")
             return {"error": "No prompt provided"}
         
         if deep_research_mode:
+            logger.info("🚀 Starting LangGraph Deep Research Mode")
+            logger.info("🔄 Initializing multi-agent collaboration...")
             # Use LangGraph deep research mode with ReAct agents
             from app.langgraph_research import deep_research_analysis
             result = deep_research_analysis(prompt, model)
+            logger.info("✅ LangGraph Deep Research completed")
         else:
+            logger.info("💬 Starting regular chat mode")
             # Use the groq_router to get the response
             result = query_llm(prompt, model)
+            logger.info("✅ Regular chat completed")
+        
+        logger.info(f"📊 Response Model: {result.get('model', 'Unknown')}")
+        logger.info(f"📏 Response Length: {len(str(result.get('response', '')))} characters")
+        logger.info("=" * 80)
         
         return result
         
     except Exception as e:
-        print(f"Chat error: {e}")
+        logger.error(f"❌ Chat error: {e}")
+        logger.error(f"❌ Error type: {type(e).__name__}")
+        logger.error("=" * 80)
         return {"error": str(e)}
 
 @app.post("/generate-title")
 def generate_chat_title(title_input: ChatTitleInput):
     """Generate a chat title based on the conversation messages"""
+    logger.info("📝 Title generation requested")
+    logger.info(f"📊 Messages count: {len(title_input.messages)}")
     try:
         if not os.getenv("GROQ_API_KEY"):
             return {"error": "GROQ_API_KEY not found", "title": "Untitled Chat"}
@@ -153,8 +193,10 @@ def change_chat_title(title_input: ChangeTitleInput):
 @app.post("/enhance-prompt")
 def enhance_prompt(enhance_input: dict):
     """Enhance a prompt using the COSTAR principle with chat history context"""
+    logger.info("✨ Prompt enhancement requested")
     try:
         if not os.getenv("GROQ_API_KEY"):
+            logger.error("GROQ_API_KEY not found for prompt enhancement")
             return {"error": "GROQ_API_KEY not found", "success": False}
         
         from langchain_groq import ChatGroq

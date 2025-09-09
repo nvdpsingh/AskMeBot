@@ -4,6 +4,8 @@ Multiple AI agents collaborate using LangGraph's ReAct pattern
 """
 
 import os
+import logging
+from datetime import datetime
 from typing import Dict, List, Any, TypedDict, Annotated
 from langgraph.graph import StateGraph, END
 from langgraph.prebuilt import ToolNode
@@ -12,6 +14,9 @@ from langchain_core.tools import tool
 from langchain_groq import ChatGroq
 from langchain.prompts import ChatPromptTemplate
 import asyncio
+
+# Create logger for langgraph research
+logger = logging.getLogger(__name__)
 
 # Available models for different agent roles
 RESEARCH_MODELS = {
@@ -340,8 +345,14 @@ def deep_research_analysis(prompt: str, primary_model: str) -> Dict[str, Any]:
     """
     Conduct deep research using LangGraph ReAct agents
     """
+    logger.info("🧠 LANGGRAPH DEEP RESEARCH INITIATED")
+    logger.info("=" * 60)
+    logger.info(f"📝 Research Prompt: {prompt}")
+    logger.info(f"🎯 Primary Model: {primary_model}")
+    logger.info(f"⏰ Start Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    logger.info("=" * 60)
+    
     try:
-        print(f"Starting LangGraph deep research for: {prompt}")
         
         # For now, let's use a simplified approach that works
         # Get insights from each agent sequentially
@@ -352,7 +363,9 @@ def deep_research_analysis(prompt: str, primary_model: str) -> Dict[str, Any]:
                 continue
                 
             try:
-                print(f"Getting insights from {agent_type} using {model}")
+                logger.info(f"🤖 AGENT: {agent_type.upper()}")
+                logger.info(f"🔧 Model: {model}")
+                logger.info(f"⏰ Agent Start: {datetime.now().strftime('%H:%M:%S')}")
                 llm = create_agent_llm(agent_type)
                 
                 # Create agent-specific prompt with system message
@@ -405,15 +418,25 @@ def deep_research_analysis(prompt: str, primary_model: str) -> Dict[str, Any]:
                     SystemMessage(content=system_prompts[agent_type]),
                     HumanMessage(content=agent_prompts[agent_type])
                 ]
+                
+                logger.info(f"📤 Sending request to {agent_type}...")
                 response = llm.invoke(messages)
                 agent_insights[agent_type] = response.content
-                print(f"Got response from {agent_type}")
+                
+                logger.info(f"✅ {agent_type} completed successfully")
+                logger.info(f"📏 Response length: {len(response.content)} characters")
+                logger.info(f"⏰ Agent End: {datetime.now().strftime('%H:%M:%S')}")
+                logger.info("-" * 40)
                 
             except Exception as e:
-                print(f"Error with {agent_type}: {e}")
+                logger.error(f"❌ Error with {agent_type}: {e}")
+                logger.error(f"❌ Error type: {type(e).__name__}")
                 agent_insights[agent_type] = f"Error analyzing with {agent_type}: {str(e)}"
+                logger.info("-" * 40)
         
         # Create debate
+        logger.info("🗣️  STARTING AGENT DEBATE")
+        logger.info("=" * 40)
         try:
             debate_llm = create_agent_llm("reviewer")
             debate_prompt = f"""Facilitate a debate between AI agents about: {prompt}
@@ -422,6 +445,9 @@ def deep_research_analysis(prompt: str, primary_model: str) -> Dict[str, Any]:
             {chr(10).join([f"{agent}: {insight}" for agent, insight in agent_insights.items()])}
             
             Create a structured debate where agents challenge each other and collaborate."""
+            
+            logger.info("📝 Creating debate prompt...")
+            logger.info(f"📊 Agent insights count: {len(agent_insights)}")
             
             messages = [
                 SystemMessage(content="""You are an AI Critical Reviewer. Your role is to:
@@ -433,14 +459,24 @@ def deep_research_analysis(prompt: str, primary_model: str) -> Dict[str, Any]:
                 - Facilitate structured debates between agents"""),
                 HumanMessage(content=debate_prompt)
             ]
+            
+            logger.info("📤 Sending debate request to reviewer...")
             debate_response = debate_llm.invoke(messages)
             debate_content = debate_response.content
             
+            logger.info("✅ Debate completed successfully")
+            logger.info(f"📏 Debate length: {len(debate_content)} characters")
+            logger.info("=" * 40)
+            
         except Exception as e:
-            print(f"Debate error: {e}")
+            logger.error(f"❌ Debate error: {e}")
+            logger.error(f"❌ Error type: {type(e).__name__}")
             debate_content = f"Debate creation failed: {str(e)}"
+            logger.info("=" * 40)
         
         # Final synthesis
+        logger.info("🎯 STARTING FINAL SYNTHESIS")
+        logger.info("=" * 40)
         try:
             synthesis_llm = create_agent_llm("synthesizer")
             synthesis_prompt = f"""Synthesize a final response for: {prompt}
@@ -453,6 +489,9 @@ def deep_research_analysis(prompt: str, primary_model: str) -> Dict[str, Any]:
             
             Create a comprehensive, well-structured final response that synthesizes all findings."""
             
+            logger.info("📝 Creating synthesis prompt...")
+            logger.info(f"🔧 Synthesis model: {RESEARCH_MODELS['synthesizer']}")
+            
             messages = [
                 SystemMessage(content="""You are an AI Synthesis Expert. Your role is to:
                 - Synthesize findings from all agents into a coherent response
@@ -462,12 +501,28 @@ def deep_research_analysis(prompt: str, primary_model: str) -> Dict[str, Any]:
                 - Present the collective wisdom of all agents"""),
                 HumanMessage(content=synthesis_prompt)
             ]
+            
+            logger.info("📤 Sending synthesis request...")
             synthesis_response = synthesis_llm.invoke(messages)
             final_synthesis = synthesis_response.content
             
+            logger.info("✅ Synthesis completed successfully")
+            logger.info(f"📏 Final response length: {len(final_synthesis)} characters")
+            logger.info(f"⏰ Synthesis End: {datetime.now().strftime('%H:%M:%S')}")
+            logger.info("=" * 40)
+            
         except Exception as e:
-            print(f"Synthesis error: {e}")
+            logger.error(f"❌ Synthesis error: {e}")
+            logger.error(f"❌ Error type: {type(e).__name__}")
             final_synthesis = f"Synthesis failed: {str(e)}"
+            logger.info("=" * 40)
+        
+        logger.info("🎉 LANGGRAPH DEEP RESEARCH COMPLETED SUCCESSFULLY")
+        logger.info("=" * 60)
+        logger.info(f"📊 Total agents processed: {len(agent_insights)}")
+        logger.info(f"📏 Final response length: {len(final_synthesis)} characters")
+        logger.info(f"⏰ Total time: {datetime.now().strftime('%H:%M:%S')}")
+        logger.info("=" * 60)
         
         return {
             "model": "LangGraph Deep Research",
@@ -483,7 +538,13 @@ def deep_research_analysis(prompt: str, primary_model: str) -> Dict[str, Any]:
         }
         
     except Exception as e:
-        print(f"LangGraph deep research error: {e}")
+        logger.error("❌ LANGGRAPH DEEP RESEARCH FAILED")
+        logger.error("=" * 60)
+        logger.error(f"❌ Error: {e}")
+        logger.error(f"❌ Error type: {type(e).__name__}")
+        logger.error("🔄 Falling back to regular response...")
+        logger.error("=" * 60)
+        
         # Fallback to regular response
         from app.groq_router import query_llm
         return query_llm(prompt, primary_model)
