@@ -2174,7 +2174,7 @@
                                 }
                                 
                                 // Add error message to chat
-                                addMessage('bot', `Sorry, I encountered an error: ${data.error}`, false);
+                                addMessage(`Sorry, I encountered an error: ${data.error}`, 'bot');
                                 return;
                             }
                             typingIndicator.classList.add('hidden');
@@ -2185,6 +2185,12 @@
                                 addMessage(errorMessage, 'bot');
                             } else {
                                 addMessage(data.response || 'I received your message but couldn\'t process it properly.', 'bot');
+                                
+                                // Hide deep research container after response
+                                if (deepResearchMode) {
+                                    const deepResearchContainer = document.getElementById('deep-research-container');
+                                    deepResearchContainer.classList.add('hidden');
+                                }
                             }
                         } else {
                             throw new Error('API request failed');
@@ -2193,6 +2199,12 @@
                         console.error('Error:', error);
                         typingIndicator.classList.add('hidden');
                         addMessage('Sorry, I encountered an error while processing your request. Please try again.', 'bot');
+                        
+                        // Hide deep research container on error
+                        if (deepResearchMode) {
+                            const deepResearchContainer = document.getElementById('deep-research-container');
+                            deepResearchContainer.classList.add('hidden');
+                        }
                     }
                 }
             });
