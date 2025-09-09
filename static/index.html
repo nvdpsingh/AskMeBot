@@ -1542,8 +1542,24 @@
                     addThinkingStep(agent.agent, agent.action, false, agent.color, 'pending');
                 });
                 
+                // Show typing animation during thinking process
+                showTypingAnimation();
+                
                 // Simulate real-time progress updates
                 updateThinkingProgress(agents);
+            }
+            
+            function showTypingAnimation() {
+                const typingIndicator = document.getElementById('typing-indicator');
+                if (typingIndicator) {
+                    typingIndicator.classList.remove('hidden');
+                    
+                    // Show typing dots animation
+                    const dots = typingIndicator.querySelector('.typing-dots');
+                    if (dots) {
+                        dots.style.animation = 'typing 1.5s infinite';
+                    }
+                }
             }
             
             function updateThinkingProgress(agents) {
@@ -2182,7 +2198,12 @@
                             // Add the response to chat
                                 addMessage(data.response || 'I received your message but couldn\'t process it properly.', 'bot');
                             
-                            // Hide deep research container after response
+                            // Hide typing indicator and deep research container after response
+                            const typingIndicator = document.getElementById('typing-indicator');
+                            if (typingIndicator) {
+                                typingIndicator.classList.add('hidden');
+                            }
+                            
                             if (deepResearchMode) {
                                 const deepResearchContainer = document.getElementById('deep-research-container');
                                 deepResearchContainer.classList.add('hidden');
