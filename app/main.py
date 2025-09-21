@@ -153,6 +153,7 @@ def chat(chat_input: dict):
                 # Extract and store key facts
                 from app.mirix_memory import SemanticMemoryEntry
                 fact_entry = SemanticMemoryEntry(
+                    id="",  # Will be auto-generated
                     content=f"User asked: {prompt[:100]}... | Response: {response_text[:200]}...",
                     timestamp=datetime.now(),
                     priority=6,
@@ -390,6 +391,7 @@ def add_memory(memory_input: dict):
         if memory_type_str == "core":
             from app.mirix_memory import CoreMemoryEntry
             entry = CoreMemoryEntry(
+                id="",  # Will be auto-generated
                 content=content,
                 timestamp=datetime.now(),
                 priority=priority,
@@ -399,6 +401,7 @@ def add_memory(memory_input: dict):
         elif memory_type_str == "episodic":
             from app.mirix_memory import EpisodicMemoryEntry
             entry = EpisodicMemoryEntry(
+                id="",  # Will be auto-generated
                 content=content,
                 timestamp=datetime.now(),
                 priority=priority,
@@ -408,6 +411,7 @@ def add_memory(memory_input: dict):
         elif memory_type_str == "semantic":
             from app.mirix_memory import SemanticMemoryEntry
             entry = SemanticMemoryEntry(
+                id="",  # Will be auto-generated
                 content=content,
                 timestamp=datetime.now(),
                 priority=priority,
@@ -417,6 +421,7 @@ def add_memory(memory_input: dict):
         elif memory_type_str == "procedural":
             from app.mirix_memory import ProceduralMemoryEntry
             entry = ProceduralMemoryEntry(
+                id="",  # Will be auto-generated
                 content=content,
                 timestamp=datetime.now(),
                 priority=priority,
@@ -426,6 +431,7 @@ def add_memory(memory_input: dict):
         elif memory_type_str == "resource":
             from app.mirix_memory import ResourceMemoryEntry
             entry = ResourceMemoryEntry(
+                id="",  # Will be auto-generated
                 content=content,
                 timestamp=datetime.now(),
                 priority=priority,
@@ -435,6 +441,7 @@ def add_memory(memory_input: dict):
         elif memory_type_str == "knowledge_vault":
             from app.mirix_memory import KnowledgeVaultEntry
             entry = KnowledgeVaultEntry(
+                id="",  # Will be auto-generated
                 content=content,
                 timestamp=datetime.now(),
                 priority=priority,
