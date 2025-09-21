@@ -579,12 +579,14 @@ class MetaMemoryManager:
         if any(word in query_lower for word in ['who am i', 'my profile', 'about me', 'persona']):
             memory_types.append(MemoryType.CORE)
         
-        # Episodic memory indicators
-        if any(word in query_lower for word in ['remember', 'happened', 'last time', 'conversation', 'event']):
+        # Episodic memory indicators - expanded to catch more conversation references
+        if any(word in query_lower for word in ['remember', 'happened', 'last time', 'conversation', 'event', 
+                                               'discuss', 'talked', 'mentioned', 'said', 'told', 'asked']):
             memory_types.append(MemoryType.EPISODIC)
         
-        # Semantic memory indicators
-        if any(word in query_lower for word in ['what is', 'define', 'explain', 'fact', 'knowledge']):
+        # Semantic memory indicators - expanded to catch more knowledge queries
+        if any(word in query_lower for word in ['what is', 'define', 'explain', 'fact', 'knowledge', 'about',
+                                               'tell me about', 'information', 'details', 'describe']):
             memory_types.append(MemoryType.SEMANTIC)
         
         # Procedural memory indicators
