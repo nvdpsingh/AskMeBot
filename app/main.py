@@ -5,6 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from app.groq_router import query_llm
 from app.chat_parser import parse_llm_output
+from app.mirix_memory import mirix_manager, MemoryType
 from dotenv import load_dotenv
 import os
 import logging
@@ -85,31 +86,86 @@ def chat(chat_input: dict):
         prompt = chat_input.get("prompt", "")
         model = chat_input.get("model", "openai/gpt-oss-20b")
         deep_research_mode = chat_input.get("deepResearchMode", False)
+        chat_history = chat_input.get("chatHistory", [])
+        user_id = chat_input.get("userId", "default")
         
         logger.info(f"📝 User Prompt: {prompt}")
         logger.info(f"🤖 Selected Model: {model}")
         logger.info(f"🧠 Deep Research Mode: {deep_research_mode}")
+        logger.info(f"👤 User ID: {user_id}")
         logger.info(f"⏰ Timestamp: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
         
         if not prompt:
             logger.warning("Empty prompt provided")
             return {"error": "No prompt provided"}
         
+        # 🧠 MIRIX Memory Integration
+        logger.info("🔍 MIRIX: Retrieving relevant memories...")
+        memory_context = mirix_manager.get_memory_context(prompt, {
+            "user_id": user_id,
+            "model": model,
+            "deep_research_mode": deep_research_mode,
+            "chat_history": chat_history
+        })
+        
+        if memory_context:
+            logger.info(f"🧠 MIRIX: Found relevant memories ({len(memory_context)} chars)")
+            # Enhance prompt with memory context
+            enhanced_prompt = f"{memory_context}\n\nUser Query: {prompt}"
+        else:
+            logger.info("🧠 MIRIX: No relevant memories found")
+            enhanced_prompt = prompt
+        
         if deep_research_mode:
             logger.info("🚀 Starting LangGraph Deep Research Mode")
             logger.info("🔄 Initializing multi-agent collaboration...")
             # Use LangGraph deep research mode with ReAct agents
             from app.langgraph_research import deep_research_analysis
-            result = deep_research_analysis(prompt, model)
+            result = deep_research_analysis(enhanced_prompt, model)
             logger.info("✅ LangGraph Deep Research completed")
         else:
             logger.info("💬 Starting regular chat mode")
             # Use the groq_router to get the response
-            result = query_llm(prompt, model)
+            result = query_llm(enhanced_prompt, model)
             logger.info("✅ Regular chat completed")
         
         logger.info(f"📊 Response Model: {result.get('model', 'Unknown')}")
         logger.info(f"📏 Response Length: {len(str(result.get('response', '')))} characters")
+        
+        # 🧠 MIRIX Memory Storage
+        logger.info("💾 MIRIX: Storing conversation in memory...")
+        try:
+            # Store conversation in episodic memory
+            conversation_data = {
+                "user_prompt": prompt,
+                "response": result.get('response', ''),
+                "model": model,
+                "deep_research_mode": deep_research_mode,
+                "memory_context_used": bool(memory_context),
+                "response_length": len(str(result.get('response', ''))),
+                "priority": 5
+            }
+            mirix_manager.update_conversation_memory(user_id, conversation_data)
+            
+            # Store key facts in semantic memory if response contains factual information
+            response_text = str(result.get('response', ''))
+            if any(keyword in response_text.lower() for keyword in ['fact', 'information', 'data', 'research', 'study']):
+                # Extract and store key facts
+                from app.mirix_memory import SemanticMemoryEntry
+                fact_entry = SemanticMemoryEntry(
+                    content=f"User asked: {prompt[:100]}... | Response: {response_text[:200]}...",
+                    timestamp=datetime.now(),
+                    priority=6,
+                    concept="user_interaction",
+                    source="chat_conversation",
+                    tags=["conversation", "factual", user_id]
+                )
+                mirix_manager.add_memory(MemoryType.SEMANTIC, fact_entry)
+            
+            logger.info("✅ MIRIX: Memory storage completed")
+        except Exception as e:
+            logger.error(f"❌ MIRIX Memory storage error: {e}")
+        
         logger.info("=" * 80)
         
         return result
@@ -256,3 +312,173 @@ Return only the enhanced prompt, nothing else."""),
 @app.post("/save")
 def save():
     return {"message": "Save endpoint"}
+
+# 🧠 MIRIX Memory Management Endpoints
+
+@app.get("/memory/search")
+def search_memory(query: str, memory_type: str = None, limit: int = 10):
+    """Search across MIRIX memory system"""
+    logger.info(f"🔍 Memory search requested: {query}")
+    try:
+        if memory_type and memory_type in [mt.value for mt in MemoryType]:
+            memory_types = [MemoryType(memory_type)]
+        else:
+            memory_types = None
+        
+        results = mirix_manager.search_memory(query, memory_types, limit)
+        
+        # Format results for frontend
+        formatted_results = {}
+        for mt, entries in results.items():
+            formatted_results[mt.value] = [
+                {
+                    "id": entry.id,
+                    "content": entry.content,
+                    "timestamp": entry.timestamp.isoformat(),
+                    "priority": entry.priority,
+                    "tags": entry.tags,
+                    "metadata": entry.metadata
+                }
+                for entry in entries
+            ]
+        
+        return {
+            "success": True,
+            "results": formatted_results,
+            "total_found": sum(len(entries) for entries in results.values())
+        }
+    except Exception as e:
+        logger.error(f"Memory search error: {e}")
+        return {"error": str(e), "success": False}
+
+@app.get("/memory/stats")
+def get_memory_stats():
+    """Get memory system statistics"""
+    logger.info("📊 Memory stats requested")
+    try:
+        stats = {}
+        for memory_type, agent in mirix_manager.agents.items():
+            stats[memory_type.value] = {
+                "total_entries": len(agent.entries),
+                "storage_path": str(agent.storage_path)
+            }
+        
+        return {
+            "success": True,
+            "stats": stats,
+            "total_memories": sum(len(agent.entries) for agent in mirix_manager.agents.values())
+        }
+    except Exception as e:
+        logger.error(f"Memory stats error: {e}")
+        return {"error": str(e), "success": False}
+
+@app.post("/memory/add")
+def add_memory(memory_input: dict):
+    """Add memory entry to specific memory type"""
+    logger.info("➕ Add memory requested")
+    try:
+        memory_type_str = memory_input.get("memory_type", "episodic")
+        content = memory_input.get("content", "")
+        priority = memory_input.get("priority", 5)
+        tags = memory_input.get("tags", [])
+        metadata = memory_input.get("metadata", {})
+        
+        if not content:
+            return {"error": "No content provided", "success": False}
+        
+        # Create appropriate memory entry
+        if memory_type_str == "core":
+            from app.mirix_memory import CoreMemoryEntry
+            entry = CoreMemoryEntry(
+                content=content,
+                timestamp=datetime.now(),
+                priority=priority,
+                tags=tags,
+                metadata=metadata
+            )
+        elif memory_type_str == "episodic":
+            from app.mirix_memory import EpisodicMemoryEntry
+            entry = EpisodicMemoryEntry(
+                content=content,
+                timestamp=datetime.now(),
+                priority=priority,
+                tags=tags,
+                metadata=metadata
+            )
+        elif memory_type_str == "semantic":
+            from app.mirix_memory import SemanticMemoryEntry
+            entry = SemanticMemoryEntry(
+                content=content,
+                timestamp=datetime.now(),
+                priority=priority,
+                tags=tags,
+                metadata=metadata
+            )
+        elif memory_type_str == "procedural":
+            from app.mirix_memory import ProceduralMemoryEntry
+            entry = ProceduralMemoryEntry(
+                content=content,
+                timestamp=datetime.now(),
+                priority=priority,
+                tags=tags,
+                metadata=metadata
+            )
+        elif memory_type_str == "resource":
+            from app.mirix_memory import ResourceMemoryEntry
+            entry = ResourceMemoryEntry(
+                content=content,
+                timestamp=datetime.now(),
+                priority=priority,
+                tags=tags,
+                metadata=metadata
+            )
+        elif memory_type_str == "knowledge_vault":
+            from app.mirix_memory import KnowledgeVaultEntry
+            entry = KnowledgeVaultEntry(
+                content=content,
+                timestamp=datetime.now(),
+                priority=priority,
+                tags=tags,
+                metadata=metadata
+            )
+        else:
+            return {"error": f"Invalid memory type: {memory_type_str}", "success": False}
+        
+        # Add to memory system
+        memory_type_enum = MemoryType(memory_type_str)
+        entry_id = mirix_manager.add_memory(memory_type_enum, entry)
+        
+        return {
+            "success": True,
+            "entry_id": entry_id,
+            "memory_type": memory_type_str,
+            "message": f"Memory added to {memory_type_str} memory"
+        }
+    except Exception as e:
+        logger.error(f"Add memory error: {e}")
+        return {"error": str(e), "success": False}
+
+@app.delete("/memory/{memory_type}/{entry_id}")
+def delete_memory(memory_type: str, entry_id: str):
+    """Delete specific memory entry"""
+    logger.info(f"🗑️ Delete memory requested: {memory_type}/{entry_id}")
+    try:
+        if memory_type not in [mt.value for mt in MemoryType]:
+            return {"error": f"Invalid memory type: {memory_type}", "success": False}
+        
+        memory_type_enum = MemoryType(memory_type)
+        success = mirix_manager.agents[memory_type_enum].delete_entry(entry_id)
+        
+        if success:
+            return {
+                "success": True,
+                "message": f"Memory entry {entry_id} deleted from {memory_type} memory"
+            }
+        else:
+            return {
+                "success": False,
+                "error": f"Memory entry {entry_id} not found in {memory_type} memory"
+            }
+    except Exception as e:
+        logger.error(f"Delete memory error: {e}")
+        return {"error": str(e), "success": False}
