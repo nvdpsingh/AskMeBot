@@ -231,6 +231,12 @@ class MemoryAgent:
                 score += 8
             if hasattr(entry, 'task_name') and query_lower in entry.task_name.lower():
                 score += 8
+            
+            # Search in metadata for episodic memories
+            if hasattr(entry, 'metadata') and entry.metadata:
+                metadata_text = ' '.join(str(v) for v in entry.metadata.values() if isinstance(v, str))
+                if query_lower in metadata_text.lower():
+                    score += 7  # High score for metadata matches
                 
             if score > 0:
                 results.append((entry, score))
@@ -581,7 +587,8 @@ class MetaMemoryManager:
         
         # Episodic memory indicators - expanded to catch more conversation references
         if any(word in query_lower for word in ['remember', 'happened', 'last time', 'conversation', 'event', 
-                                               'discuss', 'talked', 'mentioned', 'said', 'told', 'asked']):
+                                               'discuss', 'talked', 'mentioned', 'said', 'told', 'asked',
+                                               'earlier', 'before', 'previous', 'past', 'we talked', 'we discussed']):
             memory_types.append(MemoryType.EPISODIC)
         
         # Semantic memory indicators - expanded to catch more knowledge queries
