@@ -15,14 +15,26 @@ from datetime import datetime
 load_dotenv()
 
 # Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.StreamHandler(),  # Console output
-        logging.FileHandler('askmebot.log')  # File output
-    ]
-)
+def setup_logging():
+    """Setup logging with fallback for read-only file systems"""
+    handlers = [logging.StreamHandler()]  # Always include console output
+    
+    # Try to add file handler, fall back to console only if read-only
+    try:
+        file_handler = logging.FileHandler('askmebot.log')
+        handlers.append(file_handler)
+    except (OSError, PermissionError):
+        # Read-only file system detected, use console only
+        pass
+    
+    logging.basicConfig(
+        level=logging.INFO,
+        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+        handlers=handlers
+    )
+
+# Setup logging
+setup_logging()
 
 # Create logger
 logger = logging.getLogger(__name__)
