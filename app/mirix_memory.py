@@ -20,8 +20,6 @@ from datetime import datetime, timezone
 from typing import Dict, List, Any, Optional, Union, Tuple
 from dataclasses import dataclass, asdict
 from enum import Enum
-import asyncio
-import aiofiles
 from pathlib import Path
 
 logger = logging.getLogger(__name__)
@@ -138,56 +136,59 @@ class MemoryAgent:
     def __init__(self, memory_type: MemoryType, storage_path: str):
         self.memory_type = memory_type
         self.storage_path = Path(storage_path) / memory_type.value
-        self.storage_path.mkdir(parents=True, exist_ok=True)
         self.entries: Dict[str, MemoryEntry] = {}
-        self.load_entries()
+        self.read_only_mode = False
+        
+        try:
+            self.storage_path.mkdir(parents=True, exist_ok=True)
+            self.load_entries()
+        except (OSError, PermissionError) as e:
+            logger.warning(f"Read-only file system detected for {memory_type.value} memory. Using in-memory storage only.")
+            self.read_only_mode = True
     
     def load_entries(self):
         """Load memory entries from storage"""
+        if self.read_only_mode:
+            logger.info(f"In-memory mode: Starting with empty {self.memory_type.value} memory")
+            return
+            
         try:
             entries_file = self.storage_path / "entries.json"
             if entries_file.exists():
-                async def _load():
-                    async with aiofiles.open(entries_file, 'r') as f:
-                        data = await f.read()
-                        return json.loads(data)
-                
-                # Run async function in sync context
-                loop = asyncio.new_event_loop()
-                asyncio.set_event_loop(loop)
-                try:
-                    data = loop.run_until_complete(_load())
+                # Use synchronous file operations to avoid event loop issues
+                with open(entries_file, 'r') as f:
+                    data = json.load(f)
                     for entry_id, entry_data in data.items():
                         self.entries[entry_id] = self._deserialize_entry(entry_data)
-                finally:
-                    loop.close()
                     
                 logger.info(f"Loaded {len(self.entries)} entries for {self.memory_type.value} memory")
         except Exception as e:
             logger.error(f"Error loading {self.memory_type.value} memory: {e}")
+            # Fall back to read-only mode
+            self.read_only_mode = True
+            logger.warning(f"Switched to read-only mode for {self.memory_type.value} memory")
     
     def save_entries(self):
         """Save memory entries to storage"""
+        if self.read_only_mode:
+            logger.info(f"In-memory mode: {len(self.entries)} entries for {self.memory_type.value} memory (not persisted)")
+            return
+            
         try:
             entries_file = self.storage_path / "entries.json"
             data = {entry_id: self._serialize_entry(entry) 
                    for entry_id, entry in self.entries.items()}
             
-            async def _save():
-                async with aiofiles.open(entries_file, 'w') as f:
-                    await f.write(json.dumps(data, indent=2, default=str))
-            
-            # Run async function in sync context
-            loop = asyncio.new_event_loop()
-            asyncio.set_event_loop(loop)
-            try:
-                loop.run_until_complete(_save())
-            finally:
-                loop.close()
+            # Use synchronous file operations to avoid event loop issues
+            with open(entries_file, 'w') as f:
+                f.write(json.dumps(data, indent=2, default=str))
                 
             logger.info(f"Saved {len(self.entries)} entries for {self.memory_type.value} memory")
         except Exception as e:
             logger.error(f"Error saving {self.memory_type.value} memory: {e}")
+            # Fall back to read-only mode
+            self.read_only_mode = True
+            logger.warning(f"Switched to read-only mode for {self.memory_type.value} memory")
     
     def _serialize_entry(self, entry: MemoryEntry) -> Dict[str, Any]:
         """Serialize memory entry to dictionary"""
