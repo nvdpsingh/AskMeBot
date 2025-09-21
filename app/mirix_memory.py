@@ -319,6 +319,7 @@ class EpisodicMemoryAgent(MemoryAgent):
         """Add conversation event to episodic memory"""
         content = f"Conversation: {conversation_data.get('summary', 'User interaction')}"
         entry = EpisodicMemoryEntry(
+            id="",  # Will be auto-generated
             content=content,
             timestamp=datetime.now(timezone.utc),
             priority=conversation_data.get('priority', 5),
@@ -333,6 +334,7 @@ class EpisodicMemoryAgent(MemoryAgent):
         """Add task completion event to episodic memory"""
         content = f"Task Completed: {task_data.get('task_name', 'Unknown task')}"
         entry = EpisodicMemoryEntry(
+            id="",  # Will be auto-generated
             content=content,
             timestamp=datetime.now(timezone.utc),
             priority=task_data.get('priority', 6),
