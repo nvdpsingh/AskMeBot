@@ -908,6 +908,96 @@
                 <div class="setting-item">
                     <span class="setting-label">Auto-save Chats</span>
                     <input type="checkbox" class="setting-control" id="auto-save" checked>
+                </div>
+            </div>
+            
+            <!-- MIRIX Memory System -->
+            <div class="settings-group">
+                <h3>🧠 MIRIX Memory System</h3>
+                <div class="setting-item">
+                    <span class="setting-label">Memory Stats</span>
+                    <button class="setting-control" id="memory-stats-btn" style="background: var(--primary-color); color: white; border: none; padding: 0.5rem 1rem; border-radius: 0.5rem; cursor: pointer;">
+                        View Stats
+                    </button>
+                </div>
+                <div class="setting-item">
+                    <span class="setting-label">Search Memory</span>
+                    <input type="text" class="setting-control" id="memory-search-input" placeholder="Search memories..." style="background: var(--background-color); color: var(--text-color); border: 1px solid var(--border-color); padding: 0.5rem; border-radius: 0.25rem;">
+                </div>
+                <div class="setting-item">
+                    <span class="setting-label">Memory Type</span>
+                    <select class="setting-control" id="memory-type-select">
+                        <option value="">All Types</option>
+                        <option value="core">Core Memory</option>
+                        <option value="episodic">Episodic Memory</option>
+                        <option value="semantic">Semantic Memory</option>
+                        <option value="procedural">Procedural Memory</option>
+                        <option value="resource">Resource Memory</option>
+                        <option value="knowledge_vault">Knowledge Vault</option>
+                    </select>
+                </div>
+                <div class="setting-item">
+                    <span class="setting-label">Add Memory</span>
+                    <button class="setting-control" id="add-memory-btn" style="background: var(--secondary-color); color: white; border: none; padding: 0.5rem 1rem; border-radius: 0.5rem; cursor: pointer;">
+                        Add Memory
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Memory Results Display -->
+            <div class="settings-group" id="memory-results-group" style="display: none;">
+                <h3>Memory Search Results</h3>
+                <div id="memory-results" style="max-height: 300px; overflow-y: auto; background: var(--background-color); border: 1px solid var(--border-color); border-radius: 0.5rem; padding: 1rem;">
+                    <!-- Memory results will be displayed here -->
+                </div>
+            </div>
+            
+            <!-- Add Memory Modal -->
+            <div class="settings-group" id="add-memory-group" style="display: none;">
+                <h3>Add New Memory</h3>
+                <div class="setting-item">
+                    <span class="setting-label">Memory Type</span>
+                    <select class="setting-control" id="add-memory-type">
+                        <option value="episodic">Episodic Memory</option>
+                        <option value="semantic">Semantic Memory</option>
+                        <option value="procedural">Procedural Memory</option>
+                        <option value="core">Core Memory</option>
+                        <option value="resource">Resource Memory</option>
+                        <option value="knowledge_vault">Knowledge Vault</option>
+                    </select>
+                </div>
+                <div class="setting-item">
+                    <span class="setting-label">Content</span>
+                    <textarea class="setting-control" id="add-memory-content" placeholder="Enter memory content..." style="background: var(--background-color); color: var(--text-color); border: 1px solid var(--border-color); padding: 0.5rem; border-radius: 0.25rem; min-height: 80px; resize: vertical;"></textarea>
+                </div>
+                <div class="setting-item">
+                    <span class="setting-label">Priority (1-10)</span>
+                    <input type="number" class="setting-control" id="add-memory-priority" min="1" max="10" value="5" style="background: var(--background-color); color: var(--text-color); border: 1px solid var(--border-color); padding: 0.5rem; border-radius: 0.25rem;">
+                </div>
+                <div class="setting-item">
+                    <span class="setting-label">Tags (comma-separated)</span>
+                    <input type="text" class="setting-control" id="add-memory-tags" placeholder="tag1, tag2, tag3" style="background: var(--background-color); color: var(--text-color); border: 1px solid var(--border-color); padding: 0.5rem; border-radius: 0.25rem;">
+                </div>
+                <div class="setting-item">
+                    <button class="setting-control" id="save-memory-btn" style="background: var(--primary-color); color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 0.5rem; cursor: pointer; width: 100%;">
+                        Save Memory
+                    </button>
+                </div>
+                <div class="setting-item">
+                    <button class="setting-control" id="cancel-add-memory-btn" style="background: var(--secondary-color); color: white; border: none; padding: 0.5rem 1rem; border-radius: 0.5rem; cursor: pointer; width: 100%;">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+            
+            <div class="settings-group">
+                <h3>Advanced</h3>
+                <div class="setting-item">
+                    <span class="setting-label">Clear All Memories</span>
+                    <button class="setting-control" id="clear-memories-btn" style="background: #dc2626; color: white; border: none; padding: 0.5rem 1rem; border-radius: 0.5rem; cursor: pointer;">
+                        Clear All
+                    </button>
+                </div>
                                 </div>
                 <div class="setting-item">
                     <span class="setting-label">Show Timestamps</span>
@@ -2259,7 +2349,224 @@
                     }
                 }
             });
+            
+            // 🧠 MIRIX Memory System JavaScript
+            initializeMirixMemory();
         });
+        
+        // MIRIX Memory System Functions
+        function initializeMirixMemory() {
+            // Memory stats button
+            document.getElementById('memory-stats-btn').addEventListener('click', showMemoryStats);
+            
+            // Memory search functionality
+            document.getElementById('memory-search-input').addEventListener('input', debounce(searchMemories, 500));
+            document.getElementById('memory-type-select').addEventListener('change', searchMemories);
+            
+            // Add memory functionality
+            document.getElementById('add-memory-btn').addEventListener('click', showAddMemoryForm);
+            document.getElementById('save-memory-btn').addEventListener('click', saveMemory);
+            document.getElementById('cancel-add-memory-btn').addEventListener('click', hideAddMemoryForm);
+            
+            // Clear memories button
+            document.getElementById('clear-memories-btn').addEventListener('click', clearAllMemories);
+        }
+        
+        async function showMemoryStats() {
+            try {
+                const response = await fetch('/memory/stats');
+                const data = await response.json();
+                
+                if (data.success) {
+                    let statsHtml = '<div style="color: var(--text-color);">';
+                    statsHtml += `<h4 style="color: var(--primary-color); margin-bottom: 1rem;">Memory System Statistics</h4>`;
+                    statsHtml += `<p><strong>Total Memories:</strong> ${data.total_memories}</p>`;
+                    
+                    for (const [type, stats] of Object.entries(data.stats)) {
+                        statsHtml += `<div style="margin: 0.5rem 0; padding: 0.5rem; background: var(--secondary-color); border-radius: 0.25rem;">`;
+                        statsHtml += `<strong>${type.charAt(0).toUpperCase() + type.slice(1)}:</strong> ${stats.total_entries} entries<br>`;
+                        statsHtml += `<small style="color: #888;">${stats.storage_path}</small>`;
+                        statsHtml += `</div>`;
+                    }
+                    
+                    statsHtml += '</div>';
+                    
+                    // Show in memory results
+                    document.getElementById('memory-results').innerHTML = statsHtml;
+                    document.getElementById('memory-results-group').style.display = 'block';
+                } else {
+                    showNotification('Error loading memory stats: ' + data.error, 'error');
+                }
+            } catch (error) {
+                console.error('Memory stats error:', error);
+                showNotification('Error loading memory stats', 'error');
+            }
+        }
+        
+        async function searchMemories() {
+            const query = document.getElementById('memory-search-input').value.trim();
+            const memoryType = document.getElementById('memory-type-select').value;
+            
+            if (!query) {
+                document.getElementById('memory-results-group').style.display = 'none';
+                return;
+            }
+            
+            try {
+                let url = `/memory/search?query=${encodeURIComponent(query)}&limit=10`;
+                if (memoryType) {
+                    url += `&memory_type=${memoryType}`;
+                }
+                
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                if (data.success) {
+                    displayMemoryResults(data.results, data.total_found);
+                } else {
+                    showNotification('Error searching memories: ' + data.error, 'error');
+                }
+            } catch (error) {
+                console.error('Memory search error:', error);
+                showNotification('Error searching memories', 'error');
+            }
+        }
+        
+        function displayMemoryResults(results, totalFound) {
+            let html = `<div style="color: var(--text-color);">`;
+            html += `<h4 style="color: var(--primary-color); margin-bottom: 1rem;">Found ${totalFound} memories</h4>`;
+            
+            for (const [type, entries] of Object.entries(results)) {
+                if (entries.length > 0) {
+                    html += `<div style="margin-bottom: 1rem;">`;
+                    html += `<h5 style="color: var(--secondary-color); margin-bottom: 0.5rem;">${type.charAt(0).toUpperCase() + type.slice(1)} Memory (${entries.length})</h5>`;
+                    
+                    entries.forEach(entry => {
+                        html += `<div style="margin: 0.5rem 0; padding: 0.75rem; background: var(--background-color); border: 1px solid var(--border-color); border-radius: 0.5rem;">`;
+                        html += `<div style="font-weight: bold; margin-bottom: 0.5rem;">Priority: ${entry.priority}/10</div>`;
+                        html += `<div style="margin-bottom: 0.5rem;">${entry.content.substring(0, 200)}${entry.content.length > 200 ? '...' : ''}</div>`;
+                        html += `<div style="font-size: 0.8rem; color: #888; margin-bottom: 0.5rem;">`;
+                        html += `Created: ${new Date(entry.timestamp).toLocaleString()}`;
+                        if (entry.tags && entry.tags.length > 0) {
+                            html += ` | Tags: ${entry.tags.join(', ')}`;
+                        }
+                        html += `</div>`;
+                        html += `<button onclick="deleteMemory('${type}', '${entry.id}')" style="background: #dc2626; color: white; border: none; padding: 0.25rem 0.5rem; border-radius: 0.25rem; cursor: pointer; font-size: 0.8rem;">Delete</button>`;
+                        html += `</div>`;
+                    });
+                    
+                    html += `</div>`;
+                }
+            }
+            
+            html += `</div>`;
+            
+            document.getElementById('memory-results').innerHTML = html;
+            document.getElementById('memory-results-group').style.display = 'block';
+        }
+        
+        function showAddMemoryForm() {
+            document.getElementById('add-memory-group').style.display = 'block';
+            document.getElementById('memory-results-group').style.display = 'none';
+        }
+        
+        function hideAddMemoryForm() {
+            document.getElementById('add-memory-group').style.display = 'none';
+            // Clear form
+            document.getElementById('add-memory-content').value = '';
+            document.getElementById('add-memory-priority').value = '5';
+            document.getElementById('add-memory-tags').value = '';
+        }
+        
+        async function saveMemory() {
+            const memoryType = document.getElementById('add-memory-type').value;
+            const content = document.getElementById('add-memory-content').value.trim();
+            const priority = parseInt(document.getElementById('add-memory-priority').value);
+            const tags = document.getElementById('add-memory-tags').value.split(',').map(tag => tag.trim()).filter(tag => tag);
+            
+            if (!content) {
+                showNotification('Please enter memory content', 'error');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/memory/add', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        memory_type: memoryType,
+                        content: content,
+                        priority: priority,
+                        tags: tags
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showNotification(`Memory added to ${memoryType} memory`, 'success');
+                    hideAddMemoryForm();
+                    // Refresh search if there's a query
+                    const query = document.getElementById('memory-search-input').value.trim();
+                    if (query) {
+                        searchMemories();
+                    }
+                } else {
+                    showNotification('Error adding memory: ' + data.error, 'error');
+                }
+            } catch (error) {
+                console.error('Save memory error:', error);
+                showNotification('Error adding memory', 'error');
+            }
+        }
+        
+        async function deleteMemory(memoryType, entryId) {
+            if (!confirm('Are you sure you want to delete this memory?')) {
+                return;
+            }
+            
+            try {
+                const response = await fetch(`/memory/${memoryType}/${entryId}`, {
+                    method: 'DELETE'
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showNotification('Memory deleted successfully', 'success');
+                    // Refresh search
+                    searchMemories();
+                } else {
+                    showNotification('Error deleting memory: ' + data.error, 'error');
+                }
+            } catch (error) {
+                console.error('Delete memory error:', error);
+                showNotification('Error deleting memory', 'error');
+            }
+        }
+        
+        async function clearAllMemories() {
+            if (!confirm('Are you sure you want to clear ALL memories? This action cannot be undone!')) {
+                return;
+            }
+            
+            showNotification('Clear all memories feature coming soon!', 'info');
+        }
+        
+        // Debounce function for search
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
     </script>
 </body>
 </html> 
