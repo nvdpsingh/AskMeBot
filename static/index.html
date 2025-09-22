@@ -2264,7 +2264,8 @@
                             body: JSON.stringify({
                                 prompt: message,
                                 model: selectedModel,
-                                deepResearchMode: deepResearchMode
+                                deepResearchMode: deepResearchMode,
+                                userId: 'web_user' // Add userId for MIRIX memory system
                             })
                         });
                         
