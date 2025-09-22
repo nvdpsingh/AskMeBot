@@ -10,6 +10,7 @@
     <meta name="version" content="v1.3.0">
     <script>
         // Force cache busting
+        console.log('AskMeBot v1.3.0 - Loading...');
         if (performance.navigation.type === 1) {
             console.log('Page reloaded - clearing cache');
             if ('caches' in window) {
@@ -20,6 +21,11 @@
                 });
             }
         }
+        
+        // Clear any existing event listeners
+        window.addEventListener('load', function() {
+            console.log('Page loaded - AskMeBot v1.3.0');
+        });
     </script>
     <!-- Favicon with cache busting -->
     <link rel="icon" type="image/x-icon" href="/static/favicon.ico?v=2">
@@ -2270,6 +2276,11 @@
                         }
                         
                         // Send message to AskMeBot API
+                        console.log('Sending chat request...');
+                        console.log('Message:', message);
+                        console.log('Model:', selectedModel);
+                        console.log('Deep Research Mode:', deepResearchMode);
+                        
                         const response = await fetch('/chat', {
                             method: 'POST',
                             headers: {
