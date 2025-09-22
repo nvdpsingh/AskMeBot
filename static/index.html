@@ -2276,10 +2276,11 @@
                             const data = await response.json();
                             console.log('Response data:', data);
                             
-                            // Check for errors in response (only for actual error strings)
-                            if (data.error && typeof data.error === 'string' && data.error.trim() !== '') {
+                            // Check for errors in response
+                            if (data.error === true || (data.error && typeof data.error === 'string' && data.error.trim() !== '')) {
                                 console.error('API Error:', data.error);
-                                showNotification(`Error: ${data.error}`, 'error');
+                                const errorMessage = typeof data.error === 'string' ? data.error : 'Unknown error occurred';
+                                showNotification(`Error: ${errorMessage}`, 'error');
                                 
                                 // Hide deep research container on error
                                 if (deepResearchMode) {
@@ -2288,7 +2289,7 @@
                                 }
                                 
                                 // Add error message to chat
-                                addMessage(`Sorry, I encountered an error: ${data.error}`, 'bot');
+                                addMessage(`Sorry, I encountered an error: ${errorMessage}`, 'bot');
                                 return;
                             }
                             typingIndicator.classList.add('hidden');
