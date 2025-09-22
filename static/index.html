@@ -2313,8 +2313,21 @@
                             }
                         } else {
                             console.error('API request failed. Status:', response.status);
-                            console.error('Response text:', await response.text());
-                            throw new Error('API request failed');
+                            const errorText = await response.text();
+                            console.error('Response text:', errorText);
+                            
+                            // Try to parse error response
+                            let errorMessage = 'API request failed';
+                            try {
+                                const errorData = JSON.parse(errorText);
+                                errorMessage = errorData.error || errorData.message || errorMessage;
+                            } catch (e) {
+                                console.log('Could not parse error response as JSON');
+                            }
+                            
+                            showNotification(`Error: ${errorMessage}`, 'error');
+                            addMessage(`Sorry, I encountered an error: ${errorMessage}`, 'bot');
+                            return;
                         }
                     } catch (error) {
                         console.error('Error:', error);
