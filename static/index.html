@@ -1637,6 +1637,10 @@
             
             function showThinkingProcess() {
                 const thinkingProcess = document.getElementById('thinking-process');
+                if (!thinkingProcess) {
+                    console.warn('Deep Research: #thinking-process not found');
+                    return;
+                }
                 thinkingProcess.innerHTML = '';
                 
                 // Show initial thinking process with real-time updates
@@ -1677,6 +1681,10 @@
             
             function updateThinkingProgress(agents) {
                 const thinkingProcess = document.getElementById('thinking-process');
+                if (!thinkingProcess) {
+                    console.warn('Deep Research: #thinking-process not found during progress update');
+                    return;
+                }
                 let currentAgent = 0;
                 
                 const progressSteps = [
@@ -1713,6 +1721,10 @@
             
             function updateAgentStatus(agentIndex, action, status, color) {
                 const thinkingProcess = document.getElementById('thinking-process');
+                if (!thinkingProcess) {
+                    console.warn('Deep Research: #thinking-process not found during status update');
+                    return;
+                }
                 const agentDivs = thinkingProcess.querySelectorAll('.thinking-step');
                 const agentDiv = agentDivs[agentIndex];
                 
@@ -2270,9 +2282,17 @@
                         
                         // Show deep research container if in deep research mode
                         if (deepResearchMode) {
-                            const deepResearchContainer = document.getElementById('deep-research-container');
-                            deepResearchContainer.classList.remove('hidden');
-                            showThinkingProcess();
+                            try {
+                                const deepResearchContainer = document.getElementById('deep-research-container');
+                                if (deepResearchContainer) {
+                                    deepResearchContainer.classList.remove('hidden');
+                                    showThinkingProcess();
+                                } else {
+                                    console.warn('Deep Research: container not found');
+                                }
+                            } catch (err) {
+                                console.error('Deep Research UI error:', err);
+                            }
                         }
                         
                         // Send message to AskMeBot API
@@ -2281,7 +2301,31 @@
                         console.log('Model:', selectedModel);
                         console.log('Deep Research Mode:', deepResearchMode);
                         
-                        const response = await fetch('/chat', {
+                        let response;
+                        try {
+                            response = await fetch('/chat', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                prompt: message,
+                                    model: selectedModel,
+                                    deepResearchMode: deepResearchMode,
+                                    userId: 'web_user' // Add userId for MIRIX memory system
+                                })
+                            });
+                        } catch (networkErr) {
+                            console.error('Network error calling /chat:', networkErr);
+                            showNotification('Network error contacting /chat', 'error');
+                            typingIndicator.classList.add('hidden');
+                            if (deepResearchMode) {
+                                const deepResearchContainer = document.getElementById('deep-research-container');
+                                if (deepResearchContainer) deepResearchContainer.classList.add('hidden');
+                            }
+                            addMessage('Sorry, I encountered a network error. Please try again.', 'bot');
+                            return;
+                        }
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
