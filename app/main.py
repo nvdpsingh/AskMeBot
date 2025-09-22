@@ -71,6 +71,11 @@ def health_check():
 def read_index():
     return FileResponse("static/index.html")
 
+@app.get("/test")
+def test_page():
+    """Serve the test page for debugging"""
+    return FileResponse("test_chat.html")
+
 class ChatInput(BaseModel):
     prompt: str
     model: str
