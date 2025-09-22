@@ -6,6 +6,8 @@ uvicorn[standard]>=0.24.0
 pydantic>=2.0.0
 langchain-groq>=0.3.7
 python-dotenv>=1.0.0
+# Web search
+duckduckgo-search>=6.2.10
 
 # Development and testing dependencies
 pytest>=7.0.0

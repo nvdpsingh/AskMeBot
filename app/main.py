@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from app.groq_router import query_llm
@@ -10,6 +10,7 @@ from dotenv import load_dotenv
 import os
 import logging
 from datetime import datetime
+from typing import Iterator
 
 # Load environment variables from .env file
 load_dotenv()
@@ -134,12 +135,10 @@ def chat(chat_input: dict):
             enhanced_prompt = prompt
         
         if deep_research_mode:
-            logger.info("🚀 Starting LangGraph Deep Research Mode")
-            logger.info("🔄 Initializing multi-agent collaboration...")
-            # Use LangGraph deep research mode with ReAct agents
+            logger.info("🚀 Deep Research requested on non-streaming endpoint; redirecting client to /deep-research/stream recommended")
+            # Fallback: run synchronous deep research for backward compatibility
             from app.langgraph_research import deep_research_analysis
             result = deep_research_analysis(enhanced_prompt, model)
-            logger.info("✅ LangGraph Deep Research completed")
         else:
             logger.info("💬 Starting regular chat mode")
             # Use the groq_router to get the response
@@ -193,6 +192,113 @@ def chat(chat_input: dict):
         logger.error(f"❌ Error type: {type(e).__name__}")
         logger.error("=" * 80)
         return {"error": str(e)}
+
+# Streaming Deep Research with DuckDuckGo context
+@app.get("/deep-research/stream")
+def deep_research_stream(q: str, model: str = "llama-3.3-70b-versatile"):
+    """Server-Sent Events stream of deep research steps with web context.
+
+    Query params:
+      - q: user query
+      - model: primary synthesis model
+    """
+    logger.info("🌐 Deep Research stream init")
+    logger.info(f"📝 Query: {q}")
+    logger.info(f"🤖 Model: {model}")
+
+    def event_stream() -> Iterator[bytes]:
+        # Step 1: Web search via DuckDuckGo
+        try:
+            from duckduckgo_search import DDGS
+            yield f"event: status\ndata: {"Searching DuckDuckGo for context..."}\n\n".encode()
+            with DDGS() as ddgs:
+                results = list(ddgs.text(q, max_results=8))
+        except Exception as e:
+            yield f"event: error\ndata: {str(e)}\n\n".encode()
+            results = []
+
+        # Trim and prepare context budget (~4k chars)
+        context_parts = []
+        total_len = 0
+        for r in results:
+            snippet = r.get("body") or r.get("snippet") or ""
+            url = r.get("href") or r.get("link") or r.get("url") or ""
+            piece = f"Title: {r.get('title','')}\nURL: {url}\nSummary: {snippet}\n\n"
+            if total_len + len(piece) > 4000:
+                break
+            context_parts.append(piece)
+            total_len += len(piece)
+        context = "".join(context_parts)
+        yield f"event: context\ndata: {context.replace('\n','\\n')}\n\n".encode()
+
+        # Step 2: Multi-agent reasoning (sequential to respect rate limits)
+        agents = [
+            ("analyst", "llama-3.3-70b-versatile"),
+            ("researcher", "qwen/qwen3-32b"),
+            ("technician", "deepseek-r1-distill-llama-70b"),
+            ("innovator", "meta-llama/llama-4-maverick-17b-128e-instruct"),
+            ("reviewer", "meta-llama/llama-4-scout-17b-16e-instruct"),
+        ]
+
+        from langchain_groq import ChatGroq
+        from langchain.prompts import ChatPromptTemplate
+
+        insights = {}
+        for name, agent_model in agents:
+            try:
+                yield f"event: agent_start\ndata: {name}\n\n".encode()
+                system = f"You are the {name} providing a distinct perspective. Use the provided web context succinctly."
+                prompt = ChatPromptTemplate.from_messages([
+                    ("system", system),
+                    ("human", "Query: {q}\n\nContext:\n{ctx}\n\nProvide your analysis in <= 300 words.")
+                ])
+                llm = ChatGroq(model=agent_model)
+                messages = prompt.format_messages(q=q, ctx=context)
+                resp = llm.invoke(messages)
+                content = getattr(resp, "content", str(resp))
+                insights[name] = content
+                yield f"event: agent_insight\ndata: {name}: {content.replace('\n',' ')}\n\n".encode()
+            except Exception as e:
+                insights[name] = f"Error: {e}"
+                yield f"event: agent_error\ndata: {name}: {str(e)}\n\n".encode()
+
+        # Step 3: Debate (compressed)
+        debate_seed = "\n\n".join([f"[{k.upper()}]\n{v[:1000]}" for k, v in insights.items()])
+        yield f"event: debate\ndata: Starting debate...\n\n".encode()
+        try:
+            reviewer_model = "meta-llama/llama-4-scout-17b-16e-instruct"
+            llm = ChatGroq(model=reviewer_model)
+            debate_prompt = ChatPromptTemplate.from_messages([
+                ("system", "Facilitate a concise debate between agent insights and list consensus + disagreements in <= 250 words."),
+                ("human", "Insights to debate:\n{debate}")
+            ])
+            messages = debate_prompt.format_messages(debate=debate_seed[:3500])
+            debate_resp = llm.invoke(messages)
+            debate_text = getattr(debate_resp, "content", str(debate_resp))
+            yield f"event: debate_result\ndata: {debate_text.replace('\n',' ')}\n\n".encode()
+        except Exception as e:
+            debate_text = f"Debate error: {e}"
+            yield f"event: debate_error\ndata: {str(e)}\n\n".encode()
+
+        # Step 4: Final synthesis
+        yield f"event: synthesis_start\ndata: Synthesizing final answer...\n\n".encode()
+        try:
+            synth_llm = ChatGroq(model=model)
+            synth_prompt = ChatPromptTemplate.from_messages([
+                ("system", "Produce a clear, well-structured final answer. Cite URLs inline [n] from the provided context when helpful."),
+                ("human", "Query: {q}\n\nWeb Context (trimmed):\n{ctx}\n\nAgent Insights (trimmed):\n{ins}\n\nDebate Summary (trimmed):\n{deb}\n\nFinal answer in <= 600 words:"),
+            ])
+            trimmed_insights = "\n\n".join([f"[{k}] {v[:800]}" for k, v in insights.items()])
+            messages = synth_prompt.format_messages(q=q, ctx=context[:2000], ins=trimmed_insights[:2500], deb=(debate_text or "")[:1200])
+            final_resp = synth_llm.invoke(messages)
+            final_text = getattr(final_resp, "content", str(final_resp))
+            yield f"event: final\ndata: {final_text.replace('\n',' ')}\n\n".encode()
+        except Exception as e:
+            yield f"event: final_error\ndata: {str(e)}\n\n".encode()
+
+        yield b"event: done\ndata: end\n\n"
+
+    return StreamingResponse(event_stream(), media_type="text/event-stream")
 
 @app.post("/generate-title")
 def generate_chat_title(title_input: ChatTitleInput):

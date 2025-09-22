@@ -2295,12 +2295,70 @@
                             }
                         }
                         
-                        // Send message to AskMeBot API
+                        // Decide between normal POST and streaming SSE for Deep Research
                         console.log('Sending chat request...');
                         console.log('Message:', message);
                         console.log('Model:', selectedModel);
                         console.log('Deep Research Mode:', deepResearchMode);
-                        
+
+                        if (deepResearchMode) {
+                            // Use SSE streaming endpoint
+                            try {
+                                const sseUrl = `/deep-research/stream?q=${encodeURIComponent(message)}&model=${encodeURIComponent(selectedModel)}`;
+                                const eventSource = new EventSource(sseUrl);
+
+                                // Show container
+                                const deepResearchContainer = document.getElementById('deep-research-container');
+                                if (deepResearchContainer) deepResearchContainer.classList.remove('hidden');
+
+                                eventSource.addEventListener('status', (e) => {
+                                    addThinkingStep('System', e.data, false, 'blue', 'working');
+                                });
+                                eventSource.addEventListener('context', (e) => {
+                                    addThinkingStep('Web Context', 'Context gathered', false, 'green', 'completed');
+                                });
+                                eventSource.addEventListener('agent_start', (e) => {
+                                    addThinkingStep(e.data, 'Starting...', false, 'yellow', 'working');
+                                });
+                                eventSource.addEventListener('agent_insight', (e) => {
+                                    addThinkingStep('Agent Insight', e.data, false, 'purple', 'completed');
+                                });
+                                eventSource.addEventListener('agent_error', (e) => {
+                                    addThinkingStep('Agent Error', e.data, false, 'red', 'completed');
+                                });
+                                eventSource.addEventListener('debate', (e) => {
+                                    addThinkingStep('Debate', 'Facilitating...', false, 'indigo', 'working');
+                                });
+                                eventSource.addEventListener('debate_result', (e) => {
+                                    addThinkingStep('Debate Result', e.data, false, 'indigo', 'completed');
+                                });
+                                eventSource.addEventListener('synthesis_start', (e) => {
+                                    addThinkingStep('Synthesis', 'Creating final answer...', false, 'yellow', 'working');
+                                });
+                                eventSource.addEventListener('final', (e) => {
+                                    typingIndicator.classList.add('hidden');
+                                    addMessage(e.data, 'bot');
+                                });
+                                eventSource.addEventListener('final_error', (e) => {
+                                    typingIndicator.classList.add('hidden');
+                                    addMessage(`Error during synthesis: ${e.data}`, 'bot');
+                                });
+                                eventSource.addEventListener('error', (e) => {
+                                    console.error('SSE error', e);
+                                });
+                                eventSource.addEventListener('done', () => {
+                                    eventSource.close();
+                                    const container = document.getElementById('deep-research-container');
+                                    if (container) container.classList.add('hidden');
+                                });
+                            } catch (err) {
+                                console.error('SSE setup error:', err);
+                                addMessage('Failed to start deep research stream.', 'bot');
+                            }
+                            return;
+                        }
+
+                        // Fallback: normal /chat POST for non-deep research
                         let response;
                         try {
                             response = await fetch('/chat', {
@@ -2311,18 +2369,14 @@
                             body: JSON.stringify({
                                 prompt: message,
                                     model: selectedModel,
-                                    deepResearchMode: deepResearchMode,
-                                    userId: 'web_user' // Add userId for MIRIX memory system
+                                    deepResearchMode: false,
+                                    userId: 'web_user'
                                 })
                             });
                         } catch (networkErr) {
                             console.error('Network error calling /chat:', networkErr);
                             showNotification('Network error contacting /chat', 'error');
                             typingIndicator.classList.add('hidden');
-                            if (deepResearchMode) {
-                                const deepResearchContainer = document.getElementById('deep-research-container');
-                                if (deepResearchContainer) deepResearchContainer.classList.add('hidden');
-                            }
                             addMessage('Sorry, I encountered a network error. Please try again.', 'bot');
                             return;
                         }
