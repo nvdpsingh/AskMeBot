@@ -7,6 +7,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
+    <meta name="version" content="v1.2.0">
     <!-- Favicon with cache busting -->
     <link rel="icon" type="image/x-icon" href="/static/favicon.ico?v=2">
     <link rel="icon" type="image/svg+xml" href="/static/favicon.svg?v=2">
@@ -2271,14 +2272,16 @@
                         
                         console.log('Response status:', response.status);
                         console.log('Response ok:', response.ok);
+                        console.log('Frontend version: v1.2.0 - Error handling fixed');
                         
                         if (response.ok) {
                             const data = await response.json();
                             console.log('Response data:', data);
                             
                             // Check for errors in response
+                            console.log('Checking for errors. data.error:', data.error, 'type:', typeof data.error);
                             if (data.error === true || (data.error && typeof data.error === 'string' && data.error.trim() !== '')) {
-                                console.error('API Error:', data.error);
+                                console.error('API Error detected:', data.error);
                                 const errorMessage = typeof data.error === 'string' ? data.error : 'Unknown error occurred';
                                 showNotification(`Error: ${errorMessage}`, 'error');
                                 
@@ -2292,6 +2295,7 @@
                                 addMessage(`Sorry, I encountered an error: ${errorMessage}`, 'bot');
                                 return;
                             }
+                            console.log('No errors detected, proceeding with response');
                             typingIndicator.classList.add('hidden');
                             
                             // Add the response to chat
