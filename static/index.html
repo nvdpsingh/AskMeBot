@@ -2305,49 +2305,41 @@
                             const data = await response.json();
                             console.log('Response data:', data);
                             
-                            // Check for errors in response
-                            console.log('Checking for errors. data.error:', data.error, 'type:', typeof data.error);
-                            if (data.error === true || (data.error && typeof data.error === 'string' && data.error.trim() !== '')) {
+                            // Simple error check - only if data.error is explicitly true or a non-empty string
+                            if (data.error === true || (typeof data.error === 'string' && data.error.trim() !== '')) {
                                 console.error('API Error detected:', data.error);
                                 const errorMessage = typeof data.error === 'string' ? data.error : 'Unknown error occurred';
                                 showNotification(`Error: ${errorMessage}`, 'error');
-                                
-                                // Hide deep research container on error
-                                if (deepResearchMode) {
-                                    const deepResearchContainer = document.getElementById('deep-research-container');
-                                    deepResearchContainer.classList.add('hidden');
-                                }
-                                
-                                // Add error message to chat
                                 addMessage(`Sorry, I encountered an error: ${errorMessage}`, 'bot');
                                 return;
                             }
+                            
                             console.log('No errors detected, proceeding with response');
                             typingIndicator.classList.add('hidden');
                             
-                            // Add the response to chat
-                            let responseText = data.response;
-                            
-                            // Fallback handling for different response formats
-                            if (!responseText && data.original_response) {
-                                responseText = data.original_response;
-                            }
-                            if (!responseText && data.message) {
-                                responseText = data.message;
-                            }
-                            if (!responseText) {
-                                responseText = 'I received your message but couldn\'t process it properly.';
-                            }
+                            // Extract response text with multiple fallbacks
+                            let responseText = data.response || data.original_response || data.message || 'I received your message but couldn\'t process it properly.';
                             
                             console.log('Final response text:', responseText);
-                            addMessage(responseText, 'bot');
+                            console.log('About to call addMessage with:', responseText, 'bot');
                             
-                            // Hide typing indicator and deep research container after response
-                            const typingIndicator = document.getElementById('typing-indicator');
-                            if (typingIndicator) {
-                                typingIndicator.classList.add('hidden');
+                            // Test if addMessage function exists and works
+                            if (typeof addMessage === 'function') {
+                                console.log('addMessage function exists, calling it...');
+                                addMessage(responseText, 'bot');
+                                console.log('addMessage called successfully');
+                            } else {
+                                console.error('addMessage function does not exist!');
+                                // Fallback: manually add message to chat
+                                const chatMessages = document.getElementById('chat-messages');
+                                const messageDiv = document.createElement('div');
+                                messageDiv.className = 'message bot-message';
+                                messageDiv.innerHTML = `<div class="message-content">${responseText}</div>`;
+                                chatMessages.appendChild(messageDiv);
+                                chatMessages.scrollTop = chatMessages.scrollHeight;
                             }
                             
+                            // Hide deep research container after response
                             if (deepResearchMode) {
                                 const deepResearchContainer = document.getElementById('deep-research-container');
                                 deepResearchContainer.classList.add('hidden');
@@ -2357,7 +2349,6 @@
                             const errorText = await response.text();
                             console.error('Response text:', errorText);
                             
-                            // Try to parse error response
                             let errorMessage = 'API request failed';
                             try {
                                 const errorData = JSON.parse(errorText);
