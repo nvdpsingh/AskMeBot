@@ -58,6 +58,9 @@ def query_llm(prompt:str,model:str):
         
         # Parse the response to convert markdown to HTML
         logger.info("🔍 Parsing LLM output for markdown...")
+        logger.info(f"📝 Raw response type: {type(response)}")
+        logger.info(f"📝 Response content type: {type(response.content)}")
+        logger.info(f"📝 Response content preview: {str(response.content)[:200]}...")
         parsed_response = parse_llm_output(str(response.content))
         logger.info(f"✅ Parsing completed - Formatted: {parsed_response['formatted']}")
         
