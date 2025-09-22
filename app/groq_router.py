@@ -51,17 +51,19 @@ def query_llm(prompt:str,model:str):
         logger.info("✅ Response received from Groq")
         logger.info(f"📏 Response length: {len(response.content)} characters")
         
+        # Extract the text content from the response
+        response_text = response.content if hasattr(response, 'content') else str(response)
+        
         # Update chat history with the new interaction
         chat_history.append(("user", prompt))
-        chat_history.append(("assistant", str(response)))
+        chat_history.append(("assistant", response_text))
         logger.info(f"📚 Chat history updated: {len(chat_history)} messages")
         
         # Parse the response to convert markdown to HTML
         logger.info("🔍 Parsing LLM output for markdown...")
-        logger.info(f"📝 Raw response type: {type(response)}")
-        logger.info(f"📝 Response content type: {type(response.content)}")
-        logger.info(f"📝 Response content preview: {str(response.content)[:200]}...")
-        parsed_response = parse_llm_output(str(response.content))
+        logger.info(f"📝 Response text preview: {response_text[:200]}...")
+        
+        parsed_response = parse_llm_output(response_text)
         logger.info(f"✅ Parsing completed - Formatted: {parsed_response['formatted']}")
         
         logger.info("🎉 GROQ ROUTER COMPLETED SUCCESSFULLY")
